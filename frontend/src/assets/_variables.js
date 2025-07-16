@@ -1,0 +1,9 @@
+export const backgroundDark = "#20374C";
+export const backgroundMediumDark = "#385E80";
+export const backgroundLightDark = "#ABB6C2";
+export const backgroundWhite = "#FFFFFF";
+export const infoText = "#27bcee";
+export const warningColor = "#FFC107";
+export const dangerColor = "#D9534F";
+export const greenColor = "#5CB85C";
+export const darkColor = "#000000";
