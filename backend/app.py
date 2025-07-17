@@ -228,7 +228,7 @@ def addClient():
         return jsonify({"error": "Client already exists"}), 409
     
     clientId = clientsColection.count_documents({}) + 1
-    clientToken = generate_unique_client_token(16)
+    clientToken = generate_unique_client_token()
     apiKey = generate_unique_api_key()
     clientsColection.insert_one({
         "id": clientId,
