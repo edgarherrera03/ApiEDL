@@ -32,12 +32,12 @@ const NewClientWindow = ({ closeWindow, onReloadClients }) => {
 			`El cliente siguiente sera añadido:\n\n[cliente: ${name}, usuario: ${username}, fecha de expiración: ${expirationDate}]\n\n¿Confirmar?`
 		);
 		if (confirmed) {
-			const { success, message } = await addClientRequest(
+			const { success } = await addClientRequest(
 				name,
 				username,
 				expirationDate
 			);
-			if (!success) alert(message);
+			if (!success) alert("There was an error adding the client");
 		}
 		resetNewClientsFields();
 		closeWindow();

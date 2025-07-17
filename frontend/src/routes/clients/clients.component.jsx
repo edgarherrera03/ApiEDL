@@ -11,7 +11,7 @@ const Clients = () => {
 			if (response.success) {
 				setClientslist(response.clients);
 			} else {
-				alert(response.error || "Error fetching clients information");
+				console.log(response.error || "Error fetching clients information");
 			}
 		};
 
@@ -22,7 +22,7 @@ const Clients = () => {
 		if (response.success) {
 			setClientslist(response.clients);
 		} else {
-			alert(response.error || "Error reloading clients list");
+			console.log(response.error || "Error reloading clients list");
 		}
 	};
 	return (
