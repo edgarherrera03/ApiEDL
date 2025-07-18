@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {
 	backgroundDark,
+	backgroundLightDark,
 	backgroundWhite,
 	dangerColor,
 	darkColor,
@@ -24,11 +25,10 @@ export const BaseButton = styled.button`
 	display: flex;
 	justify-content: center;
 	border-radius: 5px;
-
+	box-shadow: 0px 3px rgb(0, 0, 0, 0.2);
 	&:hover {
-		background-color: ${backgroundWhite};
+		background-color: ${backgroundLightDark};
 		color: ${backgroundDark};
-		border: 1px solid ${backgroundDark};
 	}
 `;
 
@@ -58,12 +58,38 @@ export const ModifyButton = styled(DeleteButton)`
 `;
 
 export const AddButton = styled(DeleteButton)`
-	width: 200px;
+	position: relative;
+	overflow: hidden;
+	width: 150px;
+	height: 35px;
+	align-items: center;
 	color: ${greenColor};
-	border: 1px solid ${greenColor};
+	font-size: 16px;
+	background-color: ${backgroundDark};
+	border: 1px solid ${darkColor};
+	z-index: 0;
+	transition: color 0.5s ease-in-out; /* ✅ Smooth text transition */
+
 	&:hover {
+		background-color: ${backgroundDark};
+		box-shadow: none;
+		color: ${backgroundDark}; /* ✅ Matches the hover bg color for contrast */
+	}
+
+	&::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 0%;
 		background-color: ${greenColor};
-		color: ${darkColor};
+		z-index: -1;
+		transition: width 0.5s ease-in-out;
+	}
+
+	&:hover::before {
+		width: 100%;
 	}
 `;
 
@@ -73,5 +99,45 @@ export const SeeButton = styled(DeleteButton)`
 	&:hover {
 		background-color: ${warningColor};
 		color: ${darkColor};
+	}
+`;
+
+export const GenerateButton = styled.button`
+	position: relative;
+	overflow: hidden;
+	width: auto;
+	height: 30px;
+	letter-spacing: 0.5px;
+	line-height: 30px;
+	padding: 0 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	font-weight: bold;
+	color: ${warningColor};
+	background-color: ${darkColor};
+	border: 1px solid ${warningColor};
+	box-shadow: 0 5px rgba(0, 0, 0, 0.2);
+	z-index: 0;
+	transition: color 0.5s ease-in-out;
+
+	&:hover {
+		color: ${darkColor};
+		background-color: ${darkColor};
+	}
+
+	&::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 0%;
+		background-color: ${warningColor};
+		z-index: -1;
+		transition: width 0.5s ease-in-out;
+	}
+
+	&:hover::before {
+		width: 100%;
 	}
 `;

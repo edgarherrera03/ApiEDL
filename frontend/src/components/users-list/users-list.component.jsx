@@ -63,13 +63,6 @@ const UsersList = ({
 		<UsersListContainer $activated={openModal}>
 			<h1>Lista de usuarios</h1>
 			<UsersInformationContainer $activated={openModal}>
-				<InfoList
-					headerTitleList={headerTitles}
-					infoList={usersInfo}
-					orderedKeys={orderedKeys}
-					renderActions={renderUserActions}
-					activated={openModal}
-				/>
 				{role === "admin" && (
 					<Button
 						onClick={handleOpenNewUser}
@@ -77,6 +70,13 @@ const UsersList = ({
 						Añadir usuario
 					</Button>
 				)}
+				<InfoList
+					headerTitleList={headerTitles}
+					infoList={usersInfo}
+					orderedKeys={orderedKeys}
+					renderActions={renderUserActions}
+					activated={openModal}
+				/>
 			</UsersInformationContainer>
 
 			{openNewUsr && (

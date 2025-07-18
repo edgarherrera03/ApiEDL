@@ -17,6 +17,7 @@ db = client["ApiEDLDatabase"]
 usersCollection = db["users"]
 usersInfoCollection = db['usersInfo']
 clientsColection = db["clients"]
+logsCollection = db['logs']
 
 def generate_unique_client_token():
     while True:
@@ -268,6 +269,155 @@ def getClientByToken(clientToken):
         }}), 200
     else:
         return jsonify({"error": "Client not found"}), 404
+
+@app.route('/api/actions/client/add-ip/<clientToken>', methods=['POST'])
+@tokenVerification
+def addIpToClient(clientToken):
+    data = request.get_json()
+    ipAddress = data['ipAddress']
+    if not ipAddress:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+
+    if ipAddress in client['IpList']:
+        return jsonify({"error": "IP address already exists"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$push": {"IpList": ipAddress}}
+    )
+    
+    return jsonify({"message": "IP address added successfully"}), 200
+
+@app.route('/api/actions/client/delete-ip/<clientToken>', methods=['POST'])
+@tokenVerification
+def deleteIpFromClient(clientToken):
+    data = request.get_json()
+    ipAddress = data['ipAddress']
+    if not ipAddress:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+    if ipAddress not in client['IpList']:
+        return jsonify({"error": "IP address does not exist"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$pull": {"IpList": ipAddress}}
+    )
+    
+    return jsonify({"message": "IP address deleted successfully"}), 200
+
+@app.route('/api/actions/client/add-ip-white-list/<clientToken>', methods=['POST'])
+@tokenVerification
+def addIpToWhiteList(clientToken):
+    data = request.get_json()
+    ipAddress = data['ipAddress']
+    if not ipAddress:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+
+    if ipAddress in client['WhiteList']:
+        return jsonify({"error": "IP address already exists in whitelist"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$push": {"WhiteList": ipAddress}}
+    )
+    
+    return jsonify({"message": "IP address added to whitelist successfully"}), 200
+
+@app.route('/api/actions/client/delete-ip-white-list/<clientToken>', methods=['POST'])
+@tokenVerification
+def deleteIpFromWhiteList(clientToken):
+    data = request.get_json()
+    ipAddress = data['ipAddress']
+    if not ipAddress:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+    if ipAddress not in client['WhiteList']:
+        return jsonify({"error": "IP address does not exist in whitelist"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$pull": {"WhiteList": ipAddress}}
+    )
+    
+    return jsonify({"message": "IP address deleted from whitelist successfully"}), 200
+
+@app.route('/api/actions/client/add-website/<clientToken>', methods=['POST'])
+@tokenVerification
+def addWebsiteToClient(clientToken):
+    data = request.get_json()
+    website = data['website']
+    if not website:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+
+    if website in client['WebsiteList']:
+        return jsonify({"error": "Website already exists"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$push": {"WebsiteList": website}}
+    )
+    
+    return jsonify({"message": "Website added successfully"}), 200
+
+@app.route('/api/actions/client/delete-website/<clientToken>', methods=['POST'])
+@tokenVerification
+def deleteWebsiteFromClient(clientToken):
+    data = request.get_json()
+    website = data['website']
+    if not website:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+    if website not in client['WebsiteList']:
+        return jsonify({"error": "Website does not exist"}), 409
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$pull": {"WebsiteList": website}}
+    )
+    
+    return jsonify({"message": "Website deleted successfully"}), 200
+
+@app.route('/api/actions/client/modify-expiration-date/<clientToken>', methods=['POST'])
+@tokenVerification
+def modifyExpirationDate(clientToken):
+    data = request.get_json()
+    newExpirationDate = data['expirationDate']
+    if not newExpirationDate:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsColection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+
+    clientsColection.update_one(
+        {"clientToken": clientToken},
+        {"$set": {"expirationDate": newExpirationDate}}
+    )
+    
+    return jsonify({"message": "Expiration date updated successfully"}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)

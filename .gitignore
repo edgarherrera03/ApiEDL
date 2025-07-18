@@ -26,5 +26,11 @@ frontend/yarn-error.log*
 
 #BACKEND
 backend/.env
+backend/.DS_Store
 backend/__pycache__
+
+
+#GENERAL
+.DS_Store
+
 

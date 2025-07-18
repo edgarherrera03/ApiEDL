@@ -319,3 +319,200 @@ export const requestClientByToken = async (token) => {
 		return { success: false, error: "Request failed" };
 	}
 };
+
+export const addIpAddressRequest = async (token, ipAddress) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/add-ip/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ ipAddress: ipAddress }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "IP address added successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Add IP address request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const deleteIpAddressRequest = async (token, ipAddress) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/delete-ip/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ ipAddress: ipAddress }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "IP address deleted successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Delete IP address request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const addIpWhiteListRequest = async (token, ipAddress) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/add-ip-white-list/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ ipAddress: ipAddress }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "IP address added to whitelist successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Add IP whitelist request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const deleteIpWhiteListRequest = async (token, ipAddress) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/delete-ip-white-list/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ ipAddress: ipAddress }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message:
+					data.message || "IP address removed from whitelist successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Delete IP whitelist request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const addWebsiteRequest = async (token, website) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/add-website/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ website: website }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Website added successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Add website request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const deleteWebsiteRequest = async (token, website) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/delete-website/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ website: website }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Website deleted successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Delete website request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const modifyExpirationDateRequest = async (token, newExpirationDate) => {
+	try {
+		const response = await fetch(
+			`http://127.0.1:5000/api/actions/client/modify-expiration-date/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ expirationDate: newExpirationDate }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Expiration date modified successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Modify expiration date request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};

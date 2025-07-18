@@ -10,7 +10,7 @@ export const FormContainer = styled.div`
 	background-color: ${backgroundMediumDark};
 	border-radius: 10px;
 	box-shadow: 0 8px rgba(0, 0, 0, 0.2);
-	padding: 10px 20px 15px 20px;
+	padding: 10px 20px 20px 20px;
 	h2 {
 		margin: 10px 0;
 		color: ${infoText};

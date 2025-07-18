@@ -5,7 +5,6 @@ import {
 	deleteUserRequest,
 } from "../../utils/flask-backend.utils";
 import UsersList from "../../components/users-list/users-list.component";
-import UserInfo from "../../components/user-info/user-info.component";
 
 const Users = () => {
 	const [usersInfo, setUsersInfo] = useState([]);
@@ -66,7 +65,6 @@ const Users = () => {
 					onOpenModal={handleOpenModal}
 					reloadUserList={handleUsersReload}
 				/>
-				<UserInfo openModal={toggleOpenModal} />
 			</UsersContainer>
 		</>
 	);

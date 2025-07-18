@@ -10,7 +10,7 @@ import {
 export const InfoListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	width: 95%;
+	width: 100%;
 	pointer-events: ${(props) => (props.$activated ? "none" : "auto")};
 	opacity: ${(props) => (props.$activated ? 0.5 : 1)};
 `;
@@ -39,14 +39,14 @@ export const InformationContainer = styled.div`
 	> :nth-child(odd) {
 		background-color: ${backgroundDark};
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.2);
+			background-color: #4a4a4a;
 		}
 	}
 
 	> :nth-child(even) {
 		background-color: ${backgroundMediumDark};
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.2);
+			background-color: #4a4a4a;
 		}
 	}
 `;

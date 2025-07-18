@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import {
+	backgroundDark,
 	backgroundWhite,
 	greenColor,
 	warningColor,
 } from "../../assets/_variables";
+import { ReactComponent as WarningSvg } from "../../assets/warning.svg";
+import { ReactComponent as HelpSvg } from "../../assets/help.svg";
 
 export const HomeContainer = styled.div`
 	position: absolute;
@@ -23,7 +26,7 @@ export const HomeContainer = styled.div`
 
 export const Title = styled.div`
 	width: 70%;
-	color: ${backgroundWhite};
+	color: ${backgroundDark};
 `;
 
 export const InfoContainer = styled.div`
@@ -32,8 +35,6 @@ export const InfoContainer = styled.div`
 	margin-bottom: 20px;
 	border-radius: 5px;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
 	padding: 0 20px;
 	span {
 		text-decoration: underline;
@@ -41,8 +42,31 @@ export const InfoContainer = styled.div`
 	}
 `;
 
+export const TextContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+`;
+
 export const InfoTitle = styled.h4`
 	font-size: 20px;
 	font-weight: 500;
 	margin-bottom: 10px;
+`;
+
+export const LogoContainer = styled.div`
+	height: 100%;
+	width: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-right: 25px;
+`;
+
+export const WarningLogo = styled(WarningSvg)`
+	height: 70px;
+`;
+
+export const HelpLogo = styled(HelpSvg)`
+	height: 70px;
 `;

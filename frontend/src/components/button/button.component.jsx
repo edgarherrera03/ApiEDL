@@ -4,6 +4,7 @@ import {
 	ModifyButton,
 	AddButton,
 	SeeButton,
+	GenerateButton,
 } from "./button.styles.jsx";
 
 export const BUTTON_TYPE_CLASSES = {
@@ -12,6 +13,7 @@ export const BUTTON_TYPE_CLASSES = {
 	modify: "modify",
 	add: "add",
 	see: "see",
+	generate: "generate",
 };
 
 const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) =>
@@ -21,6 +23,7 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) =>
 		[BUTTON_TYPE_CLASSES.modify]: ModifyButton,
 		[BUTTON_TYPE_CLASSES.add]: AddButton,
 		[BUTTON_TYPE_CLASSES.see]: SeeButton,
+		[BUTTON_TYPE_CLASSES.generate]: GenerateButton,
 	}[buttonType]);
 
 const Button = ({ children, buttonType, ...otherProps }) => {
