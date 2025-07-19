@@ -5,7 +5,7 @@ import {
 	ButtonsContainer,
 } from "./new-client-window.styles";
 import Button from "../button/button.component";
-import { addClientRequest } from "../../utils/flask-backend.utils";
+import { addClientRequest } from "../../utils/api";
 
 const defaultNewClientFields = {
 	username: "",

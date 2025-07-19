@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { FormContainer } from "./sign-in-form.styles";
-import { signInAuthUser } from "../../utils/flask-backend.utils";
+import { signInAuthUser } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
 import { useContext } from "react";
 import FormInput from "../form-input/form-input.component";

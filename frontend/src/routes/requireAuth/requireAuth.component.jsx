@@ -1,17 +1,18 @@
 import { useContext, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "../../context/user.context";
-import { tokenVerification } from "../../utils/flask-backend.utils";
+import { tokenVerification, logoutAuthUser } from "../../utils/api";
 
 const RequireAuth = ({ children }) => {
 	const location = useLocation();
 	const { isAuthenticated, setIsAuthenticated, loading, setCurrentUser } =
 		useContext(UserContext);
 	useEffect(() => {
-		const logout = () => {
+		const logout = async () => {
 			setCurrentUser(null);
 			setIsAuthenticated(false);
 			localStorage.removeItem("user");
+			await logoutAuthUser();
 		};
 		const verifyToken = async () => {
 			const { success } = await tokenVerification();

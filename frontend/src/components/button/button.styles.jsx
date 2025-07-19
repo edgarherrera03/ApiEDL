@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
 	backgroundDark,
 	backgroundLightDark,
@@ -10,70 +10,61 @@ import {
 } from "../../assets/_variables";
 
 export const BaseButton = styled.button`
-	/* min-width: 80px; */
 	width: 120px;
 	height: 40px;
 	letter-spacing: 0.5px;
 	line-height: 40px;
-	padding: 0 10px 0 10px;
+	padding: 0 10px;
 	font-size: 16px;
-	background-color: ${backgroundDark};
-	color: ${backgroundWhite};
 	font-weight: bold;
+	color: ${backgroundWhite};
+	background-color: ${backgroundDark};
 	border: none;
+	border-radius: 5px;
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
-	border-radius: 5px;
-	box-shadow: 0px 3px rgb(0, 0, 0, 0.2);
+	box-shadow: 0px 3px rgba(0, 0, 0, 0.2);
+	transition: all 0.3s ease;
+
 	&:hover {
 		background-color: ${backgroundLightDark};
 		color: ${backgroundDark};
 	}
 `;
 
-export const DeleteButton = styled(BaseButton)`
+const outlinedStyle = (color) => css`
 	width: auto;
 	height: 30px;
 	line-height: 30px;
 	font-size: 15px;
 	background-color: ${darkColor};
-	color: ${dangerColor};
-	border: 1px solid ${dangerColor};
+	color: ${color};
+	border: 1px solid ${color};
 	box-shadow: 0 5px rgba(0, 0, 0, 0.2);
+
 	&:hover {
-		background-color: ${dangerColor};
+		background-color: ${color};
 		color: ${backgroundWhite};
-		box-shadow: 0 5px rgba(10, 10, 10, 10);
+		box-shadow: 0 5px rgba(10, 10, 10, 0.5);
 	}
 `;
 
-export const ModifyButton = styled(DeleteButton)`
-	color: ${warningColor};
-	border: 1px solid ${warningColor};
-	&:hover {
-		background-color: ${warningColor};
-		color: ${darkColor};
-	}
-`;
-
-export const AddButton = styled(DeleteButton)`
+const animatedButton = (textColor, bgColor) => css`
 	position: relative;
 	overflow: hidden;
-	width: 150px;
 	height: 35px;
 	align-items: center;
-	color: ${greenColor};
-	font-size: 16px;
-	background-color: ${backgroundDark};
+	color: ${textColor};
+	background-color: ${bgColor};
 	border: 1px solid ${darkColor};
+	font-size: 16px;
 	z-index: 0;
-	transition: color 0.5s ease-in-out; /* ✅ Smooth text transition */
-
+	transition: color 0.5s ease-in-out;
 	&:hover {
-		background-color: ${backgroundDark};
+		background-color: ${bgColor};
 		box-shadow: none;
-		color: ${backgroundDark}; /* ✅ Matches the hover bg color for contrast */
+		color: ${bgColor}; // To be covered by background
 	}
 
 	&::before {
@@ -81,9 +72,9 @@ export const AddButton = styled(DeleteButton)`
 		position: absolute;
 		left: 0;
 		top: 0;
-		height: 100%;
 		width: 0%;
-		background-color: ${greenColor};
+		height: 100%;
+		background-color: ${textColor};
 		z-index: -1;
 		transition: width 0.5s ease-in-out;
 	}
@@ -93,51 +84,47 @@ export const AddButton = styled(DeleteButton)`
 	}
 `;
 
-export const SeeButton = styled(DeleteButton)`
-	color: ${warningColor};
-	border: 1px solid ${warningColor};
+export const DeleteButton = styled(BaseButton)`
+	${outlinedStyle(dangerColor)}
+`;
+
+export const ModifyButton = styled(BaseButton)`
+	${outlinedStyle(warningColor)}
+
 	&:hover {
-		background-color: ${warningColor};
 		color: ${darkColor};
 	}
 `;
 
-export const GenerateButton = styled.button`
-	position: relative;
-	overflow: hidden;
-	width: auto;
-	height: 30px;
-	letter-spacing: 0.5px;
+export const AddButton = styled(BaseButton)`
+	width: 150px;
+
+	${animatedButton(greenColor, backgroundDark)}
+`;
+
+export const GenerateButton = styled(BaseButton)`
+	width: 120px;
+	height: 35px;
 	line-height: 30px;
 	padding: 0 10px;
-	font-size: 16px;
-	border-radius: 5px;
-	font-weight: bold;
-	color: ${warningColor};
-	background-color: ${darkColor};
-	border: 1px solid ${warningColor};
-	box-shadow: 0 5px rgba(0, 0, 0, 0.2);
-	z-index: 0;
-	transition: color 0.5s ease-in-out;
-
+	box-shadow: none;
+	${animatedButton(warningColor, darkColor)}
 	&:hover {
 		color: ${darkColor};
 		background-color: ${darkColor};
 	}
+`;
 
-	&::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		top: 0;
-		height: 100%;
-		width: 0%;
-		background-color: ${warningColor};
-		z-index: -1;
-		transition: width 0.5s ease-in-out;
-	}
+export const SeeMoreButton = styled(BaseButton)`
+	width: 120px;
+	height: 35px;
+	line-height: 30px;
+	padding: 0 10px;
+	box-shadow: none;
+	${animatedButton(backgroundWhite, backgroundDark)}
 
-	&:hover::before {
-		width: 100%;
+	&:hover {
+		color: ${backgroundDark};
+		background-color: ${backgroundDark};
 	}
 `;

@@ -1,24 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-	modifyExpirationDateRequest,
-	requestClientByToken,
-} from "../../utils/flask-backend.utils";
+import { requestClientByToken } from "../../utils/api";
 import {
 	ClientDetailPageContainer,
-	ClientGeneralInformation,
-	ClientInformation,
-	ApiKeyContainer,
-	ExpirationDateContainer,
-	ActivityLogContainer,
-	ClientControlContainer,
-	TitleInformation,
+	ClientDetailContentContainer,
+	ClientTitle,
 } from "./client-detail-page.styles";
-import Button, {
-	BUTTON_TYPE_CLASSES,
-} from "../../components/button/button.component";
-import IpList from "../../components/Ip-list/Ip-list.component";
-import DomainList from "../../components/domain-list/domain-list.component";
+import LeftBarClient from "../../components/left-bar-client/left-bar-client.component";
+import { CLIENT_ROUTES } from "../../components/left-bar-client/left-bar-client.component";
 import {
 	addIpAddressRequest,
 	deleteIpAddressRequest,
@@ -26,11 +15,14 @@ import {
 	deleteIpWhiteListRequest,
 	addWebsiteRequest,
 	deleteWebsiteRequest,
-} from "../../utils/flask-backend.utils";
+} from "../../utils/api";
+import GeneralInfoClient from "../../components/general-info-client/general-info-client.component";
+import IpList from "../../components/ip-list/ip-list.component";
 
 const ClientDetailPage = () => {
 	const { token } = useParams();
 	const [client, setClient] = useState(null);
+	const [selectedRoute, setSelectedRoute] = useState(CLIENT_ROUTES.general);
 
 	useEffect(() => {
 		const fetchClient = async () => {
@@ -44,6 +36,10 @@ const ClientDetailPage = () => {
 
 		fetchClient();
 	}, [token]);
+
+	const handleSelectRoute = (route) => {
+		setSelectedRoute(route);
+	};
 
 	const reloadClientDetails = async () => {
 		const response = await requestClientByToken(token);
@@ -84,84 +80,53 @@ const ClientDetailPage = () => {
 		return response;
 	};
 
-	const handleSubmitExpirationDate = async (event) => {
-		event.preventDefault();
-		const newDate = event.target.elements[0].value;
-		const confirmed = window.confirm(
-			`La siguiente fecha de expiración sera añadida:\n\n[Fecha: ${newDate}]\n\n¿Confirmar?`
-		);
-		if (!confirmed) return;
-		const response = await modifyExpirationDateRequest(token, newDate);
-		if (response.success) {
-			reloadClientDetails();
-		} else {
-			alert(response.error || "Error modifying expiration date");
-		}
-	};
 	if (!client) return <p>Loading...</p>;
 
 	return (
 		<ClientDetailPageContainer>
-			<ClientGeneralInformation>
-				<h1>{client.name}</h1>
-				<p>
-					<span>Usuario:</span> {client.username}
-				</p>
-			</ClientGeneralInformation>
-			<ClientInformation>
-				<ApiKeyContainer>
-					<TitleInformation>API Key</TitleInformation>
-					<p>{client.apiKey}</p>
-					<div>
-						<Button type="button" buttonType={BUTTON_TYPE_CLASSES.generate}>
-							Regenerar
-						</Button>
-					</div>
-				</ApiKeyContainer>
-				<ExpirationDateContainer>
-					<TitleInformation>Fecha de Expiración</TitleInformation>
-					<p>{new Date(client.expirationDate).toUTCString()}</p>
-					<form onSubmit={handleSubmitExpirationDate}>
-						<label>Nueva fecha</label>
-						<input type="date" required />
-						<button type="submit">OK</button>
-					</form>
-				</ExpirationDateContainer>
-				<ActivityLogContainer>
-					<TitleInformation>Actividad</TitleInformation>
+			<LeftBarClient selected={selectedRoute} onSelect={handleSelectRoute} />
+			<ClientDetailContentContainer>
+				<ClientTitle>
+					<h1>{client.name}</h1>
 					<p>
-						<span>Fecha de creación:</span>{" "}
-						{new Date(client.creationDate).toUTCString()}
+						<span>Usuario:</span> {client.username}
 					</p>
-					<p>
-						<span>Fecha de actualización:</span>{" "}
-						{new Date(client.updateDate).toUTCString()}
-					</p>
-				</ActivityLogContainer>
-			</ClientInformation>
-			<ClientControlContainer>
-				<IpList
-					header="Lista de enlaces:"
-					ipItemList={client.IpList}
-					handleAdd={handleAddIpAdress}
-					handleDelete={handleDeleteIpAddress}
-					reloadIpItemList={reloadClientDetails}
-				/>
-				<IpList
-					header="White List:"
-					ipItemList={client.WhiteList}
-					handleAdd={handleAddIpWhiteList}
-					handleDelete={handleDeleteIpWhiteList}
-					reloadIpItemList={reloadClientDetails}
-				/>
-				<DomainList
-					header="Lista de dominios:"
-					ipItemList={client.WebsiteList}
-					handleAdd={handleAddWebsiteList}
-					handleDelete={handleDeleteWebsiteList}
-					reloadIpItemList={reloadClientDetails}
-				/>
-			</ClientControlContainer>
+				</ClientTitle>
+				{selectedRoute === CLIENT_ROUTES.general && (
+					<GeneralInfoClient
+						client={client}
+						token={token}
+						reloadClientDetails={reloadClientDetails}
+					/>
+				)}
+				{selectedRoute === CLIENT_ROUTES.ipList && (
+					<IpList
+						reloadIpItemList={reloadClientDetails}
+						handleAdd={handleAddIpAdress}
+					/>
+				)}
+				{selectedRoute === CLIENT_ROUTES.domainList && (
+					<GeneralInfoClient
+						client={client}
+						token={token}
+						reloadClientDetails={reloadClientDetails}
+					/>
+				)}
+				{selectedRoute === CLIENT_ROUTES.hashList && (
+					<GeneralInfoClient
+						client={client}
+						token={token}
+						reloadClientDetails={reloadClientDetails}
+					/>
+				)}
+				{selectedRoute === CLIENT_ROUTES.edlProfiles && (
+					<GeneralInfoClient
+						client={client}
+						token={token}
+						reloadClientDetails={reloadClientDetails}
+					/>
+				)}
+			</ClientDetailContentContainer>
 		</ClientDetailPageContainer>
 	);
 };

@@ -8,7 +8,7 @@ import {
 	NewUserFormInput,
 	ErrorMessage,
 } from "./new-user-window.styles";
-import { addUserRequest } from "../../utils/flask-backend.utils";
+import { addUserRequest } from "../../utils/api";
 
 const defaultNewUserFields = {
 	username: "",

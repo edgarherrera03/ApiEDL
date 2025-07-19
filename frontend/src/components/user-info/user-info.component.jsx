@@ -10,7 +10,7 @@ import {
 import { useContext, useState } from "react";
 import Button from "../button/button.component";
 import { UserContext } from "../../context/user.context";
-import { changePasswordRequest } from "../../utils/flask-backend.utils";
+import { changePasswordRequest } from "../../utils/api";
 
 const defaultChangePasswordFields = {
 	password: "",

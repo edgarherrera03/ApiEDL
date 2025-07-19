@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { UsersContainer } from "./users.styles";
-import {
-	requestUsersInformation,
-	deleteUserRequest,
-} from "../../utils/flask-backend.utils";
+import { requestUsersInformation, deleteUserRequest } from "../../utils/api";
 import UsersList from "../../components/users-list/users-list.component";
 
 const Users = () => {
@@ -24,7 +21,7 @@ const Users = () => {
 			if (response.success) {
 				setUsersInfo(response.users);
 			} else {
-				alert(response.error || "Error fetching users information");
+				console.log(response.error || "Error fetching users information");
 			}
 		};
 

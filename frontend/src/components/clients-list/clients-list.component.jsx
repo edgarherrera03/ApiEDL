@@ -44,7 +44,7 @@ const ClientsList = ({ clientsList, reloadClientsList }) => {
 		<Button
 			onClick={() => navigate(`/clientes/${client.clientToken}`)}
 			type="button"
-			buttonType={BUTTON_TYPE_CLASSES.see}>
+			buttonType={BUTTON_TYPE_CLASSES.modify}>
 			Ver
 		</Button>
 	);

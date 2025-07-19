@@ -8,7 +8,7 @@ import {
 import { Outlet } from "react-router";
 import { UserContext } from "../../context/user.context";
 import { useContext } from "react";
-import { logoutAuthUser } from "../../utils/flask-backend.utils";
+import { logoutAuthUser } from "../../utils/api";
 
 const Navigation = () => {
 	const { currentUser, isAuthenticated, setIsAuthenticated, setCurrentUser } =

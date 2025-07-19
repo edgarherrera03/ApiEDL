@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import { tokenVerification } from "../utils/flask-backend.utils";
+import { tokenVerification } from "../utils/api";
+import { logoutAuthUser } from "../utils/api";
 
 export const UserContext = createContext({
 	currentUser: null,
@@ -15,10 +16,11 @@ export const UserProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const logout = () => {
+		const logout = async () => {
 			setCurrentUser(null);
 			setIsAuthenticated(false);
 			localStorage.removeItem("user");
+			await logoutAuthUser();
 		};
 
 		const verifyToken = async () => {

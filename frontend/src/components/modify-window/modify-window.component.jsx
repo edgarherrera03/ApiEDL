@@ -8,7 +8,7 @@ import {
 	NewUserFormInput,
 	UserLabel,
 } from "./modify-window.styles";
-import { modifyUserRequest } from "../../utils/flask-backend.utils";
+import { modifyUserRequest } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
 
 const defaultModifyFields = {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { requestClientsList } from "../../utils/flask-backend.utils";
+import { requestClientsList } from "../../utils/api";
 import { ClientsContainer } from "./clients.styles";
 import ClientsList from "../../components/clients-list/clients-list.component";
 

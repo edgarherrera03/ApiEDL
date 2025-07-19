@@ -1,47 +1,79 @@
-import styled from "styled-components";
-import { backgroundDark, backgroundWhite } from "../../assets/_variables";
+import styled, { css } from "styled-components";
+import Button from "../button/button.component";
+import {
+	backgroundMediumDark,
+	backgroundWhite,
+	backgroundLightDark,
+	backgroundDark,
+} from "../../assets/_variables";
 
 export const IpListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	background-color: ${backgroundWhite};
+	border-radius: 5px;
+	width: 1150px;
+`;
+
+export const IpListHeader = styled.div`
+	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	form {
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		height: 35px;
-		label {
-			width: 10%;
-			text-align: center;
-			align-content: center;
-			border: 1px solid ${backgroundDark};
-			height: 100%;
-			color: ${backgroundWhite};
-			background-color: ${backgroundDark};
-			border-top-left-radius: 5px;
-		}
-		input {
-			width: 80%;
-			height: 100%;
-			border: 1px solid ${backgroundDark};
-			padding: 0px 10px;
-			font-size: 1.1rem;
-		}
-		button {
-			width: 10%;
-			border: 1px solid ${backgroundDark};
-			border-top-right-radius: 5px;
-			cursor: pointer;
-			background-color: ${backgroundDark};
-			color: ${backgroundWhite};
-			font-weight: 600;
-			font-size: 1.5rem;
-		}
+	padding: 0 20px;
+	height: 60px;
+	position: relative;
+
+	span {
+		color: ${backgroundMediumDark};
+		font-size: 1.1rem;
+		font-weight: bold;
 	}
 `;
-export const IpListHeader = styled.h3`
-	color: ${backgroundDark};
-	font-size: 1.1rem;
-	width: 100%;
+
+export const FormWrapper = styled.form`
+	display: flex;
+	align-items: center;
+	position: absolute;
+	right: 20px;
+	transition: transform 0.3s ease, opacity 0.3s ease;
+	opacity: 0;
+	z-index: -1;
+
+	${({ formVisible }) =>
+		formVisible &&
+		css`
+			opacity: 1;
+			z-index: 0;
+		`}
+
+	input {
+		height: 35px;
+		border: 1px solid ${backgroundLightDark};
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		padding: 0 10px;
+		font-size: 1rem;
+		outline: none;
+	}
+`;
+export const AddIpButton = styled.button`
+	height: 35px;
+	border: 1px solid ${backgroundDark};
+	border-left: none;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	cursor: pointer;
+	background-color: ${backgroundDark};
+	color: ${backgroundWhite};
+	font-weight: 500;
+	font-size: 1rem;
+	padding: 0 12px;
+`;
+export const CustomButton = styled(Button)`
+	transition: transform 0.3s ease;
+	${({ formVisible }) =>
+		formVisible &&
+		css`
+			transform: translateX(-225px);
+		`}
 `;

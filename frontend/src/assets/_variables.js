@@ -9,6 +9,9 @@ export const dangerColor = "#D9534F";
 export const greenColor = "#5CB85C";
 export const darkColor = "#000000";
 
+export const NavBarHeight = 100;
+export const LeftBarClientWidth = 230;
+
 // export const backgroundDark = "#20374C";
 // export const backgroundMediumDark = "#385E80";
 // export const backgroundLightDark = "#ABB6C2";
