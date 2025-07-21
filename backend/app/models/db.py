@@ -6,5 +6,5 @@ db = client["ApiEDLDatabase"]
 usersCollection = db["users"]
 usersInfoCollection = db["usersInfo"]
 clientsCollection = db["clients"]
-logsCollection = db["logs"]
+logsCollection = db["usersLogs"]
 

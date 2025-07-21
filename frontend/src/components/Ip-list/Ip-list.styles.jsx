@@ -12,7 +12,7 @@ export const IpListContainer = styled.div`
 	flex-direction: column;
 	background-color: ${backgroundWhite};
 	border-radius: 5px;
-	width: 1150px;
+	width: 100%;
 `;
 
 export const IpListHeader = styled.div`
@@ -35,22 +35,28 @@ export const FormWrapper = styled.form`
 	align-items: center;
 	position: absolute;
 	right: 20px;
-	transition: transform 0.3s ease, opacity 0.3s ease;
+	transition: transform 0.5s ease, opacity 1s ease;
 	opacity: 0;
 	z-index: -1;
 
-	${({ formVisible }) =>
-		formVisible &&
+	${({ $formVisible }) =>
+		$formVisible &&
 		css`
 			opacity: 1;
 			z-index: 0;
 		`}
 
-	input {
-		height: 35px;
-		border: 1px solid ${backgroundLightDark};
+	> :first-child {
 		border-top-left-radius: 5px;
 		border-bottom-left-radius: 5px;
+	}
+	input,
+	select {
+		height: 35px;
+		box-sizing: border-box;
+		min-width: 120px;
+		max-width: 150px;
+		border: 1px solid ${backgroundLightDark};
 		padding: 0 10px;
 		font-size: 1rem;
 		outline: none;
@@ -70,10 +76,11 @@ export const AddIpButton = styled.button`
 	padding: 0 12px;
 `;
 export const CustomButton = styled(Button)`
-	transition: transform 0.3s ease;
-	${({ formVisible }) =>
-		formVisible &&
+	transition: transform 0.5s ease;
+	box-sizing: border-box;
+	${({ $formVisible }) =>
+		$formVisible &&
 		css`
-			transform: translateX(-225px);
+			transform: translateX(-560px);
 		`}
 `;

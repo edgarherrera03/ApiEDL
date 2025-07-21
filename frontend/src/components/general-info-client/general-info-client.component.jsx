@@ -1,6 +1,4 @@
 import {
-	GeneralInfoClientContainer,
-	ClientTitle,
 	ClientBaseInformation,
 	ApiKeyContainer,
 	TitleInformation,
@@ -36,50 +34,49 @@ const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 		setExpirationDate(value);
 	};
 	return (
-		<GeneralInfoClientContainer>
-			<ClientBaseInformation>
-				<ApiKeyContainer>
-					<TitleInformation>
-						<span>API Key</span>
-						<p>{client.apiKey}</p>
-					</TitleInformation>
+		<ClientBaseInformation>
+			<ApiKeyContainer>
+				<TitleInformation>
+					<span>API Key</span>
+					<p>{client.apiKey}</p>
+				</TitleInformation>
 
-					<div>
-						<Button type="button" buttonType={BUTTON_TYPE_CLASSES.generate}>
-							Regenerar
-						</Button>
-					</div>
-				</ApiKeyContainer>
-				<ExpirationDateContainer>
+				<div>
+					<Button type="button" buttonType={BUTTON_TYPE_CLASSES.generate}>
+						Regenerar
+					</Button>
+				</div>
+			</ApiKeyContainer>
+			<ExpirationDateContainer>
+				<DateContainer>
+					<span>Fecha de expiración:</span>
+					<p>{new Date(client.expirationDate).toUTCString()}</p>
+				</DateContainer>
+
+				<form onSubmit={handleSubmitExpirationDate}>
 					<DateContainer>
-						<span>Fecha de expiración:</span>
-						<p>{new Date(client.expirationDate).toUTCString()}</p>
+						<span>Nueva fecha:</span>
+						<input
+							type="date"
+							required
+							value={expirationDate}
+							onChange={handleChangeExpirationDate}
+						/>
+						<button type="submit">OK</button>
 					</DateContainer>
-					<form onSubmit={handleSubmitExpirationDate}>
-						<DateContainer>
-							<span>Nueva fecha:</span>
-							<input
-								type="date"
-								required
-								value={expirationDate}
-								onChange={handleChangeExpirationDate}
-							/>
-							<button type="submit">OK</button>
-						</DateContainer>
-					</form>
-				</ExpirationDateContainer>
-				<DatesContainer>
-					<DateContainer>
-						<span>Fecha de creación:</span>{" "}
-						<p>{new Date(client.creationDate).toUTCString()}</p>
-					</DateContainer>
-					<DateContainer>
-						<span>Ultima actualización:</span>{" "}
-						<p>{new Date(client.updateDate).toUTCString()}</p>
-					</DateContainer>
-				</DatesContainer>
-			</ClientBaseInformation>
-		</GeneralInfoClientContainer>
+				</form>
+			</ExpirationDateContainer>
+			<DatesContainer>
+				<DateContainer>
+					<span>Fecha de creación:</span>{" "}
+					<p>{new Date(client.creationDate).toUTCString()}</p>
+				</DateContainer>
+				<DateContainer>
+					<span>Última actualización:</span>{" "}
+					<p>{new Date(client.updateDate).toUTCString()}</p>
+				</DateContainer>
+			</DatesContainer>
+		</ClientBaseInformation>
 	);
 };
 

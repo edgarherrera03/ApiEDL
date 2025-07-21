@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import {
-	backgroundWhite,
 	backgroundDark,
 	backgroundMediumDark,
 	LeftBarClientWidth,
@@ -20,6 +19,7 @@ export const ClientDetailContentContainer = styled.div`
 	flex-direction: column;
 	padding: 30px 50px;
 	gap: 30px;
+	width: 80%;
 `;
 
 export const ClientTitle = styled.div`

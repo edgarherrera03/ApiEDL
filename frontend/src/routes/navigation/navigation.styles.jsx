@@ -49,7 +49,7 @@ export const NavLinks = styled.div`
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
-	width: 50%;
+	width: 60%;
 	margin-right: 40px;
 
 	@media (max-width: 1150px) {

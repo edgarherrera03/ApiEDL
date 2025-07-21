@@ -26,14 +26,12 @@ const Clients = () => {
 		}
 	};
 	return (
-		<>
-			<ClientsContainer>
-				<ClientsList
-					clientsList={clientslist}
-					reloadClientsList={reloadClientsList}
-				/>
-			</ClientsContainer>
-		</>
+		<ClientsContainer>
+			<ClientsList
+				clientsList={clientslist}
+				reloadClientsList={reloadClientsList}
+			/>
+		</ClientsContainer>
 	);
 };
 export default Clients;

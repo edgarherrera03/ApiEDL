@@ -13,6 +13,7 @@ export const ScrollListHeaders = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	height: 60px;
+	border-bottom: 1px solid ${backgroundLightDark};
 `;
 
 export const Header = styled.div`
@@ -27,8 +28,26 @@ export const Header = styled.div`
 	}
 `;
 
-export const ScollListInformation = styled.div``;
+export const ScollListInformation = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: ${({ $height }) => ($height ? `${$height}px` : "auto")};
+	overflow-y: auto;
+`;
 
-export const Item = styled.div``;
+export const Item = styled.div`
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid ${backgroundLightDark};
+	padding: 5px 0;
+`;
 
-export const Info = styled.div``;
+export const Info = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 100%;
+	padding: 15px 20px;
+	overflow-wrap: break-word;
+	word-break: break-word;
+`;

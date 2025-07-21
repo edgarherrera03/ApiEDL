@@ -27,10 +27,11 @@ const Navigation = () => {
 				<AppTitle to="/home">ApiEDL</AppTitle>
 				{isAuthenticated && (
 					<NavLinks>
+						<NavLink to="/dashboard">Dashboard</NavLink>
 						<NavLink to="/clientes">Clientes</NavLink>
 						<NavLink>Registros</NavLink>
 						<NavLink to="/users">Usuarios</NavLink>
-						<NavLink>Logs</NavLink>
+						<NavLink to="/logs">Logs</NavLink>
 						<NavLink onClick={handleLogOut}>Salir</NavLink>
 						<NavLink>{currentUser["username"]}</NavLink>
 					</NavLinks>

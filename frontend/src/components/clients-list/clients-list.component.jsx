@@ -1,4 +1,4 @@
-import { ClientsListContainer } from "./clients-list.styles";
+import { ClientsListContainer, TitleContainer } from "./clients-list.styles";
 import Button from "../button/button.component";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { UserContext } from "../../context/user.context";
@@ -51,6 +51,9 @@ const ClientsList = ({ clientsList, reloadClientsList }) => {
 	return (
 		<>
 			<ClientsListContainer $activated={openNewClientWindow}>
+				<TitleContainer>
+					<h1>Lista de Clientes</h1>
+				</TitleContainer>
 				{role === "admin" && (
 					<Button
 						onClick={openNewClient}

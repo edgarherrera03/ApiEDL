@@ -8,6 +8,7 @@ import Users from "./routes/users/users.component";
 import Clients from "./routes/clients/clients.component";
 import RequireAuth from "./routes/requireAuth/requireAuth.component";
 import ClientDetailPage from "./routes/client-detail-page/client-detail-page.component";
+import Logs from "./routes/logs/logs.component";
 
 function App() {
 	const { loading } = useContext(UserContext);
@@ -45,6 +46,14 @@ function App() {
 					element={
 						<RequireAuth>
 							<ClientDetailPage />
+						</RequireAuth>
+					}
+				/>
+				<Route
+					path="/logs"
+					element={
+						<RequireAuth>
+							<Logs />
 						</RequireAuth>
 					}
 				/>

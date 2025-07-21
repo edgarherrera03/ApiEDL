@@ -116,7 +116,7 @@ export const GenerateButton = styled(BaseButton)`
 `;
 
 export const SeeMoreButton = styled(BaseButton)`
-	width: 120px;
+	width: auto;
 	height: 35px;
 	line-height: 30px;
 	padding: 0 10px;

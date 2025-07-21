@@ -13,11 +13,12 @@ export const LeftBarClientContainer = styled.div`
 	width: 200px;
 	height: calc(100% - 100px);
 	background-color: ${backgroundLightDark};
-	padding: 50px 15px 0 15px;
+	padding: 70px 15px 0 15px;
+	z-index: 1;
 `;
 export const LeftBarRoute = styled.div`
 	display: flex;
-	height: 45px;
+	height: 50px;
 	background-color: ${(props) =>
 		props.$selected ? `${backgroundDark}` : "transparent"};
 	border-radius: 10px;

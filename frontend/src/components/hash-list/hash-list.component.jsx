@@ -1,46 +1,51 @@
 import {
-	DomainListContainer,
-	DomainListHeader,
+	HashListContainer,
+	HashListHeader,
 	FormWrapper,
-	AddDomainButton,
+	AddHashButton,
 	CustomButton,
-} from "./domain-list.styles";
+} from "./hash-list.styles";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useState } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 
-const defaulNewDomainFields = {
-	domain: "",
+const defaulNewHashFields = {
+	hash: "",
+	programName: "",
 	classification: "",
-	ipRating: "",
+	hashRating: "",
 	blocked: "",
 };
 
-const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
-	const [newDomainFields, setNewDomainFields] = useState(defaulNewDomainFields);
+const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
+	const [newHashFields, setNewHashFields] = useState(defaulNewHashFields);
 	const [formVisible, setFormVisible] = useState(false);
+	console.log(hashList);
 
-	const { domain, classification, ipRating, blocked } = newDomainFields;
+	const { hash, programName, classification, hashRating, blocked } =
+		newHashFields;
 	const headersList = [
-		"Dominio",
+		"Hash",
+		"Nombre del programa",
 		"Clasificación",
 		"Calificación",
 		"Bloqueada",
 		"Ultima Modificación",
 	];
 	const orderList = [
-		"domain",
+		"hash",
+		"programName",
 		"classification",
-		"ipRating",
+		"hashRating",
 		"blocked",
 		"lastUpdate",
 	];
 
-	const resetNewDomainFields = () => setNewDomainFields(defaulNewDomainFields);
+	const resetNewHashFields = () => setNewHashFields(defaulNewHashFields);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
-		setNewDomainFields({ ...newDomainFields, [name]: value });
+		setNewHashFields({ ...newHashFields, [name]: value });
 	};
 
 	const toggleForm = () => {
@@ -50,40 +55,45 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const confirmed = window.confirm(
-			`El siguiente dominio sera añadida:\n\n[Dominio: ${domain}]\n\n¿Confirmar?`
+			`El siguiente hash sera añadido:\n\n[Hash: ${hash}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newDomainFields);
+		const { success } = await handleAdd(newHashFields);
 		if (!success) {
-			alert("Hubo un error al añadir el dominio");
+			alert("Hubo un error al añadir el hash");
 			return;
 		}
-		resetNewDomainFields();
-		reloadDomainItemList();
+		resetNewHashFields();
+		reloadHashItemList();
 	};
 	return (
-		<DomainListContainer>
-			<DomainListHeader>
-				<span>Lista de dominios</span>
+		<HashListContainer>
+			<HashListHeader>
+				<span>Lista de Hashes</span>
 
 				<CustomButton
 					buttonType={BUTTON_TYPE_CLASSES.seeMore}
 					onClick={toggleForm}
 					$formVisible={formVisible}>
-					Añadir dominio {formVisible ? ">" : "<"}
+					Añadir Hash {formVisible ? ">" : "<"}
 				</CustomButton>
 
 				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
-						name="domain"
+						name="hash"
 						required
-						value={domain}
+						value={hash}
 						onChange={handleChange}
 						type="text"
-						minLength="4"
-						maxLength="253"
-						pattern="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
-						placeholder="Dominio"
+						placeholder="Hash"
+					/>
+					<input
+						name="programName"
+						required
+						value={programName}
+						onChange={handleChange}
+						type="text"
+						placeholder="Nombre del programa"
 					/>
 					<select
 						name="classification"
@@ -96,12 +106,12 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 						<option value="Malicioso">Malicioso</option>
 					</select>
 					<input
-						name="ipRating"
+						name="hashRating"
 						required
 						type="number"
 						min={0}
 						max={100}
-						value={ipRating}
+						value={hashRating}
 						onChange={handleChange}
 						placeholder="Calificacion"
 					/>
@@ -114,16 +124,16 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 						<option value={true}>Bloqueado</option>
 						<option value={false}>Permitido</option>
 					</select>
-					<AddDomainButton type="submit">+</AddDomainButton>
+					<AddHashButton type="submit">+</AddHashButton>
 				</FormWrapper>
-			</DomainListHeader>
+			</HashListHeader>
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
-				itemList={domainList}
+				itemList={hashList}
 			/>
-		</DomainListContainer>
+		</HashListContainer>
 	);
 };
 
-export default DomainList;
+export default HashList;

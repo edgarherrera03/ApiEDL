@@ -9,9 +9,18 @@ import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useState } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 
+const defaulNewIpFields = {
+	ipAdress: "",
+	classification: "",
+	ipRating: "",
+	blocked: "",
+};
+
 const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
-	const [ip, setIp] = useState("");
+	const [newIpFields, setNewIpFields] = useState(defaulNewIpFields);
 	const [formVisible, setFormVisible] = useState(false);
+
+	const { ipAdress, classification, ipRating, blocked } = newIpFields;
 	const headersList = [
 		"Dirección IP",
 		"Clasificación",
@@ -22,14 +31,16 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 	const orderList = [
 		"ipAdress",
 		"classification",
-		"calification",
+		"ipRating",
 		"blocked",
 		"lastUpdate",
 	];
 
+	const resetNewIpFields = () => setNewIpFields(defaulNewIpFields);
+
 	const handleChange = (event) => {
-		const { value } = event.target;
-		setIp(value);
+		const { name, value } = event.target;
+		setNewIpFields({ ...newIpFields, [name]: value });
 	};
 
 	const toggleForm = () => {
@@ -39,40 +50,70 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const confirmed = window.confirm(
-			`La siguiente IP sera añadida:\n\n[IP: ${ip}]\n\n¿Confirmar?`
+			`La siguiente IP sera añadida:\n\n[IP: ${ipAdress}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(ip);
+		const { success } = await handleAdd(newIpFields);
 		if (!success) {
-			alert("There was an error adding the IP address");
+			alert("Hubo un error al añadir la direccion IP");
 			return;
 		}
-		setIp("");
+		resetNewIpFields();
 		reloadIpItemList();
 	};
 	return (
 		<IpListContainer>
-			<IpListHeader formVisible={formVisible}>
+			<IpListHeader>
 				<span>Lista de IP's</span>
 
 				<CustomButton
 					buttonType={BUTTON_TYPE_CLASSES.seeMore}
 					onClick={toggleForm}
-					formVisible={formVisible}>
+					$formVisible={formVisible}>
 					Añadir IP {formVisible ? ">" : "<"}
 				</CustomButton>
 
-				<FormWrapper onSubmit={handleSubmit} formVisible={formVisible}>
+				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
-						name="Ip"
+						name="ipAdress"
 						required
-						value={ip}
+						value={ipAdress}
 						onChange={handleChange}
 						type="text"
 						minLength="7"
 						maxLength="15"
 						pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$"
+						placeholder="Direccion IPv4"
 					/>
+					<select
+						name="classification"
+						required
+						value={classification}
+						onChange={handleChange}>
+						<option value="">Clasificación</option>
+						<option value="Seguro">Seguro</option>
+						<option value="Sospechoso">Sospechoso</option>
+						<option value="Malicioso">Malicioso</option>
+					</select>
+					<input
+						name="ipRating"
+						required
+						type="number"
+						min={0}
+						max={100}
+						value={ipRating}
+						onChange={handleChange}
+						placeholder="Calificacion"
+					/>
+					<select
+						name="blocked"
+						required
+						value={blocked}
+						onChange={handleChange}>
+						<option value="">Estatus</option>
+						<option value={true}>Bloqueado</option>
+						<option value={false}>Permitido</option>
+					</select>
 					<AddIpButton type="submit">+</AddIpButton>
 				</FormWrapper>
 			</IpListHeader>

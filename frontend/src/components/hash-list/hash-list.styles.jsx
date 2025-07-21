@@ -7,7 +7,7 @@ import {
 	backgroundDark,
 } from "../../assets/_variables";
 
-export const DomainListContainer = styled.div`
+export const HashListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${backgroundWhite};
@@ -15,7 +15,7 @@ export const DomainListContainer = styled.div`
 	width: 100%;
 `;
 
-export const DomainListHeader = styled.div`
+export const HashListHeader = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -55,14 +55,14 @@ export const FormWrapper = styled.form`
 		height: 35px;
 		box-sizing: border-box;
 		min-width: 120px;
-		max-width: 250px;
+		max-width: 180px;
 		border: 1px solid ${backgroundLightDark};
 		padding: 0 10px;
 		font-size: 1rem;
 		outline: none;
 	}
 `;
-export const AddDomainButton = styled.button`
+export const AddHashButton = styled.button`
 	height: 35px;
 	border: 1px solid ${backgroundDark};
 	border-left: none;
@@ -81,6 +81,6 @@ export const CustomButton = styled(Button)`
 	${({ $formVisible }) =>
 		$formVisible &&
 		css`
-			transform: translateX(-600px);
+			transform: translateX(-770px);
 		`}
 `;

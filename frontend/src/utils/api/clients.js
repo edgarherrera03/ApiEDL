@@ -264,6 +264,34 @@ export const deleteWebsiteRequest = async (token, website) => {
 	}
 };
 
+export const addHashRequest = async (token, hash) => {
+	try {
+		const response = await fetch(
+			`http://127.0.0.1:5000/api/clients/by-token/actions/add-hash/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ hash: hash }),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Hash añadido correctamente",
+			};
+		} else {
+			return { success: false, error: data.error || "Hubo un error" };
+		}
+	} catch (error) {
+		console.error("Hubo un error al añadir el hash:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
 export const modifyExpirationDateRequest = async (token, newExpirationDate) => {
 	try {
 		const response = await fetch(

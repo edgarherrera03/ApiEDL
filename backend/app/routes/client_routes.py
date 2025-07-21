@@ -82,6 +82,7 @@ def getClientByToken(clientToken):
             "IpList": client.get('IpList', []),
             "WhiteList": client.get('WhiteList', []),
             "WebsiteList": client.get('WebsiteList', []),
+            "HashList" : client.get('HashList', []),
             "apiKey": client.get('apiKey', None),
         }}), 200
     else:
@@ -92,6 +93,7 @@ def getClientByToken(clientToken):
 def addIpToClient(clientToken):
     data = request.get_json()
     ipAddress = data['ipAddress']
+    ipAddress["lastUpdate"] = datetime.today().strftime('%Y-%m-%d')
     if not ipAddress:
         return jsonify({"error": "Missing fields"}), 400
 
@@ -178,6 +180,7 @@ def deleteIpFromWhiteList(clientToken):
 def addWebsiteToClient(clientToken):
     data = request.get_json()
     website = data['website']
+    website["lastUpdate"] = datetime.today().strftime('%Y-%m-%d')
     if not website:
         return jsonify({"error": "Missing fields"}), 400
 
@@ -215,6 +218,28 @@ def deleteWebsiteFromClient(clientToken):
     )
     
     return jsonify({"message": "Website deleted successfully"}), 200
+
+@bp.route('/by-token/actions/add-hash/<clientToken>', methods=['POST'])
+@token_verification_required
+def addHashToClient(clientToken):
+    data = request.get_json()
+    hash = data['hash']
+    hash["lastUpdate"] = datetime.today().strftime('%Y-%m-%d')
+    if not hash:
+        return jsonify({"error": "Missing fields"}), 400
+
+    client = clientsCollection.find_one({"clientToken": clientToken})
+    if not client:
+        return jsonify({"error": "Client not found"}), 404
+
+    if hash in client['HashList']:
+        return jsonify({"error": "Hash already exists"}), 409
+
+    clientsCollection.update_one(
+        {"clientToken": clientToken},
+        {"$push": {"HashList": hash}}
+    )
+    return jsonify({"message": "Hash added successfully"}), 200
 
 @bp.route('/by-token/actions/modify-expiration-date/<clientToken>', methods=['POST'])
 @token_verification_required

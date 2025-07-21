@@ -26,14 +26,18 @@ clients = [
         "expirationDate": "2026-01-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": [
-            {"ipAdress": "192.168.10.1", "classification": "Sospechoso", "qualification": 60, 'blocked': False, 'lastUpdate': "2025-07-17"},
-            {"ipAdress": "10.0.1.5", "classification": "Malicioso", "qualification": 90, 'blocked': True, 'lastUpdate': "2025-07-15"},
-            {"ipAdress": "172.16.10.12", "classification": "Seguro", "qualification": 30, 'blocked': False, 'lastUpdate': "2025-07-10"},
+            {"ipAdress": "192.168.10.1", "classification": "Sospechoso", "ipRating": 60, 'blocked': False, 'lastUpdate': "2025-07-17"},
+            {"ipAdress": "10.0.1.5", "classification": "Malicioso", "ipRating": 90, 'blocked': True, 'lastUpdate': "2025-07-15"},
+            {"ipAdress": "172.16.10.12", "classification": "Seguro", "ipRating": 30, 'blocked': False, 'lastUpdate': "2025-07-10"},
         ],
         "WhiteList": ["192.168.10.1"],
         "WebsiteList": [
-            {"domain": "https://portal.clienta.net", "classification": "Seguro", "qualification": 10, 'blocked': False, 'lastUpdate': "2025-07-12"},
-            {"domain": "https://login.clienta.net", "classification": "Sospechoso", "qualification": 55, 'blocked': False, 'lastUpdate': "2025-07-08"}
+            {"domain": "https://portal.clienta.net", "classification": "Seguro", "ipRating": 10, 'blocked': False, 'lastUpdate': "2025-07-12"},
+            {"domain": "https://login.clienta.net", "classification": "Sospechoso", "ipRating": 55, 'blocked': False, 'lastUpdate': "2025-07-08"}
+        ],
+        "HashList": [
+            {"hash": "a1b2c3d4e5f6g7h8i9j0", "programName": "Trojan.Generic", "classification": "Malicioso", "hashRating": 95, "blocked": True, "lastUpdate": "2025-07-15"},
+            {"hash": "f0e1d2c3b4a596877665", "programName": "Updater.exe", "classification": "Seguro", "hashRating": 10, "blocked": False, "lastUpdate": "2025-07-12"}
         ],
         "apiKey": secrets.token_urlsafe(24),
     },
@@ -46,14 +50,18 @@ clients = [
         "expirationDate": "2026-02-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": [
-            {"ipAdress": "192.168.20.2", "classification": "Seguro", "qualification": 15, 'blocked': False, 'lastUpdate': "2025-07-01"},
-            {"ipAdress": "10.1.0.8", "classification": "Sospechoso", "qualification": 50, 'blocked': False, 'lastUpdate': "2025-06-30"},
-            {"ipAdress": "172.16.2.15", "classification": "Malicioso", "qualification": 95, 'blocked': True, 'lastUpdate': "2025-07-16"},
+            {"ipAdress": "192.168.20.2", "classification": "Seguro", "ipRating": 15, 'blocked': False, 'lastUpdate': "2025-07-01"},
+            {"ipAdress": "10.1.0.8", "classification": "Sospechoso", "ipRating": 50, 'blocked': False, 'lastUpdate': "2025-06-30"},
+            {"ipAdress": "172.16.2.15", "classification": "Malicioso", "ipRating": 95, 'blocked': True, 'lastUpdate': "2025-07-16"},
         ],
         "WhiteList": ["10.1.0.8"],
         "WebsiteList": [
-            {"domain": "https://clientb.services.com", "classification": "Sospechoso", "qualification": 40, 'blocked': False, 'lastUpdate': "2025-07-10"},
-            {"domain": "https://dashboard.clientb.com", "classification": "Malicioso", "qualification": 85, 'blocked': True, 'lastUpdate': "2025-07-14"}
+            {"domain": "https://clientb.services.com", "classification": "Sospechoso", "ipRating": 40, 'blocked': False, 'lastUpdate': "2025-07-10"},
+            {"domain": "https://dashboard.clientb.com", "classification": "Malicioso", "ipRating": 85, 'blocked': True, 'lastUpdate': "2025-07-14"}
+        ],
+        "HashList": [
+            {"hash": "123abc456def789ghi0", "programName": "Downloader.exe", "classification": "Sospechoso", "hashRating": 55, "blocked": False, "lastUpdate": "2025-07-13"},
+            {"hash": "00011122233344455566", "programName": "CleanerTool.exe", "classification": "Seguro", "hashRating": 12, "blocked": False, "lastUpdate": "2025-07-10"}
         ],
         "apiKey": secrets.token_urlsafe(24),
     },
@@ -66,13 +74,16 @@ clients = [
         "expirationDate": "2026-03-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": [
-            {"ipAdress": "192.168.3.3", "classification": "Malicioso", "qualification": 80, 'blocked': True, 'lastUpdate': "2025-07-18"},
-            {"ipAdress": "10.1.0.1", "classification": "Seguro", "qualification": 20, 'blocked': False, 'lastUpdate': "2025-07-10"},
-            {"ipAdress": "172.17.0.5", "classification": "Sospechoso", "qualification": 50, 'blocked': False, 'lastUpdate': "2025-07-09"},
+            {"ipAdress": "192.168.3.3", "classification": "Malicioso", "ipRating": 80, 'blocked': True, 'lastUpdate': "2025-07-18"},
+            {"ipAdress": "10.1.0.1", "classification": "Seguro", "ipRating": 20, 'blocked': False, 'lastUpdate': "2025-07-10"},
+            {"ipAdress": "172.17.0.5", "classification": "Sospechoso", "ipRating": 50, 'blocked': False, 'lastUpdate': "2025-07-09"},
         ],
         "WhiteList": ["172.17.0.5", "10.1.0.1"],
         "WebsiteList": [
-            {"domain": "https://clientc.net", "classification": "Seguro", "qualification": 5, 'blocked': False, 'lastUpdate': "2025-07-05"}
+            {"domain": "https://clientc.net", "classification": "Seguro", "ipRating": 5, 'blocked': False, 'lastUpdate': "2025-07-05"}
+        ],
+        "HashList": [
+            {"hash": "deadbeefcafebabe1234", "programName": "Spyware.exe", "classification": "Malicioso", "hashRating": 88, "blocked": True, "lastUpdate": "2025-07-18"}
         ],
         "apiKey": secrets.token_urlsafe(24),
     },
@@ -85,13 +96,16 @@ clients = [
         "expirationDate": "2026-04-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": [
-            {"ipAdress": "192.168.4.4", "classification": "Sospechoso", "qualification": 65, 'blocked': False, 'lastUpdate': "2025-07-02"},
-            {"ipAdress": "10.2.0.6", "classification": "Malicioso", "qualification": 85, 'blocked': True, 'lastUpdate': "2025-07-13"},
+            {"ipAdress": "192.168.4.4", "classification": "Sospechoso", "ipRating": 65, 'blocked': False, 'lastUpdate': "2025-07-02"},
+            {"ipAdress": "10.2.0.6", "classification": "Malicioso", "ipRating": 85, 'blocked': True, 'lastUpdate': "2025-07-13"},
         ],
         "WhiteList": [],
         "WebsiteList": [
-            {"domain": "https://clientd.org", "classification": "Seguro", "qualification": 25, 'blocked': False, 'lastUpdate': "2025-07-01"},
-            {"domain": "https://support.clientd.org", "classification": "Sospechoso", "qualification": 70, 'blocked': False, 'lastUpdate': "2025-07-15"}
+            {"domain": "https://clientd.org", "classification": "Seguro", "ipRating": 25, 'blocked': False, 'lastUpdate': "2025-07-01"},
+            {"domain": "https://support.clientd.org", "classification": "Sospechoso", "ipRating": 70, 'blocked': False, 'lastUpdate': "2025-07-15"}
+        ],
+        "HashList": [
+            {"hash": "beefcafe1234567890", "programName": "Installer.pkg", "classification": "Sospechoso", "hashRating": 60, "blocked": False, "lastUpdate": "2025-07-15"}
         ],
         "apiKey": secrets.token_urlsafe(24),
     },
@@ -104,12 +118,15 @@ clients = [
         "expirationDate": "2026-05-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": [
-            {"ipAdress": "192.168.5.5", "classification": "Seguro", "qualification": 10, 'blocked': False, 'lastUpdate': "2025-07-07"},
-            {"ipAdress": "10.3.0.7", "classification": "Sospechoso", "qualification": 45, 'blocked': False, 'lastUpdate': "2025-07-11"},
+            {"ipAdress": "192.168.5.5", "classification": "Seguro", "ipRating": 10, 'blocked': False, 'lastUpdate': "2025-07-07"},
+            {"ipAdress": "10.3.0.7", "classification": "Sospechoso", "ipRating": 45, 'blocked': False, 'lastUpdate': "2025-07-11"},
         ],
         "WhiteList": ["192.168.5.5"],
         "WebsiteList": [
-            {"domain": "https://cliente.io", "classification": "Seguro", "qualification": 20, 'blocked': False, 'lastUpdate': "2025-07-08"}
+            {"domain": "https://cliente.io", "classification": "Seguro", "ipRating": 20, 'blocked': False, 'lastUpdate': "2025-07-08"}
+        ],
+        "HashList": [
+            {"hash": "hashsafeabcd123456", "programName": "DriverHelper", "classification": "Seguro", "hashRating": 15, "blocked": False, "lastUpdate": "2025-07-08"}
         ],
         "apiKey": secrets.token_urlsafe(24),
     },

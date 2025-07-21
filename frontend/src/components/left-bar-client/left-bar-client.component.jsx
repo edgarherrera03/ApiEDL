@@ -5,7 +5,6 @@ export const CLIENT_ROUTES = {
 	ipList: "ipList",
 	domainList: "domainList",
 	hashList: "hashList",
-	edlProfiles: "edlProfiles",
 };
 
 const LeftBarClient = ({ selected, onSelect }) => {
@@ -30,11 +29,6 @@ const LeftBarClient = ({ selected, onSelect }) => {
 				$selected={selected === CLIENT_ROUTES.hashList}
 				onClick={() => onSelect(CLIENT_ROUTES.hashList)}>
 				<span>Lista de Hash</span>
-			</LeftBarRoute>
-			<LeftBarRoute
-				$selected={selected === CLIENT_ROUTES.edlProfiles}
-				onClick={() => onSelect(CLIENT_ROUTES.edlProfiles)}>
-				<span>Perfiles EDL</span>
 			</LeftBarRoute>
 		</LeftBarClientContainer>
 	);

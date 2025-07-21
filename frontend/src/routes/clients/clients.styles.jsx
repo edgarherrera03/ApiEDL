@@ -7,5 +7,5 @@ export const ClientsContainer = styled.div`
 	flex-direction: column;
 	width: 100%;
 	align-items: center;
-	margin-top: 80px;
+	margin-top: 50px;
 `;

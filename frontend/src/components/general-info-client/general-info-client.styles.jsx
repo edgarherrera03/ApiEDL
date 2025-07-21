@@ -6,34 +6,12 @@ import {
 	backgroundLightDark,
 } from "../../assets/_variables";
 
-export const GeneralInfoClientContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
-export const ClientTitle = styled.div`
-	display: flex;
-	flex-direction: column;
-	h1 {
-		color: ${backgroundDark};
-		font-size: 2.5rem;
-		margin-bottom: 10px;
-	}
-	p {
-		span {
-			font-weight: bold;
-		}
-		color: ${backgroundMediumDark};
-		font-size: 1.2rem;
-		margin: 5px 0;
-	}
-`;
-
 export const ClientBaseInformation = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${backgroundWhite};
 	border-radius: 5px;
-	width: 1150px;
+	width: 100%;
 `;
 
 export const ApiKeyContainer = styled.div`
@@ -60,7 +38,6 @@ export const TitleInformation = styled.span`
 export const ExpirationDateContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-	width: 100%;
 	padding: 0 20px;
 	height: 60px;
 	border-bottom: 1px solid ${backgroundLightDark};
@@ -80,10 +57,8 @@ export const ExpirationDateContainer = styled.div`
 export const DatesContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-	width: 100%;
 	padding: 0 20px;
 	height: 60px;
-
 	> :first-child {
 		border-right: 1px solid ${backgroundLightDark};
 	}
@@ -125,5 +100,10 @@ export const DateContainer = styled.div`
 		font-weight: 500;
 		font-size: 1rem;
 		padding: 5px 10px;
+
+		transition: opacity 0.2s ease;
+		&:hover {
+			opacity: 0.8;
+		}
 	}
 `;
