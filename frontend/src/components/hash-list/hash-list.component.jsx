@@ -20,7 +20,6 @@ const defaulNewHashFields = {
 const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 	const [newHashFields, setNewHashFields] = useState(defaulNewHashFields);
 	const [formVisible, setFormVisible] = useState(false);
-	console.log(hashList);
 
 	const { hash, programName, classification, hashRating, blocked } =
 		newHashFields;
@@ -58,7 +57,7 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 			`El siguiente hash sera añadido:\n\n[Hash: ${hash}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newHashFields);
+		const { success } = await handleAdd(newHashFields, "HashList");
 		if (!success) {
 			alert("Hubo un error al añadir el hash");
 			return;

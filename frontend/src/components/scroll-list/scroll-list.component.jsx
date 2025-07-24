@@ -20,17 +20,19 @@ const ScrollList = ({ headersList, ordersList, itemList, height = "" }) => {
 			</ScrollListHeaders>
 			<ScollListInformation $height={height}>
 				{itemList.map((item, index) => (
-					<Item key={index}>
-						{ordersList.map((key, i) => (
-							<Info key={i}>
-								{key === "blocked" ? (
-									<BlockedIcon blocked={item[key]} />
-								) : (
-									<span>{item[key]}</span>
-								)}
-							</Info>
-						))}
-					</Item>
+					<>
+						<Item key={index}>
+							{ordersList.map((key, i) => (
+								<Info key={i}>
+									{key === "blocked" ? (
+										<BlockedIcon blocked={item[key]} />
+									) : (
+										<span>{item[key]}</span>
+									)}
+								</Info>
+							))}
+						</Item>
+					</>
 				))}
 			</ScollListInformation>
 		</ScrollListContainer>

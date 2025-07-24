@@ -53,7 +53,7 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 			`El siguiente dominio sera añadida:\n\n[Dominio: ${domain}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newDomainFields);
+		const { success } = await handleAdd(newDomainFields, "WebsiteList");
 		if (!success) {
 			alert("Hubo un error al añadir el dominio");
 			return;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Button from "../button/button.component";
 import {
 	NewUserContainer,
@@ -9,9 +9,10 @@ import {
 	ErrorMessage,
 } from "./new-user-window.styles";
 import { addUserRequest } from "../../utils/api";
+import { UserContext } from "../../context/user.context";
 
 const defaultNewUserFields = {
-	username: "",
+	usernameToAdd: "",
 	role: "",
 	password: "",
 	confirmPassword: "",
@@ -20,7 +21,8 @@ const defaultNewUserFields = {
 const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 	const [newUserFields, setNewUserFields] = useState(defaultNewUserFields);
 	const [messageLabel, setMessageLabel] = useState("");
-	const { username, role, password, confirmPassword } = newUserFields;
+	const { usernameToAdd, role, password, confirmPassword } = newUserFields;
+	const { currentUser } = useContext(UserContext);
 
 	const resetNewUserFields = () => {
 		setNewUserFields(defaultNewUserFields);
@@ -78,11 +80,12 @@ const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 		setMessageLabel("");
 
 		const confirmed = window.confirm(
-			`El siguiente usuario se añadirá a la base de datos:\n\n[usuario: ${username}, rol: ${role}]\n\n¿Confirmar?`
+			`El siguiente usuario se añadirá a la base de datos:\n\n[usuario: ${usernameToAdd}, rol: ${role}]\n\n¿Confirmar?`
 		);
 		if (confirmed) {
 			const { success, message } = await addUserRequest(
-				username,
+				currentUser["username"],
+				usernameToAdd,
 				password,
 				role
 			);
@@ -104,11 +107,11 @@ const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 			<span>Añadir un nuevo usuario</span>
 			<form onSubmit={handleSubmit}>
 				<NewUserFormInput
-					name="username"
+					name="usernameToAdd"
 					type="text"
 					label="Usuario"
 					required
-					value={username}
+					value={usernameToAdd}
 					onChange={handleChange}
 				/>
 				<RoleLabel>

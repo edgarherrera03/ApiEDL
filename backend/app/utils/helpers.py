@@ -3,6 +3,7 @@ import bcrypt
 from ..models.db import clientsCollection
 from ..models.db import logsCollection
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def hashPassword(password):
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
@@ -23,9 +24,21 @@ def generate_unique_api_key():
             return apiKey
 
 USER_ACTIONS = {
-    'add_ip':'',
-    'delete_ip': '',
-
+    'add_item_to_list': 'Añadió un elemento a una lista',
+    'delete_item_from_list': 'Eliminó un elemento de una lista',
+    'modify_ip': 'Modificó una dirección IP',
+    'modify_website': 'Modificó un dominio',
+    'modify_hash': 'Modificó un hash',
+    'add_user': 'Añadió un usuario',
+    'delete_user': 'Eliminó un usuario',
+    'modify_user': 'Modificó un usuario',
+    'add_client': 'Añadió un cliente',
+    'delete_client': 'Eliminó un cliente',
+    'modify_client': 'Modificó un cliente',
+    'modify_expirationDate': 'Modificó la fecha de expiración', 
+    'change_password': 'Cambio de contraseña',
+    'modify_list_limit': 'Modificó el limite de una lista',
+    'regenerate_api_key': 'Regeneró una Api_Key',
 }
 
 def log_user_action(username, action, details):
@@ -33,6 +46,6 @@ def log_user_action(username, action, details):
         "username": username,
         "action": action,
         "details": details,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.now(ZoneInfo("America/El_Salvador")).strftime('%a, %d %b %Y %H:%M:%S GMT')
     }
     logsCollection.insert_one(log_entry)

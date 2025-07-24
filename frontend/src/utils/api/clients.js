@@ -29,7 +29,12 @@ export const requestClientsList = async () => {
 	}
 };
 
-export const addClientRequest = async (name, username, expirationDate) => {
+export const addClientRequest = async (
+	username,
+	name,
+	usernameToAdd,
+	expirationDate
+) => {
 	try {
 		const response = await fetch(
 			"http://127.0.0.1:5000/api/clients/actions/add",
@@ -40,8 +45,9 @@ export const addClientRequest = async (name, username, expirationDate) => {
 				},
 				credentials: "include",
 				body: JSON.stringify({
-					name: name,
 					username: username,
+					name: name,
+					usernameToAdd: usernameToAdd,
 					expirationDate: expirationDate,
 				}),
 			}
@@ -95,35 +101,7 @@ export const requestClientByToken = async (token) => {
 	}
 };
 
-export const addIpAddressRequest = async (token, ipAddress) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/add-ip/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ ipAddress: ipAddress }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message: data.message || "IP address added successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Add IP address request failed:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const deleteIpAddressRequest = async (token, ipAddress) => {
+export const deleteIpAddressRequest = async (username, token, ipAddress) => {
 	try {
 		const response = await fetch(
 			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-ip/${token}`,
@@ -133,7 +111,7 @@ export const deleteIpAddressRequest = async (token, ipAddress) => {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-				body: JSON.stringify({ ipAddress: ipAddress }),
+				body: JSON.stringify({ username: username, ipAddress: ipAddress }),
 			}
 		);
 		const data = await response.json();
@@ -147,34 +125,6 @@ export const deleteIpAddressRequest = async (token, ipAddress) => {
 		}
 	} catch (error) {
 		console.error("Delete IP address request failed:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const addIpWhiteListRequest = async (token, ipAddress) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/add-ip-white-list/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ ipAddress: ipAddress }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message: data.message || "IP address added to whitelist successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Add IP whitelist request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -208,35 +158,7 @@ export const deleteIpWhiteListRequest = async (token, ipAddress) => {
 	}
 };
 
-export const addWebsiteRequest = async (token, website) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/add-website/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ website: website }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message: data.message || "Website added successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Add website request failed:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const deleteWebsiteRequest = async (token, website) => {
+export const deleteWebsiteRequest = async (username, token, website) => {
 	try {
 		const response = await fetch(
 			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-website/${token}`,
@@ -246,7 +168,7 @@ export const deleteWebsiteRequest = async (token, website) => {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-				body: JSON.stringify({ website: website }),
+				body: JSON.stringify({ username: username, website: website }),
 			}
 		);
 		const data = await response.json();
@@ -264,35 +186,80 @@ export const deleteWebsiteRequest = async (token, website) => {
 	}
 };
 
-export const addHashRequest = async (token, hash) => {
+export const addItemToList = async (username, token, itemToAdd, listType) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/add-hash/${token}`,
+			`http://127.0.0.1:5000/api/clients/by-token/actions/add-item-list/${token}`,
 			{
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-				body: JSON.stringify({ hash: hash }),
+				body: JSON.stringify({
+					username: username,
+					itemToAdd: itemToAdd,
+					listType: listType,
+				}),
 			}
 		);
 		const data = await response.json();
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "Hash añadido correctamente",
+				message: data.message || "Objeto añadido correctamente",
 			};
 		} else {
 			return { success: false, error: data.error || "Hubo un error" };
 		}
 	} catch (error) {
-		console.error("Hubo un error al añadir el hash:", error);
+		console.error("Hubo un error al añadir el objeto:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
 
-export const modifyExpirationDateRequest = async (token, newExpirationDate) => {
+export const deleteItemFromList = async (
+	username,
+	token,
+	itemToDelete,
+	listType
+) => {
+	try {
+		const response = await fetch(
+			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-item-list/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					itemToAdd: itemToDelete,
+					listType: listType,
+				}),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Objeto eliminado correctamente",
+			};
+		} else {
+			return { success: false, error: data.error || "Hubo un error" };
+		}
+	} catch (error) {
+		console.error("Hubo un error al eliminar el objeto:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const modifyExpirationDateRequest = async (
+	username,
+	token,
+	newExpirationDate
+) => {
 	try {
 		const response = await fetch(
 			`http://127.0.0.1:5000/api/clients/by-token/actions/modify-expiration-date/${token}`,
@@ -302,7 +269,10 @@ export const modifyExpirationDateRequest = async (token, newExpirationDate) => {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-				body: JSON.stringify({ expirationDate: newExpirationDate }),
+				body: JSON.stringify({
+					username: username,
+					expirationDate: newExpirationDate,
+				}),
 			}
 		);
 		const data = await response.json();
@@ -316,6 +286,73 @@ export const modifyExpirationDateRequest = async (token, newExpirationDate) => {
 		}
 	} catch (error) {
 		console.error("Modify expiration date request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const modifyListLimitRequest = async (
+	username,
+	token,
+	newListLimit,
+	listType
+) => {
+	try {
+		const response = await fetch(
+			`http://127.0.0.1:5000/api/clients/by-token/actions/modify-list-limit/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					newListLimit: newListLimit,
+					listType: listType,
+				}),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "List limit modified successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Modify list limit request failed:", error);
+		return { success: false, error: "Request failed" };
+	}
+};
+
+export const regenerateApiKeyRequest = async (username, token) => {
+	try {
+		const response = await fetch(
+			`http://127.0.0.1:5000/api/clients/by-token/actions/regenerate-api-key/${token}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+				}),
+			}
+		);
+		const data = await response.json();
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Api_Key regenerated successfully",
+			};
+		} else {
+			return { success: false, error: data.error || "An error occurred" };
+		}
+	} catch (error) {
+		console.error("Regenerate Api_Key request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };

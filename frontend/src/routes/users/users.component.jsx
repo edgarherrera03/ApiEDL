@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { UsersContainer } from "./users.styles";
 import { requestUsersInformation, deleteUserRequest } from "../../utils/api";
 import UsersList from "../../components/users-list/users-list.component";
+import { UserContext } from "../../context/user.context";
 
 const Users = () => {
 	const [usersInfo, setUsersInfo] = useState([]);
 	const [toggleOpenModal, setToggleOpenModal] = useState(false);
-
+	const { currentUser } = useContext(UserContext);
 	const handleOpenModal = () => {
 		setToggleOpenModal(true);
 	};
@@ -28,26 +29,29 @@ const Users = () => {
 		fetchUsers();
 	}, []);
 
-	const handleDelete = async (username) => {
+	const handleDelete = async (usernameToDelete) => {
 		const confirmed = window.confirm(
-			`¿Estás seguro que que quieres eliminar el usuario de ${username} ?`
+			`¿Estás seguro que que quieres eliminar el usuario de ${usernameToDelete} ?`
 		);
 		if (confirmed) {
-			const { success, message } = await deleteUserRequest(username);
+			const { success, message } = await deleteUserRequest(
+				currentUser["username"],
+				usernameToDelete
+			);
 			if (success) {
 				setUsersInfo((prevUsers) =>
-					prevUsers.filter((user) => user.username !== username)
+					prevUsers.filter((user) => user.username !== usernameToDelete)
 				);
 			} else {
-				alert(message);
+				console.log(message);
 			}
 		}
 	};
 
 	const handleUsersReload = async () => {
-		const data = await requestUsersInformation();
-		if (data) {
-			setUsersInfo(data);
+		const { success, users } = await requestUsersInformation();
+		if (success) {
+			setUsersInfo(users);
 		}
 	};
 

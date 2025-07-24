@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
 	NewClientWindowContainer,
 	NewClientFormInput,
@@ -6,6 +6,7 @@ import {
 } from "./new-client-window.styles";
 import Button from "../button/button.component";
 import { addClientRequest } from "../../utils/api";
+import { UserContext } from "../../context/user.context";
 
 const defaultNewClientFields = {
 	username: "",
@@ -17,6 +18,7 @@ const NewClientWindow = ({ closeWindow, onReloadClients }) => {
 		defaultNewClientFields
 	);
 	const { username, name, expirationDate } = newClientsFields;
+	const { currentUser } = useContext(UserContext);
 
 	const resetNewClientsFields = () => {
 		setNewClientsFields(defaultNewClientFields);
@@ -33,6 +35,7 @@ const NewClientWindow = ({ closeWindow, onReloadClients }) => {
 		);
 		if (confirmed) {
 			const { success } = await addClientRequest(
+				currentUser["username"],
 				name,
 				username,
 				expirationDate

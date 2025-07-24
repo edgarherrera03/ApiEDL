@@ -30,16 +30,22 @@ export const requestUsersInformation = async () => {
 	}
 };
 
-export const deleteUserRequest = async (username) => {
+export const deleteUserRequest = async (username, usernameToDelete) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/actions/delete", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-			body: JSON.stringify({ username: username }),
-		});
+		const response = await fetch(
+			"http://127.0.0.1:5000/api/users/actions/delete",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					usernameToDelete: usernameToDelete,
+				}),
+			}
+		);
 
 		const data = await response.json();
 		if (response.ok) {
@@ -56,20 +62,29 @@ export const deleteUserRequest = async (username) => {
 	}
 };
 
-export const addUserRequest = async (username, password, role) => {
+export const addUserRequest = async (
+	username,
+	usernameToAdd,
+	password,
+	role
+) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/actions/add-user", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				username: username,
-				password: password,
-				role: role,
-			}),
-		});
+		const response = await fetch(
+			"http://127.0.0.1:5000/api/users/actions/add",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					usernameToAdd: usernameToAdd,
+					password: password,
+					role: role,
+				}),
+			}
+		);
 
 		const data = await response.json();
 		if (response.ok) {
@@ -93,19 +108,22 @@ export const modifyUserRequest = async (
 	role
 ) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/actions/modify", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				username: username,
-				password: password,
-				usernameToModify: usernameToModify,
-				role: role,
-			}),
-		});
+		const response = await fetch(
+			"http://127.0.0.1:5000/api/users/actions/modify",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					password: password,
+					usernameToModify: usernameToModify,
+					role: role,
+				}),
+			}
+		);
 
 		const data = await response.json();
 		if (response.ok) {

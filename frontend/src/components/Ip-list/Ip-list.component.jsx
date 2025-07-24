@@ -53,7 +53,7 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 			`La siguiente IP sera añadida:\n\n[IP: ${ipAdress}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newIpFields);
+		const { success } = await handleAdd(newIpFields, "IpList");
 		if (!success) {
 			alert("Hubo un error al añadir la direccion IP");
 			return;

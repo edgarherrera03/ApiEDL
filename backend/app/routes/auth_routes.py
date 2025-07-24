@@ -5,6 +5,7 @@ import jwt
 from app.models.db import usersCollection, usersInfoCollection
 from app.utils.helpers import hashPassword, verifyPassword
 from app.utils.auth import token_verification_required
+from app.utils.helpers import USER_ACTIONS, log_user_action
 from flask import current_app as app
 
 bp = Blueprint('auth', __name__, url_prefix='/api')
@@ -69,4 +70,7 @@ def changePassword():
             {"username": username},
             {"$set": {"password": hashedPassword}}
         )
+        action = USER_ACTIONS['change_password']
+        details = f'Cambio de contraseña del usuario {username}'
+        log_user_action(username, action, details)
         return jsonify({"message": "Password updated successfully"}), 200
