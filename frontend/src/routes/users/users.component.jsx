@@ -7,7 +7,7 @@ import { UserContext } from "../../context/user.context";
 const Users = () => {
 	const [usersInfo, setUsersInfo] = useState([]);
 	const [toggleOpenModal, setToggleOpenModal] = useState(false);
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 	const handleOpenModal = () => {
 		setToggleOpenModal(true);
 	};
@@ -18,23 +18,25 @@ const Users = () => {
 
 	useEffect(() => {
 		const fetchUsers = async () => {
-			const response = await requestUsersInformation();
-			if (response.success) {
-				setUsersInfo(response.users);
+			const { success, users, code, error } = await requestUsersInformation();
+			if (success) {
+				setUsersInfo(users);
+			} else if (code === 401 || code === 403) {
+				await logout();
 			} else {
-				console.log(response.error || "Error fetching users information");
+				console.log(error);
 			}
 		};
 
 		fetchUsers();
-	}, []);
+	}, [logout]);
 
 	const handleDelete = async (usernameToDelete) => {
 		const confirmed = window.confirm(
 			`¿Estás seguro que que quieres eliminar el usuario de ${usernameToDelete} ?`
 		);
 		if (confirmed) {
-			const { success, message } = await deleteUserRequest(
+			const { success, error, code } = await deleteUserRequest(
 				currentUser["username"],
 				usernameToDelete
 			);
@@ -42,16 +44,24 @@ const Users = () => {
 				setUsersInfo((prevUsers) =>
 					prevUsers.filter((user) => user.username !== usernameToDelete)
 				);
+			} else if (code === 401 || code === 403) {
+				await logout();
+			} else if (code === 409) {
+				alert(error);
 			} else {
-				console.log(message);
+				console.log(error);
 			}
 		}
 	};
 
 	const handleUsersReload = async () => {
-		const { success, users } = await requestUsersInformation();
+		const { success, users, code, error } = await requestUsersInformation();
 		if (success) {
 			setUsersInfo(users);
+		} else if (code === 401 || code === 403) {
+			await logout();
+		} else {
+			console.log(error);
 		}
 	};
 

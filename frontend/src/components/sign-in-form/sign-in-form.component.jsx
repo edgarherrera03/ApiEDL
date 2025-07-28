@@ -36,17 +36,16 @@ const SignInForm = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const response = await signInAuthUser(signInFields);
-		if (response.success) {
-			const user = response.user;
+		const { success, user, error, code } = await signInAuthUser(signInFields);
+		if (success) {
 			localStorage.setItem("user", JSON.stringify(user));
 			setIsAuthenticated(true);
 			setCurrentUser(user);
-		} else {
+		} else if (code === 401) {
 			setCurrentUser(null);
 			localStorage.removeItem("user");
 			setIsAuthenticated(false);
-			alert(response.error || "Login failed");
+			alert(error);
 		}
 		resetSignInFields();
 	};

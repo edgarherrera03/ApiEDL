@@ -42,7 +42,7 @@ def login():
         )
         return response
     else:
-        return jsonify({"error" : "Invalid credentials"}), 401
+        return jsonify({"error" : "Usuario o contraseña inválidos"}), 401
 
 @bp.route('/logout',  methods=["POST"])
 @token_verification_required
@@ -63,7 +63,7 @@ def changePassword():
 
     user = usersCollection.find_one({"username": username})
     if not user:
-        return jsonify({"error": "User do not exists"}), 409
+        return jsonify({"error": "El usuario no existe"}), 409
     else:
         hashedPassword = hashPassword(newPassword)
         usersCollection.update_one(
@@ -73,4 +73,4 @@ def changePassword():
         action = USER_ACTIONS['change_password']
         details = f'Cambio de contraseña del usuario {username}'
         log_user_action(username, action, details)
-        return jsonify({"message": "Password updated successfully"}), 200
+        return jsonify({"message": "Contraseña modificada correctamente"}), 200

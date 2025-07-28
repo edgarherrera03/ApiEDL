@@ -9,16 +9,18 @@ export const requestLogs = async () => {
 		});
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok && data) {
 			return {
 				success: true,
-				message: data.message || "Logs information fetched successfully",
+				message: data.message || "Logs recuperados correctamente",
 				logs: data.logs || [],
 			};
 		} else {
 			return {
 				success: false,
-				error: data.error || "Error fetching logs information",
+				error: data.error || "Hubo un error al recuperar los logs",
+				code: code,
 			};
 		}
 	} catch (error) {

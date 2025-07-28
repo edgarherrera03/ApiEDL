@@ -8,20 +8,21 @@ export const requestClientsList = async () => {
 			credentials: "include",
 		});
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok && data) {
 			return {
 				success: true,
-				message: data.message || "Clients Fetched succesfully",
+				message: data.message,
 				clients: data.clients || [],
 			};
 		} else {
 			return {
 				success: false,
-				error: data.error || "Error fetching clients list",
+				error: data.error || "Hubo un error al extraer la lista de clientes",
+				code: code,
 			};
 		}
 	} catch (error) {
-		console.error("Error fetching clients list:", error);
 		return {
 			success: false,
 			error: "Request failed",
@@ -53,19 +54,20 @@ export const addClientRequest = async (
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "Client added successfully",
+				message: data.message || "Cliente añadido correctamente",
 			};
 		} else {
 			return {
 				success: false,
-				error: data.error || "An error occurred",
+				error: data.error || "Hubo un error al añadir al cliente",
+				code: code,
 			};
 		}
 	} catch (error) {
-		console.error("Add client request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -83,105 +85,21 @@ export const requestClientByToken = async (token) => {
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok && data) {
 			return {
 				success: true,
-				message: data.message || "Client fetched successfully",
+				message: data.message,
 				client: data.client || null,
 			};
 		} else {
 			return {
 				success: false,
-				error: data.error || "Error fetching client by token",
+				error: data.error || "Hubo un error al recuperar los datos del cliente",
+				code: code,
 			};
 		}
 	} catch (error) {
-		console.error("Error fetching client by token:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const deleteIpAddressRequest = async (username, token, ipAddress) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-ip/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ username: username, ipAddress: ipAddress }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message: data.message || "IP address deleted successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Delete IP address request failed:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const deleteIpWhiteListRequest = async (token, ipAddress) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-ip-white-list/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ ipAddress: ipAddress }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message:
-					data.message || "IP address removed from whitelist successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Delete IP whitelist request failed:", error);
-		return { success: false, error: "Request failed" };
-	}
-};
-
-export const deleteWebsiteRequest = async (username, token, website) => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/delete-website/${token}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ username: username, website: website }),
-			}
-		);
-		const data = await response.json();
-		if (response.ok) {
-			return {
-				success: true,
-				message: data.message || "Website deleted successfully",
-			};
-		} else {
-			return { success: false, error: data.error || "An error occurred" };
-		}
-	} catch (error) {
-		console.error("Delete website request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -204,13 +122,18 @@ export const addItemToList = async (username, token, itemToAdd, listType) => {
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
 				message: data.message || "Objeto añadido correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "Hubo un error" };
+			return {
+				success: false,
+				error: data.error,
+				code: code,
+			};
 		}
 	} catch (error) {
 		console.error("Hubo un error al añadir el objeto:", error);
@@ -241,13 +164,14 @@ export const deleteItemFromList = async (
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
 				message: data.message || "Objeto eliminado correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "Hubo un error" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
 		console.error("Hubo un error al eliminar el objeto:", error);
@@ -276,16 +200,16 @@ export const modifyExpirationDateRequest = async (
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "Expiration date modified successfully",
+				message: data.message || "Fecha de expiración modificada correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Modify expiration date request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -313,16 +237,16 @@ export const modifyListLimitRequest = async (
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "List limit modified successfully",
+				message: data.message || "Limite de lista modificado correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Modify list limit request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -343,16 +267,16 @@ export const regenerateApiKeyRequest = async (username, token) => {
 			}
 		);
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "Api_Key regenerated successfully",
+				message: data.message || "Api_Key regenerada correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Regenerate Api_Key request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };

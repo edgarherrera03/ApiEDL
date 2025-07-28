@@ -6,11 +6,12 @@ import {
 	CustomButton,
 } from "./ip-list.styles";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
+import { UserContext } from "../../context/user.context";
 
 const defaulNewIpFields = {
-	ipAdress: "",
+	element: "",
 	classification: "",
 	ipRating: "",
 	blocked: "",
@@ -19,8 +20,9 @@ const defaulNewIpFields = {
 const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 	const [newIpFields, setNewIpFields] = useState(defaulNewIpFields);
 	const [formVisible, setFormVisible] = useState(false);
+	const { logout } = useContext(UserContext);
 
-	const { ipAdress, classification, ipRating, blocked } = newIpFields;
+	const { element, classification, ipRating, blocked } = newIpFields;
 	const headersList = [
 		"Dirección IP",
 		"Clasificación",
@@ -29,7 +31,7 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 		"Ultima Modificación",
 	];
 	const orderList = [
-		"ipAdress",
+		"element",
 		"classification",
 		"ipRating",
 		"blocked",
@@ -50,13 +52,16 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const confirmed = window.confirm(
-			`La siguiente IP sera añadida:\n\n[IP: ${ipAdress}]\n\n¿Confirmar?`
+			`La siguiente IP sera añadida:\n\n[IP: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newIpFields, "IpList");
-		if (!success) {
-			alert("Hubo un error al añadir la direccion IP");
-			return;
+		const { success, error, code } = await handleAdd(newIpFields, "IpList");
+		if (!success && code === 404) {
+			console.log(error || "No se encontró al cliente");
+		} else if (code === 409) {
+			alert("La IP que se intentó añadir ya existe");
+		} else if (code === 403 || code === 401) {
+			await logout();
 		}
 		resetNewIpFields();
 		reloadIpItemList();
@@ -75,15 +80,15 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 
 				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
-						name="ipAdress"
+						name="element"
 						required
-						value={ipAdress}
+						value={element}
 						onChange={handleChange}
 						type="text"
 						minLength="7"
 						maxLength="15"
 						pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$"
-						placeholder="Direccion IPv4"
+						placeholder="Dirección IPv4"
 					/>
 					<select
 						name="classification"
@@ -103,7 +108,7 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 						max={100}
 						value={ipRating}
 						onChange={handleChange}
-						placeholder="Calificacion"
+						placeholder="Calificación"
 					/>
 					<select
 						name="blocked"
@@ -127,16 +132,3 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 };
 
 export default IpList;
-
-// const handleDeleteItem = async (ipItem) => {
-// 	const confirmed = window.confirm(
-// 		`La siguiente IP sera eliminada:\n\n[IP: ${ipItem}]\n\n¿Confirmar?`
-// 	);
-// 	if (!confirmed) return;
-// 	const { success } = await handleDelete(ipItem);
-// 	if (!success) {
-// 		alert("There was an error deleting the IP address");
-// 		return;
-// 	}
-// 	reloadIpItemList();
-// };

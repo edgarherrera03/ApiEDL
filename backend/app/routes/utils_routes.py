@@ -16,10 +16,10 @@ def getLogs():
             "timestamp": log['timestamp'],
         })
     if response:
-        sorted_logs = sorted(response, key=lambda x: x["timestamp"], reverse=True)
+        sorted_logs = sorted(response, key=lambda x: x["timestamp"])
         return jsonify({'message': 'Logs information fetched', 'logs': sorted_logs}), 200
     else:
-        return jsonify({'error': 'No logs found'}), 404
+        return jsonify({'error': 'No se encontraron los logs'}), 404
 
 @bp.route('/edls/get_edl', methods=['GET'])
 def get_edl():
@@ -29,15 +29,6 @@ def get_edl():
 
     if not all([listType, username, api_key]):
         return render_template('not_found.template.html', message="Missing required parameters"), 400
-
-    list_mapping = {
-    'IpList': 'ipAdress',
-    'WebsiteList': 'domain',
-    'HashList': 'hash'
-    }
-    itemToAdd = list_mapping.get(listType)
-    if not itemToAdd:
-        return render_template('not_found.template.html', message="Lista solicitada no encontrada"), 404
 
     client = clientsCollection.find_one({'username': username})
     if not client:
@@ -50,7 +41,7 @@ def get_edl():
     itemBlockedList = []
     for item in client[listType]['info']:
         if item['blocked']:
-            itemBlockedList.append(item[itemToAdd])
+            itemBlockedList.append(item['element'])
         else: 
             pass
 

@@ -19,7 +19,7 @@ const defaultModifyFields = {
 const ModifyWindow = ({ closeWindow, onReloadUsers, usernameToModify }) => {
 	const [modifyFields, setModifyFields] = useState(defaultModifyFields);
 	const { role, password } = modifyFields;
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 	const username = currentUser["username"];
 
 	const resetModifyFields = () => {
@@ -36,13 +36,18 @@ const ModifyWindow = ({ closeWindow, onReloadUsers, usernameToModify }) => {
 			`Los accesos del siguiente usuario serán modificados:\n\n[usuario: ${usernameToModify}, rol: ${role}]\n\n¿Confirmar?`
 		);
 		if (confirmed) {
-			const { success, message } = await modifyUserRequest(
+			const { success, error, code } = await modifyUserRequest(
 				username,
 				password,
 				usernameToModify,
 				role
 			);
-			if (!success) alert(message);
+			if (code === 400) alert(error);
+			else if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
 		}
 		resetModifyFields();
 		closeWindow();

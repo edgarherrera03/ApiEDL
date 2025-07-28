@@ -18,7 +18,7 @@ const NewClientWindow = ({ closeWindow, onReloadClients }) => {
 		defaultNewClientFields
 	);
 	const { username, name, expirationDate } = newClientsFields;
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 
 	const resetNewClientsFields = () => {
 		setNewClientsFields(defaultNewClientFields);
@@ -34,13 +34,19 @@ const NewClientWindow = ({ closeWindow, onReloadClients }) => {
 			`El cliente siguiente sera añadido:\n\n[cliente: ${name}, usuario: ${username}, fecha de expiración: ${expirationDate}]\n\n¿Confirmar?`
 		);
 		if (confirmed) {
-			const { success } = await addClientRequest(
+			const { success, code, error } = await addClientRequest(
 				currentUser["username"],
 				name,
 				username,
 				expirationDate
 			);
-			if (!success) alert("There was an error adding the client");
+			if (!success && code === 409) {
+				alert(error);
+			} else if (!success && code === 500) {
+				console.log("Hubo un error al añadir el cliente:");
+			} else if (code === 403 || code === 401) {
+				await logout();
+			}
 		}
 		resetNewClientsFields();
 		closeWindow();

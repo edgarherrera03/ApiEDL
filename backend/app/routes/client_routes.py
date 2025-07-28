@@ -26,7 +26,7 @@ def getClients():
     if clients:
         return jsonify({"message": "Clients fetched successfully", "clients": clients}), 200
     else:
-        return jsonify({"error": "No clients found"}), 404
+        return jsonify({"error": "No se encontraron ningun cliente"}), 404
 
 @bp.route('/actions/add', methods=['POST'])
 @token_verification_required  
@@ -44,7 +44,7 @@ def addClient():
     
 
     if clientsCollection.find_one({"username": usernameToAdd}):
-        return jsonify({"error": "Client already exists"}), 409
+        return jsonify({"error": "El cliente que se intento añadir ya existe"}), 409
     
     clientId = clientsCollection.count_documents({}) + 1
     clientToken = generate_unique_client_token()
@@ -77,7 +77,7 @@ def addClient():
 def getClientByToken(clientToken):
     client = clientsCollection.find_one({"clientToken": clientToken})
     if client:
-        return jsonify({"message": "Client found", 'client': {
+        return jsonify({"message": "Client encontrado", 'client': {
             "id": client.get('id', None),
             "name": client.get('name', None),
             "username": client['username'],
@@ -91,7 +91,7 @@ def getClientByToken(clientToken):
             "apiKey": client.get('apiKey', None),
         }}), 200
     else:
-        return jsonify({"error": "Client not found"}), 404
+        return jsonify({"error": "Cliente no encontrado"}), 404
 
 @bp.route('/by-token/actions/add-item-list/<clientToken>', methods=['POST'])
 @token_verification_required
@@ -107,10 +107,11 @@ def addItem(clientToken):
 
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
-        return jsonify({"error": "Client not found"}), 404
+        return jsonify({"error": "Cliente no encontrado"}), 404
 
-    if itemToAdd in client[listType]['info']:
-        return jsonify({"error": "Item already exists"}), 409
+    for item in client[listType]['info']:
+        if itemToAdd['element'] == item['element'] :
+            return jsonify({"error": "El elemento ya existe"}), 409
 
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     clientsCollection.update_one(
@@ -128,7 +129,7 @@ def addItem(clientToken):
     action = USER_ACTIONS['add_item_to_list']
     details = f'Se añadió {itemToAdd} a la lista {listType} del cliente {client['username']}'
     log_user_action(username, action, details)
-    return jsonify({"message": "Item added successfully"}), 200
+    return jsonify({"message": "Elemento añadido correctamente"}), 200
 
 @bp.route('/by-token/actions/delete-item-list/<clientToken>', methods=['POST'])
 @token_verification_required
@@ -143,13 +144,10 @@ def deleteItem(clientToken):
 
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
-        return jsonify({"error": "Client not found"}), 404
-
-    if not itemToDelete in client[listType]['info']:
-        return jsonify({"error": "Item don't exists"}), 409
+        return jsonify({"error": "Client no encontrado"}), 404
 
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
-    clientsCollection.update_one(
+    result = clientsCollection.update_one(
         {"clientToken": clientToken},
         {
             "$pull": {
@@ -160,11 +158,13 @@ def deleteItem(clientToken):
             }
         }
     )
+    if result.modified_count == 0:
+        return jsonify({"error": "Elemento no encontrado o ya fue eliminado."}), 404
 
     action = USER_ACTIONS['delete_item_from_list']
     details = f'Se eliminó {itemToDelete} de la lista {listType} del cliente {client['username']}'
     log_user_action(username, action, details)
-    return jsonify({"message": "Item deleted successfully"}), 200
+    return jsonify({"message": "Elemento eliminado de manera correcta"}), 200
 
 @bp.route('/by-token/actions/modify-expiration-date/<clientToken>', methods=['POST'])
 @token_verification_required
@@ -177,7 +177,7 @@ def modifyExpirationDate(clientToken):
 
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
-        return jsonify({"error": "Client not found"}), 404
+        return jsonify({"error": "Client no encontrado"}), 404
 
     clientsCollection.update_one(
         {"clientToken": clientToken},
@@ -223,7 +223,7 @@ def regenerateApiKey(clientToken):
     newApiKey = generate_unique_api_key()
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
-        return jsonify({"error": "Client not found"}), 404
+        return jsonify({"error": "Cliente no encontrado"}), 404
     
     clientsCollection.update_one(
         {"clientToken": clientToken},
@@ -233,5 +233,5 @@ def regenerateApiKey(clientToken):
     details = f'La Api_Key del cliente {client['username']} fue regenerada'
     log_user_action(username, action, details)
 
-    return jsonify({"message": "Api Key regenerated successfully"}), 200
+    return jsonify({"message": "Se regeneró la Api Key correctamente."}), 200
     

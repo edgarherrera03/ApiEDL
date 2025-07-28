@@ -1,33 +1,13 @@
-import { useContext, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
 import { UserContext } from "../../context/user.context";
-import { tokenVerification, logoutAuthUser } from "../../utils/api";
+import Spinner from "../../components/spinner/spinner.component";
 
 const RequireAuth = ({ children }) => {
-	const location = useLocation();
-	const { isAuthenticated, setIsAuthenticated, loading, setCurrentUser } =
-		useContext(UserContext);
-	useEffect(() => {
-		const logout = async () => {
-			setCurrentUser(null);
-			setIsAuthenticated(false);
-			localStorage.removeItem("user");
-			await logoutAuthUser();
-		};
-		const verifyToken = async () => {
-			const { success } = await tokenVerification();
-			if (success) {
-				setIsAuthenticated(true);
-				const storedUser = JSON.parse(localStorage.getItem("user"));
-				setCurrentUser(storedUser);
-			} else {
-				logout();
-			}
-		};
-		verifyToken();
-	}, [location.pathname, setCurrentUser, setIsAuthenticated]);
+	const { isAuthenticated, loading } = useContext(UserContext);
 
-	if (loading) return null;
+	if (loading) return <Spinner />;
+
 	if (!isAuthenticated) {
 		return <Navigate to="/" replace />;
 	}

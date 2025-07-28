@@ -22,7 +22,7 @@ const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 	const [newUserFields, setNewUserFields] = useState(defaultNewUserFields);
 	const [messageLabel, setMessageLabel] = useState("");
 	const { usernameToAdd, role, password, confirmPassword } = newUserFields;
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 
 	const resetNewUserFields = () => {
 		setNewUserFields(defaultNewUserFields);
@@ -83,13 +83,21 @@ const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 			`El siguiente usuario se añadirá a la base de datos:\n\n[usuario: ${usernameToAdd}, rol: ${role}]\n\n¿Confirmar?`
 		);
 		if (confirmed) {
-			const { success, message } = await addUserRequest(
+			const { success, error, code } = await addUserRequest(
 				currentUser["username"],
 				usernameToAdd,
 				password,
 				role
 			);
-			if (!success) alert(message);
+			if (code === 401 || code === 403) {
+				await logout();
+			} else if (code === 409) {
+				alert(error);
+			} else if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
 		}
 		resetNewUserFields();
 		closeWindow();

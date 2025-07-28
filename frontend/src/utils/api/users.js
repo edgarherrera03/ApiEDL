@@ -9,6 +9,7 @@ export const requestUsersInformation = async () => {
 		});
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok && data) {
 			return {
 				success: true,
@@ -19,6 +20,7 @@ export const requestUsersInformation = async () => {
 			return {
 				success: false,
 				error: data.error || "Error fetching users information",
+				code: code,
 			};
 		}
 	} catch (error) {
@@ -48,16 +50,16 @@ export const deleteUserRequest = async (username, usernameToDelete) => {
 		);
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "User deleted successfully",
+				message: data.message || "Usuario eliminado correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Delete request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -87,16 +89,16 @@ export const addUserRequest = async (
 		);
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "User added successfully",
+				message: data.message || "User añadido correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Add request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -126,16 +128,16 @@ export const modifyUserRequest = async (
 		);
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
-				message: data.message || "User modified successfully",
+				message: data.message || "User modificado correctamente",
 			};
 		} else {
-			return { success: false, error: data.error || "An error occurred" };
+			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Modify request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };

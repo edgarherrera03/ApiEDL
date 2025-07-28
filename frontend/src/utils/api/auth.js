@@ -10,20 +10,21 @@ export const signInAuthUser = async (signInFields) => {
 		});
 
 		const data = await response.json();
+		const code = response.status;
 		if (response.ok && data) {
 			return {
 				success: true,
-				message: data.message || "Login successful",
+				message: data.message,
 				user: data.user || null,
 			};
 		} else {
 			return {
 				success: false,
-				error: data.error || "Login failed",
+				error: data.error,
+				code: code,
 			};
 		}
 	} catch (error) {
-		console.error("Error sending login data:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
@@ -84,7 +85,7 @@ export const changePasswordRequest = async (username, newPassword) => {
 		});
 
 		const data = await response.json();
-
+		const code = response.status;
 		if (response.ok) {
 			return {
 				success: true,
@@ -93,11 +94,11 @@ export const changePasswordRequest = async (username, newPassword) => {
 		} else {
 			return {
 				success: false,
-				message: data.message || "Error changing password",
+				error: data.error || "Error changing password",
+				code: code,
 			};
 		}
 	} catch (error) {
-		console.error("Change password request failed:", error);
 		return { success: false, error: "Request failed" };
 	}
 };

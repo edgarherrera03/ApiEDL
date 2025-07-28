@@ -32,6 +32,9 @@ const ScrollList = ({ headersList, ordersList, itemList, height = "" }) => {
 								</Info>
 							))}
 						</Item>
+						{/* <ItemDetails>
+							<p><span>Comentarios:</span></p>
+						</ItemDetails> */}
 					</>
 				))}
 			</ScollListInformation>

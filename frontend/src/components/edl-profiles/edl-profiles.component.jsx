@@ -40,7 +40,7 @@ const profiles = [
 const EdlProfiles = ({ client, token, onReloadClients }) => {
 	const [copiedList, setCopiedList] = useState(null);
 	const [listLimits, setListLimits] = useState({});
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 	const username = client.username;
 	const apiKey = client.apiKey;
 
@@ -73,13 +73,20 @@ const EdlProfiles = ({ client, token, onReloadClients }) => {
 		);
 
 		if (confirmed) {
-			const { success, message } = await modifyListLimitRequest(
+			const { success, error, code } = await modifyListLimitRequest(
 				currentUser["username"],
 				token,
 				limit,
 				listTitle
 			);
-			if (!success) alert(message);
+			if (!success && code === 400) {
+				alert(error);
+			} else if (code === 403 || code === 401) {
+				await logout();
+			} else {
+				console.log(error);
+			}
+
 			setListLimits((prev) => ({ ...prev, [listTitle]: "" }));
 			onReloadClients();
 		}

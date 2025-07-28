@@ -10,7 +10,7 @@ import { useState } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 
 const defaulNewHashFields = {
-	hash: "",
+	element: "",
 	programName: "",
 	classification: "",
 	hashRating: "",
@@ -21,7 +21,7 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 	const [newHashFields, setNewHashFields] = useState(defaulNewHashFields);
 	const [formVisible, setFormVisible] = useState(false);
 
-	const { hash, programName, classification, hashRating, blocked } =
+	const { element, programName, classification, hashRating, blocked } =
 		newHashFields;
 	const headersList = [
 		"Hash",
@@ -32,7 +32,7 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 		"Ultima Modificación",
 	];
 	const orderList = [
-		"hash",
+		"element",
 		"programName",
 		"classification",
 		"hashRating",
@@ -54,7 +54,7 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const confirmed = window.confirm(
-			`El siguiente hash sera añadido:\n\n[Hash: ${hash}]\n\n¿Confirmar?`
+			`El siguiente hash sera añadido:\n\n[Hash: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
 		const { success } = await handleAdd(newHashFields, "HashList");
@@ -79,9 +79,9 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 
 				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
-						name="hash"
+						name="element"
 						required
-						value={hash}
+						value={element}
 						onChange={handleChange}
 						type="text"
 						placeholder="Hash"

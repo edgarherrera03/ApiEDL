@@ -66,12 +66,14 @@ const UserInfo = ({ openModal }) => {
 			);
 			if (confirmed) {
 				const username = currentUser["username"];
-				const { success, message } = await changePasswordRequest(
+				const { success, error, code } = await changePasswordRequest(
 					username,
 					password
 				);
-				if (!success) {
-					alert(message);
+				if (code === 401 || code === 403) {
+					await logout();
+				} else if (!success) {
+					alert(error);
 				}
 			}
 		} else {

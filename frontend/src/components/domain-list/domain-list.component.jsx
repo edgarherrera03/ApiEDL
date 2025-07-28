@@ -10,7 +10,7 @@ import { useState } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 
 const defaulNewDomainFields = {
-	domain: "",
+	element: "",
 	classification: "",
 	ipRating: "",
 	blocked: "",
@@ -20,7 +20,7 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 	const [newDomainFields, setNewDomainFields] = useState(defaulNewDomainFields);
 	const [formVisible, setFormVisible] = useState(false);
 
-	const { domain, classification, ipRating, blocked } = newDomainFields;
+	const { element, classification, ipRating, blocked } = newDomainFields;
 	const headersList = [
 		"Dominio",
 		"Clasificación",
@@ -29,7 +29,7 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 		"Ultima Modificación",
 	];
 	const orderList = [
-		"domain",
+		"element",
 		"classification",
 		"ipRating",
 		"blocked",
@@ -50,7 +50,7 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const confirmed = window.confirm(
-			`El siguiente dominio sera añadida:\n\n[Dominio: ${domain}]\n\n¿Confirmar?`
+			`El siguiente dominio sera añadida:\n\n[Dominio: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
 		const { success } = await handleAdd(newDomainFields, "WebsiteList");
@@ -75,9 +75,9 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 
 				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
-						name="domain"
+						name="element"
 						required
-						value={domain}
+						value={element}
 						onChange={handleChange}
 						type="text"
 						minLength="4"

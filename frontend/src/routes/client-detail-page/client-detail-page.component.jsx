@@ -17,26 +17,29 @@ import IpList from "../../components/ip-list/ip-list.component";
 import DomainList from "../../components/domain-list/domain-list.component";
 import HashList from "../../components/hash-list/hash-list.component";
 import EdlProfiles from "../../components/edl-profiles/edl-profiles.component";
+import Spinner from "../../components/spinner/spinner.component";
 import { UserContext } from "../../context/user.context";
 
 const ClientDetailPage = () => {
 	const { token } = useParams();
 	const [client, setClient] = useState(null);
 	const [selectedRoute, setSelectedRoute] = useState(CLIENT_ROUTES.general);
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 
 	useEffect(() => {
 		const fetchClient = async () => {
 			const response = await requestClientByToken(token);
 			if (response.success) {
 				setClient(response.client);
-			} else {
-				alert(response.error || "Error fetching client details");
+			} else if (response.code === 404) {
+				console.log(response.error || "No se encontro al cliente");
+			} else if (response.code === 403 || response.code === 401) {
+				await logout();
 			}
 		};
 
 		fetchClient();
-	}, [token]);
+	}, [token, logout]);
 
 	const handleSelectRoute = (route) => {
 		setSelectedRoute(route);
@@ -46,8 +49,12 @@ const ClientDetailPage = () => {
 		const response = await requestClientByToken(token);
 		if (response.success) {
 			setClient(response.client);
+		} else if (response.code === 404) {
+			console.log(response.error || "No se encontro al cliente");
+		} else if (response.code === 403 || response.code === 401) {
+			await logout();
 		} else {
-			alert(response.error || "Error reloading client details");
+			console.log(response.error);
 		}
 	};
 
@@ -71,7 +78,7 @@ const ClientDetailPage = () => {
 		return response;
 	};
 
-	if (!client) return <p>Loading...</p>;
+	if (!client) return <Spinner />;
 
 	return (
 		<ClientDetailPageContainer>

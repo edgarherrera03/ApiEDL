@@ -15,9 +15,9 @@ def getUsersInfo():
             "role": user['role'], 
         })
     if response:
-        return jsonify({'message': 'User information fetched', 'users': response}), 200
+        return jsonify({'message': 'Informacion de usuarios recuperada correctamente', 'users': response}), 200
     else:
-        return jsonify({'error': 'No logs found'}), 404
+        return jsonify({'error': 'No se encontro ninguna info'}), 404
     
 @bp.route("/actions/delete", methods=['POST'])
 @token_verification_required
@@ -32,7 +32,7 @@ def deleteUser():
     user = usersCollection.find_one({"username": usernameToDelete})
     userInfo = usersInfoCollection.find_one({"username": usernameToDelete})
     if not user or not userInfo:
-        return jsonify({"error": "User does not exist"}), 409
+        return jsonify({"error": "El usuario no existe o ya fue eliminado"}), 409
 
     resultUser = usersCollection.delete_one({"username": usernameToDelete})
     resultsUserInfo = usersInfoCollection.delete_one({"username": usernameToDelete})
@@ -40,9 +40,9 @@ def deleteUser():
         action = USER_ACTIONS['delete_user']
         details = f'Se eliminó al usuario {usernameToDelete}'
         log_user_action(username, action, details)
-        return jsonify({"message": f"User '{usernameToDelete}' successfully deleted."}), 200
+        return jsonify({"message": f"Usuario '{usernameToDelete}' eliminado correctamente."}), 200
     else:
-        return jsonify({"error": "Deletion failed"}), 500
+        return jsonify({"error": "Hubo un error al elminar al usuario"}), 500
 
 @bp.route('/actions/add', methods=['POST'])
 @token_verification_required
@@ -57,7 +57,7 @@ def addUser():
         return jsonify({"error": "Missing fields"}), 400
 
     if usersCollection.find_one({"username": usernameToAdd}):
-        return jsonify({"error": "User already exists"}), 409
+        return jsonify({"error": "El usuario ya existe"}), 409
     
     hashedPassword = hashPassword(password)
     usersCollection.insert_one({"username": usernameToAdd, "password": hashedPassword})
@@ -85,7 +85,7 @@ def modifyUser():
     
     user = usersCollection.find_one({'username': username})
     if not verifyPassword(password, user['password']):
-        return jsonify({'error': 'Incorrect Password'})
+        return jsonify({'error': 'Contraseña incorrecta'}), 400
 
     try:
         usersInfoCollection.update_one({'username': usernameToModify},
@@ -93,6 +93,6 @@ def modifyUser():
         action = USER_ACTIONS['modify_user']
         details = f'Rol de {usernameToModify} actualizado a {role}'
         log_user_action(username, action, details)
-        return jsonify({'message': 'User accesses updated succesfully'})
+        return jsonify({'message': 'Los accesos del usuario fueron modificados correctamente'}), 200
     except:
-        return jsonify({'error': 'Error updating the user accesses'})
+        return jsonify({'error': 'Hubo un error al modificar el rol del usuario'}), 500

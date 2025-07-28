@@ -15,14 +15,13 @@ export const UserProvider = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [loading, setLoading] = useState(true);
 
+	const logout = async () => {
+		setCurrentUser(null);
+		setIsAuthenticated(false);
+		localStorage.removeItem("user");
+		await logoutAuthUser();
+	};
 	useEffect(() => {
-		const logout = async () => {
-			setCurrentUser(null);
-			setIsAuthenticated(false);
-			localStorage.removeItem("user");
-			await logoutAuthUser();
-		};
-
 		const verifyToken = async () => {
 			const { success } = await tokenVerification();
 			if (success) {
@@ -43,6 +42,7 @@ export const UserProvider = ({ children }) => {
 		isAuthenticated,
 		setIsAuthenticated,
 		loading,
+		logout,
 	};
 
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

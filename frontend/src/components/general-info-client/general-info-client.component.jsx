@@ -9,13 +9,15 @@ import {
 import { useContext, useState } from "react";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import Button from "../button/button.component";
-import { modifyExpirationDateRequest } from "../../utils/api";
+import {
+	modifyExpirationDateRequest,
+	regenerateApiKeyRequest,
+} from "../../utils/api";
 import { UserContext } from "../../context/user.context";
-import { regenerateApiKeyRequest } from "../../utils/api";
 
 const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 	const [expirationDate, setExpirationDate] = useState("");
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 	const handleSubmitExpirationDate = async (event) => {
 		event.preventDefault();
 		const newDate = event.target.elements[0].value;
@@ -30,8 +32,10 @@ const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 		);
 		if (response.success) {
 			reloadClientDetails();
+		} else if (response.code === 403 || response.code === 401) {
+			await logout();
 		} else {
-			alert(response.error || "Se produjo un error al modificar la fecha");
+			console.log(response.error);
 		}
 		setExpirationDate("");
 	};
@@ -52,6 +56,8 @@ const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 		);
 		if (response.success) {
 			reloadClientDetails();
+		} else if (response.code === 403 || response.code === 401) {
+			await logout();
 		} else {
 			console.log(
 				response.error || "Se produjo un error al regenerar la Api_Key"
