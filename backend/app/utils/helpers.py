@@ -1,6 +1,6 @@
 import secrets
 import bcrypt
-from ..models.db import clientsCollection
+from ..models.db import clientsCollection, ipCollection, hashCollection, domainCollection
 from ..models.db import logsCollection
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -39,6 +39,12 @@ USER_ACTIONS = {
     'change_password': 'Cambio de contraseña',
     'modify_list_limit': 'Modificó el limite de una lista',
     'regenerate_api_key': 'Regeneró una Api_Key',
+}
+
+COLLECTIONS = {
+    'IpList': ipCollection,
+    'WebsiteList': domainCollection,
+    'HashList': hashCollection
 }
 
 def log_user_action(username, action, details):

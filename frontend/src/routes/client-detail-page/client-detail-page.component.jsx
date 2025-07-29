@@ -25,16 +25,19 @@ const ClientDetailPage = () => {
 	const [client, setClient] = useState(null);
 	const [selectedRoute, setSelectedRoute] = useState(CLIENT_ROUTES.general);
 	const { currentUser, logout } = useContext(UserContext);
-
 	useEffect(() => {
 		const fetchClient = async () => {
-			const response = await requestClientByToken(token);
-			if (response.success) {
-				setClient(response.client);
-			} else if (response.code === 404) {
-				console.log(response.error || "No se encontro al cliente");
-			} else if (response.code === 403 || response.code === 401) {
+			const { success, client, code, error } = await requestClientByToken(
+				token
+			);
+			if (success) {
+				setClient(client);
+			} else if (code === 404) {
+				console.log(error || "No se encontro al cliente");
+			} else if (code === 403 || code === 401) {
 				await logout();
+			} else {
+				console.log(error);
 			}
 		};
 
@@ -46,22 +49,22 @@ const ClientDetailPage = () => {
 	};
 
 	const reloadClientDetails = async () => {
-		const response = await requestClientByToken(token);
-		if (response.success) {
-			setClient(response.client);
-		} else if (response.code === 404) {
-			console.log(response.error || "No se encontro al cliente");
-		} else if (response.code === 403 || response.code === 401) {
+		const { success, client, code, error } = await requestClientByToken(token);
+		if (success) {
+			setClient(client);
+		} else if (code === 404) {
+			console.log(error || "No se encontro al cliente");
+		} else if (code === 403 || code === 401) {
 			await logout();
 		} else {
-			console.log(response.error);
+			console.log(error);
 		}
 	};
 
 	const handleAdd = async (itemFields, listType) => {
 		const response = await addItemToList(
 			currentUser["username"],
-			token,
+			client["username"],
 			itemFields,
 			listType
 		);
@@ -71,7 +74,7 @@ const ClientDetailPage = () => {
 	const handleDelete = async (itemToDelete, listType) => {
 		const response = await deleteItemFromList(
 			currentUser["username"],
-			token,
+			client["username"],
 			itemToDelete,
 			listType
 		);
@@ -106,23 +109,26 @@ const ClientDetailPage = () => {
 				)}
 				{selectedRoute === CLIENT_ROUTES.ipList && (
 					<IpList
-						reloadIpItemList={reloadClientDetails}
+						reloadClientDetails={reloadClientDetails}
 						handleAdd={handleAdd}
-						ipList={client.IpList.info}
+						handleDelete={handleDelete}
+						clientUsername={client["username"]}
 					/>
 				)}
 				{selectedRoute === CLIENT_ROUTES.domainList && (
 					<DomainList
-						reloadDomainItemList={reloadClientDetails}
+						reloadClientDetails={reloadClientDetails}
 						handleAdd={handleAdd}
-						domainList={client.WebsiteList.info}
+						handleDelete={handleDelete}
+						clientUsername={client["username"]}
 					/>
 				)}
 				{selectedRoute === CLIENT_ROUTES.hashList && (
 					<HashList
-						reloadHashItemList={reloadClientDetails}
+						reloadClientDetails={reloadClientDetails}
 						handleAdd={handleAdd}
-						hashList={client.HashList.info}
+						handleDelete={handleDelete}
+						clientUsername={client["username"]}
 					/>
 				)}
 			</ClientDetailContentContainer>

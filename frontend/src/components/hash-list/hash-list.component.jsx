@@ -6,8 +6,10 @@ import {
 	CustomButton,
 } from "./hash-list.styles";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
+import { UserContext } from "../../context/user.context";
+import { getItems } from "../../utils/api";
 
 const defaulNewHashFields = {
 	element: "",
@@ -17,9 +19,16 @@ const defaulNewHashFields = {
 	blocked: "",
 };
 
-const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
+const HashList = ({
+	handleAdd,
+	handleDelete,
+	clientUsername,
+	reloadClientDetails,
+}) => {
 	const [newHashFields, setNewHashFields] = useState(defaulNewHashFields);
 	const [formVisible, setFormVisible] = useState(false);
+	const [hashList, setHashList] = useState([]);
+	const { logout } = useContext(UserContext);
 
 	const { element, programName, classification, hashRating, blocked } =
 		newHashFields;
@@ -40,6 +49,22 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 		"lastUpdate",
 	];
 
+	const fetchHash = async () => {
+		const { success, error, code, items } = await getItems("HashList");
+		if (success) {
+			setHashList(
+				items.filter((hash) => hash.clients.includes(clientUsername))
+			);
+		} else if (code === 401 || code === 403) {
+			await logout();
+		} else {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchHash();
+	}, []);
 	const resetNewHashFields = () => setNewHashFields(defaulNewHashFields);
 
 	const handleChange = (event) => {
@@ -63,7 +88,27 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 			return;
 		}
 		resetNewHashFields();
-		reloadHashItemList();
+		fetchHash();
+		reloadClientDetails();
+	};
+	const handleDeleteHash = async (itemToDelete) => {
+		const confirmed = window.confirm(
+			`El Hash siguiente sera eliminada:\n\n[Hash: ${itemToDelete}]\n\n¿Confirmar?`
+		);
+		if (!confirmed) return;
+		const { success, error, code } = await handleDelete(
+			itemToDelete,
+			"HashList"
+		);
+		if (code === 401 || code === 403) {
+			await logout();
+		} else if (code === 404) {
+			alert(error);
+		} else if (!success) {
+			console.log(error);
+		}
+		fetchHash();
+		reloadClientDetails();
 	};
 	return (
 		<HashListContainer>
@@ -130,6 +175,7 @@ const HashList = ({ handleAdd, reloadHashItemList, hashList }) => {
 				headersList={headersList}
 				ordersList={orderList}
 				itemList={hashList}
+				handleDelete={handleDeleteHash}
 			/>
 		</HashListContainer>
 	);

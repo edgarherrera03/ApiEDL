@@ -3,7 +3,6 @@ from app.models.db import clientsCollection
 from app.utils.auth import token_verification_required
 from app.utils.helpers import generate_unique_api_key, generate_unique_client_token, USER_ACTIONS, log_user_action
 from datetime import timezone, datetime
-from zoneinfo import ZoneInfo
 
 bp = Blueprint('clients', __name__, url_prefix='/api/clients')
 
@@ -92,79 +91,6 @@ def getClientByToken(clientToken):
         }}), 200
     else:
         return jsonify({"error": "Cliente no encontrado"}), 404
-
-@bp.route('/by-token/actions/add-item-list/<clientToken>', methods=['POST'])
-@token_verification_required
-def addItem(clientToken):
-    data = request.get_json()
-    username = data['username']
-    listType = data['listType']
-    itemToAdd = data['itemToAdd']
-    itemToAdd["lastUpdate"] = datetime.today().strftime('%Y-%m-%d')
-    
-    if not itemToAdd or not username or not listType:
-        return jsonify({"error": "Missing fields"}), 400
-
-    client = clientsCollection.find_one({"clientToken": clientToken})
-    if not client:
-        return jsonify({"error": "Cliente no encontrado"}), 404
-
-    for item in client[listType]['info']:
-        if itemToAdd['element'] == item['element'] :
-            return jsonify({"error": "El elemento ya existe"}), 409
-
-    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
-    clientsCollection.update_one(
-        {"clientToken": clientToken},
-        {
-            "$push": {
-                f"{listType}.info": itemToAdd,
-            },
-            "$set": {
-                f"{listType}.lastUpdate": date
-            }
-        }
-    )
-
-    action = USER_ACTIONS['add_item_to_list']
-    details = f'Se añadió {itemToAdd} a la lista {listType} del cliente {client['username']}'
-    log_user_action(username, action, details)
-    return jsonify({"message": "Elemento añadido correctamente"}), 200
-
-@bp.route('/by-token/actions/delete-item-list/<clientToken>', methods=['POST'])
-@token_verification_required
-def deleteItem(clientToken):
-    data = request.get_json()
-    username = data['username']
-    listType = data['listType']
-    itemToDelete = data['itemToDelete']
-    
-    if not itemToDelete or not username or not listType:
-        return jsonify({"error": "Missing fields"}), 400
-
-    client = clientsCollection.find_one({"clientToken": clientToken})
-    if not client:
-        return jsonify({"error": "Client no encontrado"}), 404
-
-    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
-    result = clientsCollection.update_one(
-        {"clientToken": clientToken},
-        {
-            "$pull": {
-                f"{listType}.info": itemToDelete,
-            },
-            "$set": {
-                f"{listType}.lastUpdate": date
-            }
-        }
-    )
-    if result.modified_count == 0:
-        return jsonify({"error": "Elemento no encontrado o ya fue eliminado."}), 404
-
-    action = USER_ACTIONS['delete_item_from_list']
-    details = f'Se eliminó {itemToDelete} de la lista {listType} del cliente {client['username']}'
-    log_user_action(username, action, details)
-    return jsonify({"message": "Elemento eliminado de manera correcta"}), 200
 
 @bp.route('/by-token/actions/modify-expiration-date/<clientToken>', methods=['POST'])
 @token_verification_required

@@ -1,53 +1,53 @@
 import styled from "styled-components";
 import FormInput from "../form-input/form-input.component";
 import {
-	backgroundLightDark,
+	backgroundDark,
 	backgroundMediumDark,
-	backgroundWhite,
 	dangerColor,
 	greenColor,
 	infoText,
 } from "../../assets/_variables";
 
-export const UserContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 400px;
-	h1 {
-		color: ${backgroundWhite};
-		font-size: 30px;
-		border-bottom: 1px solid ${backgroundLightDark};
-		text-align: center;
-		padding-bottom: 15px;
-	}
-	pointer-events: ${(props) => (props.$activated ? "none" : "auto")};
-	opacity: ${(props) => (props.$activated ? 0.5 : 1)};
-`;
 export const UserInformationContainer = styled.div`
 	display: flex;
-	flex-direction: column;
+	width: 80%;
+	justify-content: center;
+	gap: 40px;
+	pointer-events: ${(props) => (props.$activated ? "none" : "auto")};
+	opacity: ${(props) => (props.$activated ? 0.5 : 1)};
 `;
 export const UserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 10px;
-	color: ${backgroundWhite};
-	padding: 0 10px;
-	border-bottom: 1px solid ${backgroundLightDark};
+	align-items: center;
+	background-color: ${backgroundMediumDark};
+	border-radius: 5px;
+	padding-bottom: 10px;
+	min-width: 380px;
+	height: 280px;
+	h3 {
+		color: ${infoText};
+	}
 	span {
 		font-size: 18px;
 		font-weight: 400;
 		margin-bottom: 10px;
 	}
 `;
+
+export const ChangePassword = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
 export const ChangePasswordContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	height: auto;
+	height: 280px;
 	align-items: center;
 	background-color: ${backgroundMediumDark};
 	border-radius: 5px;
 	padding-bottom: 10px;
+	min-width: 380px;
 	h3 {
 		color: ${infoText};
 	}
@@ -58,7 +58,7 @@ export const ChangePasswordInput = styled(FormInput)`
 `;
 
 export const PasswordRequirementsContainer = styled.div`
-	color: ${backgroundWhite};
+	color: ${backgroundDark};
 	margin-top: 20px;
 	li {
 	}
@@ -67,4 +67,8 @@ export const PasswordRequirement = styled.li`
 	margin-bottom: 3px;
 	color: ${(props) =>
 		props.$validationStatus ? `${greenColor}` : `${dangerColor}`};
+`;
+
+export const InfoInput = styled(FormInput)`
+	pointer-events: none;
 `;

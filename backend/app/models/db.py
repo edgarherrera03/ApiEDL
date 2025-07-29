@@ -7,4 +7,8 @@ usersCollection = db["users"]
 usersInfoCollection = db["usersInfo"]
 clientsCollection = db["clients"]
 logsCollection = db["usersLogs"]
+ipCollection = db['ipAdress']
+domainCollection = db['hash']
+hashCollection = db['domain']
+
 

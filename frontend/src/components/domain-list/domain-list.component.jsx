@@ -6,8 +6,10 @@ import {
 	CustomButton,
 } from "./domain-list.styles";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
+import { UserContext } from "../../context/user.context";
+import { getItems } from "../../utils/api";
 
 const defaulNewDomainFields = {
 	element: "",
@@ -16,9 +18,16 @@ const defaulNewDomainFields = {
 	blocked: "",
 };
 
-const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
+const DomainList = ({
+	handleAdd,
+	handleDelete,
+	clientUsername,
+	reloadClientDetails,
+}) => {
 	const [newDomainFields, setNewDomainFields] = useState(defaulNewDomainFields);
 	const [formVisible, setFormVisible] = useState(false);
+	const [domainsList, setDomainsList] = useState([]);
+	const { logout } = useContext(UserContext);
 
 	const { element, classification, ipRating, blocked } = newDomainFields;
 	const headersList = [
@@ -36,6 +45,22 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 		"lastUpdate",
 	];
 
+	const fetchDomains = async () => {
+		const { success, error, code, items } = await getItems("WebsiteList");
+		if (success) {
+			setDomainsList(
+				items.filter((domain) => domain.clients.includes(clientUsername))
+			);
+		} else if (code === 401 || code === 403) {
+			await logout();
+		} else {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchDomains();
+	}, []);
 	const resetNewDomainFields = () => setNewDomainFields(defaulNewDomainFields);
 
 	const handleChange = (event) => {
@@ -59,7 +84,28 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 			return;
 		}
 		resetNewDomainFields();
-		reloadDomainItemList();
+		fetchDomains();
+		reloadClientDetails();
+	};
+
+	const handleDeleteDomain = async (itemToDelete) => {
+		const confirmed = window.confirm(
+			`El siguiente dominio sera eliminado:\n\n[Dominio: ${itemToDelete}]\n\n¿Confirmar?`
+		);
+		if (!confirmed) return;
+		const { success, error, code } = await handleDelete(
+			itemToDelete,
+			"WebsiteList"
+		);
+		if (code === 401 || code === 403) {
+			await logout();
+		} else if (code === 404) {
+			alert(error);
+		} else if (!success) {
+			console.log(error);
+		}
+		fetchDomains();
+		reloadClientDetails();
 	};
 	return (
 		<DomainListContainer>
@@ -120,7 +166,8 @@ const DomainList = ({ handleAdd, reloadDomainItemList, domainList }) => {
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
-				itemList={domainList}
+				itemList={domainsList}
+				handleDelete={handleDeleteDomain}
 			/>
 		</DomainListContainer>
 	);

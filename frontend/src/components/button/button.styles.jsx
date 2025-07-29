@@ -128,3 +128,17 @@ export const SeeMoreButton = styled(BaseButton)`
 		background-color: ${backgroundDark};
 	}
 `;
+
+export const DeleteItemButton = styled(BaseButton)`
+	width: auto;
+	height: 35px;
+	line-height: 30px;
+	padding: 0 10px;
+	box-shadow: none;
+	border: none;
+	${animatedButton(backgroundWhite, dangerColor)}
+
+	&:hover {
+		color: ${dangerColor};
+	}
+`;

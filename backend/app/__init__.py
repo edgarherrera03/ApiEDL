@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 from app.models.init_db import init_db
-from app.routes import auth_routes, user_routes, client_routes, utils_routes
+from app.routes import auth_routes, user_routes, client_routes, utils_routes, items_routes
 
 def create_app():
     load_dotenv()
@@ -19,5 +19,6 @@ def create_app():
     app.register_blueprint(user_routes.bp)
     app.register_blueprint(client_routes.bp)
     app.register_blueprint(utils_routes.bp)
+    app.register_blueprint(items_routes.bp)
 
     return app

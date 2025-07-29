@@ -1,11 +1,12 @@
 import {
-	UserContainer,
 	UserInformationContainer,
 	ChangePasswordContainer,
 	UserInformation,
 	ChangePasswordInput,
 	PasswordRequirementsContainer,
 	PasswordRequirement,
+	ChangePassword,
+	InfoInput,
 } from "./user-info.styles";
 import { useContext, useState } from "react";
 import Button from "../button/button.component";
@@ -21,7 +22,8 @@ const UserInfo = ({ openModal }) => {
 		defaultChangePasswordFields
 	);
 	const { password, confirmPassword } = changePasswordFields;
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
+	const { username, role } = currentUser;
 
 	const getPasswordValidationStatus = (password) => {
 		return {
@@ -65,7 +67,6 @@ const UserInfo = ({ openModal }) => {
 				"¿Estás seguro que deseas cambiar la contraseña?"
 			);
 			if (confirmed) {
-				const username = currentUser["username"];
 				const { success, error, code } = await changePasswordRequest(
 					username,
 					password
@@ -85,13 +86,8 @@ const UserInfo = ({ openModal }) => {
 		resetChangePasswordFields();
 	};
 	return (
-		<UserContainer $activated={openModal}>
-			<h1>Mi Usuario</h1>
-			<UserInformationContainer>
-				<UserInformation>
-					<span>Usuario: {currentUser["username"]}</span>
-					<span>Rol: {currentUser["role"]}</span>
-				</UserInformation>
+		<UserInformationContainer $activated={openModal}>
+			<ChangePassword>
 				<ChangePasswordContainer>
 					<h3>Cambio de constraseña</h3>
 					<form onSubmit={handleSubmit}>
@@ -138,8 +134,20 @@ const UserInfo = ({ openModal }) => {
 						</PasswordRequirement>
 					</ul>
 				</PasswordRequirementsContainer>
-			</UserInformationContainer>
-		</UserContainer>
+			</ChangePassword>
+			<UserInformation>
+				<h3>Información del usuario</h3>
+				<div>
+					<InfoInput
+						type="text"
+						label="Nombre de Usuario"
+						value={username}
+						readOnly
+					/>
+					<InfoInput type="text" label="Rol" value={role} readOnly />
+				</div>
+			</UserInformation>
+		</UserInformationContainer>
 	);
 };
 

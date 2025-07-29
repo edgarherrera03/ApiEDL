@@ -9,12 +9,12 @@ const Clients = () => {
 	const [clientslist, setClientslist] = useState([]);
 	useEffect(() => {
 		const fetchClients = async () => {
-			const response = await requestClientsList();
-			if (response.success) {
-				setClientslist(response.clients);
-			} else if (response.code === 404) {
-				console.log(response.error || "No se encontro ningun cliente");
-			} else if (response.code === 403 || response.code === 401) {
+			const { success, code, clients, error } = await requestClientsList();
+			if (success) {
+				setClientslist(clients);
+			} else if (code === 404) {
+				console.log(error);
+			} else if (code === 403 || code === 401) {
 				await logout();
 			}
 		};
@@ -22,12 +22,12 @@ const Clients = () => {
 		fetchClients();
 	}, [logout]);
 	const reloadClientsList = async () => {
-		const response = await requestClientsList();
-		if (response.success) {
-			setClientslist(response.clients);
-		} else if (response.code === 404) {
-			console.log(response.error || "No se encontro ningun cliente");
-		} else if (response.code === 403 || response.code === 401) {
+		const { success, code, clients, error } = await requestClientsList();
+		if (success) {
+			setClientslist(clients);
+		} else if (code === 404) {
+			console.log(error);
+		} else if (code === 403 || code === 401) {
 			await logout();
 		}
 	};

@@ -28,6 +28,19 @@ export const Header = styled.div`
 	}
 `;
 
+export const Icon = styled.div`
+	width: 200px;
+	display: flex;
+	align-items: center;
+	padding: 15px 10px;
+	cursor: pointer;
+	span {
+		font-size: 30px;
+		height: 100%;
+		align-content: center;
+	}
+`;
+
 export const ScollListInformation = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -38,7 +51,8 @@ export const ScollListInformation = styled.div`
 export const Item = styled.div`
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 1px solid ${backgroundLightDark};
+	border-bottom: ${({ $details }) =>
+		$details ? `none` : `1px solid ${backgroundLightDark}`};
 	padding: 5px 0;
 `;
 
@@ -50,4 +64,45 @@ export const Info = styled.div`
 	padding: 15px 20px;
 	overflow-wrap: break-word;
 	word-break: break-word;
+`;
+
+export const ItemDetails = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 20px;
+	border-bottom: 1px solid ${backgroundLightDark};
+`;
+
+export const CommentsContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+	gap: 10px;
+	span {
+		font-weight: bold;
+		color: ${backgroundDark};
+		font-size: 1rem;
+	}
+	input {
+		border-radius: 5px;
+		padding: 5px 10px;
+		font-size: 16px;
+		width: 80%;
+	}
+	form {
+		display: flex;
+		width: 100%;
+		gap: 5px;
+	}
+`;
+
+export const CommentSection = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+export const ButtonSection = styled.div`
+	display: flex;
+	gap: 10px;
 `;

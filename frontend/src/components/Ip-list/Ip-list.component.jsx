@@ -6,9 +6,10 @@ import {
 	CustomButton,
 } from "./ip-list.styles";
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
+import { getItems } from "../../utils/api";
 
 const defaulNewIpFields = {
 	element: "",
@@ -17,9 +18,15 @@ const defaulNewIpFields = {
 	blocked: "",
 };
 
-const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
+const IpList = ({
+	handleAdd,
+	handleDelete,
+	clientUsername,
+	reloadClientDetails,
+}) => {
 	const [newIpFields, setNewIpFields] = useState(defaulNewIpFields);
 	const [formVisible, setFormVisible] = useState(false);
+	const [ipList, setIpList] = useState([]);
 	const { logout } = useContext(UserContext);
 
 	const { element, classification, ipRating, blocked } = newIpFields;
@@ -37,6 +44,20 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 		"blocked",
 		"lastUpdate",
 	];
+	const fetchIps = async () => {
+		const { success, error, code, items } = await getItems("IpList");
+		if (success) {
+			setIpList(items.filter((ip) => ip.clients.includes(clientUsername)));
+		} else if (code === 401 || code === 403) {
+			await logout();
+		} else {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchIps();
+	}, []);
 
 	const resetNewIpFields = () => setNewIpFields(defaulNewIpFields);
 
@@ -64,8 +85,27 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 			await logout();
 		}
 		resetNewIpFields();
-		reloadIpItemList();
+		fetchIps();
+		reloadClientDetails();
 	};
+
+	const handleDeleteIp = async (itemToDelete) => {
+		const confirmed = window.confirm(
+			`La siguiente IP sera eliminada:\n\n[IP: ${itemToDelete}]\n\n¿Confirmar?`
+		);
+		if (!confirmed) return;
+		const { success, error, code } = await handleDelete(itemToDelete, "IpList");
+		if (code === 401 || code === 403) {
+			await logout();
+		} else if (code === 404) {
+			alert(error);
+		} else if (!success) {
+			console.log(error);
+		}
+		fetchIps();
+		reloadClientDetails();
+	};
+
 	return (
 		<IpListContainer>
 			<IpListHeader>
@@ -126,6 +166,7 @@ const IpList = ({ handleAdd, reloadIpItemList, ipList }) => {
 				headersList={headersList}
 				ordersList={orderList}
 				itemList={ipList}
+				handleDelete={handleDeleteIp}
 			/>
 		</IpListContainer>
 	);

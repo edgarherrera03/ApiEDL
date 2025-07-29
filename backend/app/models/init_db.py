@@ -1,5 +1,5 @@
 import secrets
-from .db import clientsCollection, usersCollection, usersInfoCollection
+from .db import clientsCollection, usersCollection, usersInfoCollection, ipCollection, domainCollection, hashCollection
 from ..utils.helpers import hashPassword
 
 users = [
@@ -16,6 +16,42 @@ usersInfo = [
     {"username": "guest", "role": "reader"},
 ]
 
+ipAdresses = [
+    {"element": "192.168.10.1", "classification": "Sospechoso", "ipRating": 60, "blocked": False, "lastUpdate": "2025-07-17", "clients": ["Client_A"]},
+    {"element": "10.0.1.5", "classification": "Malicioso", "ipRating": 90, "blocked": True, "lastUpdate": "2025-07-15", "clients": ["Client_A"]},
+    {"element": "172.16.10.12", "classification": "Seguro", "ipRating": 30, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_A"]},
+    {"element": "192.168.20.2", "classification": "Seguro", "ipRating": 15, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_B"]},
+    {"element": "10.1.0.8", "classification": "Sospechoso", "ipRating": 50, "blocked": False, "lastUpdate": "2025-06-30", "clients": ["Client_B"]},
+    {"element": "172.16.2.15", "classification": "Malicioso", "ipRating": 95, "blocked": True, "lastUpdate": "2025-07-16", "clients": ["Client_B"]},
+    {"element": "192.168.3.3", "classification": "Malicioso", "ipRating": 80, "blocked": True, "lastUpdate": "2025-07-18", "clients": ["Client_C"]},
+    {"element": "10.1.0.1", "classification": "Seguro", "ipRating": 20, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_C"]},
+    {"element": "172.17.0.5", "classification": "Sospechoso", "ipRating": 50, "blocked": False, "lastUpdate": "2025-07-09", "clients": ["Client_C"]},
+    {"element": "192.168.4.4", "classification": "Sospechoso", "ipRating": 65, "blocked": False, "lastUpdate": "2025-07-02", "clients": ["Client_D"]},
+    {"element": "10.2.0.6", "classification": "Malicioso", "ipRating": 85, "blocked": True, "lastUpdate": "2025-07-13", "clients": ["Client_D"]},
+    {"element": "192.168.5.5", "classification": "Seguro", "ipRating": 10, "blocked": False, "lastUpdate": "2025-07-07", "clients": ["Client_E"]},
+    {"element": "10.3.0.7", "classification": "Sospechoso", "ipRating": 45, "blocked": False, "lastUpdate": "2025-07-11", "clients": ["Client_E"]}
+]
+
+websites = [
+    {"element": "https://login.clienta.net", "classification": "Sospechoso", "ipRating": 55, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_A"]},
+    {"element": "https://portal.clienta.net", "classification": "Seguro", "ipRating": 10, "blocked": False, "lastUpdate": "2025-07-12", "clients": ["Client_A"]},
+    {"element": "https://clientb.services.com", "classification": "Sospechoso", "ipRating": 40, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_B"]},
+    {"element": "https://dashboard.clientb.com", "classification": "Malicioso", "ipRating": 85, "blocked": True, "lastUpdate": "2025-07-14", "clients": ["Client_B"]},
+    {"element": "https://clientc.net", "classification": "Seguro", "ipRating": 5, "blocked": False, "lastUpdate": "2025-07-05", "clients": ["Client_C"]},
+    {"element": "https://clientd.org", "classification": "Seguro", "ipRating": 25, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_D"]},
+    {"element": "https://support.clientd.org", "classification": "Sospechoso", "ipRating": 70, "blocked": False, "lastUpdate": "2025-07-15", "clients": ["Client_D"]},
+    {"element": "https://cliente.io", "classification": "Seguro", "ipRating": 20, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_E"]}
+]
+
+hashList = [
+    {"element": "a1b2c3d4e5f6g7h8i9j0", "programName": "Trojan.Generic", "classification": "Malicioso", "hashRating": 95, "blocked": True, "lastUpdate": "2025-07-15", "clients": ["Client_A"]},
+    {"element": "f0e1d2c3b4a596877665", "programName": "Updater.exe", "classification": "Seguro", "hashRating": 10, "blocked": False, "lastUpdate": "2025-07-12", "clients": ["Client_A"]},
+    {"element": "123abc456def789ghi0", "programName": "Downloader.exe", "classification": "Sospechoso", "hashRating": 55, "blocked": False, "lastUpdate": "2025-07-13", "clients": ["Client_B"]},
+    {"element": "00011122233344455566", "programName": "CleanerTool.exe", "classification": "Seguro", "hashRating": 12, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_B"]},
+    {"element": "deadbeefcafebabe1234", "programName": "Spyware.exe", "classification": "Malicioso", "hashRating": 88, "blocked": True, "lastUpdate": "2025-07-18", "clients": ["Client_C"]},
+    {"element": "beefcafe1234567890", "programName": "Installer.pkg", "classification": "Sospechoso", "hashRating": 60, "blocked": False, "lastUpdate": "2025-07-15", "clients": ["Client_D"]},
+    {"element": "hashsafeabcd123456", "programName": "DriverHelper", "classification": "Seguro", "hashRating": 15, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_E"]}
+]
 clients = [
     {
         'id': 1,
@@ -26,28 +62,18 @@ clients = [
         "expirationDate": "2026-01-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": {
-            'info': [
-                {"element": "192.168.10.1", "classification": "Sospechoso", "ipRating": 60, 'blocked': False, 'lastUpdate': "2025-07-17"},
-                {"element": "10.0.1.5", "classification": "Malicioso", "ipRating": 90, 'blocked': True, 'lastUpdate': "2025-07-15"},
-                {"element": "172.16.10.12", "classification": "Seguro", "ipRating": 30, 'blocked': False, 'lastUpdate': "2025-07-10"},
-            ],
+            'info': ["192.168.10.1", "10.0.1.5", "172.16.10.12"],
             'lastUpdate': "2025-07-17",
             'listLimit': 10000
         },
         "WhiteList": ["192.168.10.1"],
         "WebsiteList": {
-            'info': [
-                {"element": "https://portal.clienta.net", "classification": "Seguro", "ipRating": 10, 'blocked': False, 'lastUpdate': "2025-07-12"},
-                {"element": "https://login.clienta.net", "classification": "Sospechoso", "ipRating": 55, 'blocked': False, 'lastUpdate': "2025-07-08"}
-            ],
+            'info': ["https://login.clienta.net", "https://portal.clienta.net"],
             'lastUpdate': "2025-07-12",
             'listLimit': 10000
         },
         "HashList": {
-            'info': [
-                {"element": "a1b2c3d4e5f6g7h8i9j0", "programName": "Trojan.Generic", "classification": "Malicioso", "hashRating": 95, "blocked": True, "lastUpdate": "2025-07-15"},
-                {"element": "f0e1d2c3b4a596877665", "programName": "Updater.exe", "classification": "Seguro", "hashRating": 10, "blocked": False, "lastUpdate": "2025-07-12"}
-            ],
+            'info': ["a1b2c3d4e5f6g7h8i9j0", "f0e1d2c3b4a596877665"],
             'lastUpdate': "2025-07-15",
             'listLimit': 10000
         },
@@ -62,28 +88,18 @@ clients = [
         "expirationDate": "2026-02-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": {
-            'info': [
-                {"element": "192.168.20.2", "classification": "Seguro", "ipRating": 15, 'blocked': False, 'lastUpdate': "2025-07-01"},
-                {"element": "10.1.0.8", "classification": "Sospechoso", "ipRating": 50, 'blocked': False, 'lastUpdate': "2025-06-30"},
-                {"element": "172.16.2.15", "classification": "Malicioso", "ipRating": 95, 'blocked': True, 'lastUpdate': "2025-07-16"},
-            ],
+            'info': ["192.168.20.2", "10.1.0.8", "172.16.2.15"],
             'lastUpdate': "2025-07-16",
             'listLimit': 10000
         },
         "WhiteList": ["10.1.0.8"],
         "WebsiteList": {
-            'info': [
-                {"element": "https://clientb.services.com", "classification": "Sospechoso", "ipRating": 40, 'blocked': False, 'lastUpdate': "2025-07-10"},
-                {"element": "https://dashboard.clientb.com", "classification": "Malicioso", "ipRating": 85, 'blocked': True, 'lastUpdate': "2025-07-14"}
-            ],
+            'info': ["https://clientb.services.com", "https://dashboard.clientb.com"],
             'lastUpdate': "2025-07-14",
             'listLimit': 10000
         },
         "HashList": {
-            'info': [
-                {"element": "123abc456def789ghi0", "programName": "Downloader.exe", "classification": "Sospechoso", "hashRating": 55, "blocked": False, "lastUpdate": "2025-07-13"},
-                {"element": "00011122233344455566", "programName": "CleanerTool.exe", "classification": "Seguro", "hashRating": 12, "blocked": False, "lastUpdate": "2025-07-10"}
-            ],
+            'info': ["123abc456def789ghi0", "00011122233344455566"],
             'lastUpdate': "2025-07-13",
             'listLimit': 10000
         },
@@ -98,26 +114,18 @@ clients = [
         "expirationDate": "2026-03-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": {
-            'info': [
-                {"element": "192.168.3.3", "classification": "Malicioso", "ipRating": 80, 'blocked': True, 'lastUpdate': "2025-07-18"},
-                {"element": "10.1.0.1", "classification": "Seguro", "ipRating": 20, 'blocked': False, 'lastUpdate': "2025-07-10"},
-                {"element": "172.17.0.5", "classification": "Sospechoso", "ipRating": 50, 'blocked': False, 'lastUpdate': "2025-07-09"},
-            ],
+            'info': ["192.168.3.3", "10.1.0.1", "172.17.0.5"],
             'lastUpdate': "2025-07-18",
             'listLimit': 10000
         },
         "WhiteList": ["172.17.0.5", "10.1.0.1"],
         "WebsiteList": {
-            'info': [
-                {"element": "https://clientc.net", "classification": "Seguro", "ipRating": 5, 'blocked': False, 'lastUpdate': "2025-07-05"}
-            ],
+            'info': ["https://clientc.net"],
             'lastUpdate': "2025-07-05",
             'listLimit': 10000
         },
         "HashList": {
-            'info': [
-                {"element": "deadbeefcafebabe1234", "programName": "Spyware.exe", "classification": "Malicioso", "hashRating": 88, "blocked": True, "lastUpdate": "2025-07-18"}
-            ],
+            'info': ["deadbeefcafebabe1234"],
             'lastUpdate': "2025-07-18",
             'listLimit': 10000
         },
@@ -132,26 +140,18 @@ clients = [
         "expirationDate": "2026-04-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": {
-            'info': [
-                {"element": "192.168.4.4", "classification": "Sospechoso", "ipRating": 65, 'blocked': False, 'lastUpdate': "2025-07-02"},
-                {"element": "10.2.0.6", "classification": "Malicioso", "ipRating": 85, 'blocked': True, 'lastUpdate': "2025-07-13"},
-            ],
+            'info': ["192.168.4.4", "10.2.0.6"],
             'lastUpdate': '2023-04-01',
             'listLimit': 10000
         },
         "WhiteList": [],
         "WebsiteList": {
-            'info': [
-                {"element": "https://clientd.org", "classification": "Seguro", "ipRating": 25, 'blocked': False, 'lastUpdate': "2025-07-01"},
-                {"element": "https://support.clientd.org", "classification": "Sospechoso", "ipRating": 70, 'blocked': False, 'lastUpdate': "2025-07-15"}
-            ],
+            'info': ["https://clientd.org", "https://support.clientd.org"],
             'lastUpdate': "2025-07-15",
             'listLimit': 10000
         },
         "HashList": {
-            'info': [
-                {"element": "beefcafe1234567890", "programName": "Installer.pkg", "classification": "Sospechoso", "hashRating": 60, "blocked": False, "lastUpdate": "2025-07-15"}
-            ],
+            'info': ["beefcafe1234567890"],
             'lastUpdate': "2025-07-15",
             'listLimit': 10000
         },
@@ -166,30 +166,23 @@ clients = [
         "expirationDate": "2026-05-01",
         "clientToken": secrets.token_urlsafe(16),
         "IpList": {
-            'info': [
-                {"element": "192.168.5.5", "classification": "Seguro", "ipRating": 10, 'blocked': False, 'lastUpdate': "2025-07-07"},
-                {"element": "10.3.0.7", "classification": "Sospechoso", "ipRating": 45, 'blocked': False, 'lastUpdate': "2025-07-11"},
-            ],
+            'info': ["192.168.5.5", "10.3.0.7"],
             'lastUpdate': "2025-07-11",
             'listLimit': 10000
         },
         "WhiteList": ["192.168.5.5"],
         "WebsiteList": {
-            'info': [
-                {"element": "https://cliente.io", "classification": "Seguro", "ipRating": 20, 'blocked': False, 'lastUpdate': "2025-07-08"}
-            ],
+            'info': ["https://cliente.io"],
             'lastUpdate': "2025-07-08",
             'listLimit': 10000
         },
         "HashList": {
-            'info': [
-                {"element": "hashsafeabcd123456", "programName": "DriverHelper", "classification": "Seguro", "hashRating": 15, "blocked": False, "lastUpdate": "2025-07-08"}
-            ],
+            'info': ["hashsafeabcd123456"],
             'lastUpdate': "2025-07-08",
             'listLimit': 10000
         },
         "apiKey": secrets.token_urlsafe(24),
-    },
+    }
 ]
 def init_db():
     for user in users:
@@ -222,3 +215,24 @@ def init_db():
 
         clientsCollection.insert_one(client)
         print(f"Client with ID '{client['id']}' registered.")
+    
+    for ipAdress in ipAdresses:
+        if ipCollection.find_one({'element': ipAdress['element']}):
+            print(f"Ip Adress '{ipAdress['element']}' already exists. Skipping.")
+            continue
+        ipCollection.insert_one(ipAdress)
+        print(f"Ip Adress '{ipAdress['element']}' registered.")
+    
+    for website in websites:
+        if domainCollection.find_one({'element': website['element']}):
+            print(f"Domain '{website['element']}' already exists. Skipping.")
+            continue
+        domainCollection.insert_one(website)
+        print(f"Domain '{website['element']}' registered.")
+    
+    for hash in hashList:
+        if hashCollection.find_one({'element': hash['element']}):
+            print(f"Hash '{hash['element']}' already exists. Skipping.")
+            continue
+        hashCollection.insert_one(hash)
+        print(f"Hash '{hash['element']}' registered.")
