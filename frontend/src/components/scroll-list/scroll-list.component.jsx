@@ -10,6 +10,7 @@ import {
 	CommentsContainer,
 	Icon,
 	CommentSection,
+	Comment,
 	ButtonSection,
 } from "./scroll-list.styles";
 import BlockedIcon from "../blocked-icon/blocked-icon.component";
@@ -20,19 +21,36 @@ const ScrollList = ({
 	ordersList,
 	itemList,
 	height = "",
-	commentsList,
 	handleDelete,
+	handleComment,
 }) => {
 	// Estado para controlar qué elementos están abiertos
 	const [openItems, setOpenItems] = useState({});
-
+	const [comments, setComments] = useState({});
 	const toggleItem = (index) => {
 		setOpenItems((prev) => ({
 			...prev,
 			[index]: !prev[index], // alterna entre true/false
 		}));
 	};
+	const handleInputChange = (event) => {
+		const { name, value } = event.target;
+		setComments((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
 
+	const handleSubmitComment = (event, item, index) => {
+		event.preventDefault();
+		if (comments[index]?.trim()) {
+			handleComment(comments[index], item);
+			setComments((prev) => ({
+				...prev,
+				[index]: "", // Limpiar input tras enviar
+			}));
+		}
+	};
 	return (
 		<ScrollListContainer>
 			<ScrollListHeaders>
@@ -68,12 +86,26 @@ const ScrollList = ({
 								<CommentsContainer>
 									<CommentSection>
 										<span>Comentarios:</span>
+										{Array.isArray(item["comments"]) &&
+											item["comments"].map((comment, index) => (
+												<Comment key={index}>
+													<span>{comment.username}</span>
+													<p>[{comment.date}]:</p>
+													<p>{comment.comment}</p>
+												</Comment>
+											))}
 									</CommentSection>
-									<form action="">
+									<form
+										onSubmit={(event) =>
+											handleSubmitComment(event, item["element"], index)
+										}>
 										<input
+											name={index}
 											type="text"
-											required
 											placeholder="Nuevo comentario"
+											required
+											value={comments[index] || ""}
+											onChange={handleInputChange}
 										/>
 										<Button
 											type="submit"

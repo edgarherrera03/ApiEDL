@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { Link } from "react-router";
 import {
 	backgroundDark,
+	backgroundLightDark,
+	backgroundMediumDark,
 	backgroundWhite,
 	infoText,
 } from "../../assets/_variables";
@@ -68,6 +70,14 @@ export const NavLink = styled(Link)`
 	color: ${backgroundWhite};
 	margin: 10px 0;
 	text-decoration: none;
+	border-radius: 15px;
+	padding: 5px 10px;
+	background-color: ${({ $active }) =>
+		$active ? backgroundMediumDark : "transparent"};
+	&:hover {
+		background-color: ${backgroundMediumDark};
+	}
+
 	@media (max-width: 1000px) {
 		font-size: 1.4rem;
 	}

@@ -138,3 +138,34 @@ def deleteItem():
     details = f'Se eliminó {itemToDelete} de la lista {listType} del cliente {clientUsername}'
     log_user_action(username, action, details)
     return jsonify({"message": "Elemento eliminado de manera correcta"}), 200
+
+@bp.route('/actions/client/add-comment', methods=['POST'])
+@token_verification_required
+def addCommentToItem():
+    data = request.get_json()
+    username = data['username']
+    clientUsername = data['clientUsername']
+    listType = data['listType']
+    comment = data['comment']
+    item = data ['item']
+
+    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+    collection = COLLECTIONS[listType]
+
+    if not comment or not username or not listType or not clientUsername or not item:
+        return jsonify({"error": "Missing fields"}), 400
+    
+    #Contruimos el formato del comentario
+    commentToBeInserted = { 'username': username, 'comment': comment, 'date': date}
+    collection.update_one(
+        {'element': item},
+        {
+            "$push": {
+                'comments': commentToBeInserted,
+            }
+        }
+    )
+    action = USER_ACTIONS['comment_item']
+    details = f'Se agregó un nuevo comentario para el objeto siguiente: {item}'
+    log_user_action(username, action, details)
+    return jsonify({"message": "Comentario agregado de manera correcta"}), 200

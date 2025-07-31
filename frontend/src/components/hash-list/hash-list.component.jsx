@@ -9,7 +9,7 @@ import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
-import { getItems } from "../../utils/api";
+import { ItemsContext } from "../../context/items.context";
 
 const defaulNewHashFields = {
 	element: "",
@@ -27,8 +27,9 @@ const HashList = ({
 }) => {
 	const [newHashFields, setNewHashFields] = useState(defaulNewHashFields);
 	const [formVisible, setFormVisible] = useState(false);
-	const [hashList, setHashList] = useState([]);
+	const [hashes, setHashes] = useState([]);
 	const { logout } = useContext(UserContext);
+	const { hashList, reloadHashList } = useContext(ItemsContext);
 
 	const { element, programName, classification, hashRating, blocked } =
 		newHashFields;
@@ -49,22 +50,9 @@ const HashList = ({
 		"lastUpdate",
 	];
 
-	const fetchHash = async () => {
-		const { success, error, code, items } = await getItems("HashList");
-		if (success) {
-			setHashList(
-				items.filter((hash) => hash.clients.includes(clientUsername))
-			);
-		} else if (code === 401 || code === 403) {
-			await logout();
-		} else {
-			console.log(error);
-		}
-	};
-
 	useEffect(() => {
-		fetchHash();
-	}, []);
+		setHashes(hashList.filter((hash) => hash.clients.includes(clientUsername)));
+	}, [hashList]);
 	const resetNewHashFields = () => setNewHashFields(defaulNewHashFields);
 
 	const handleChange = (event) => {
@@ -88,8 +76,8 @@ const HashList = ({
 			return;
 		}
 		resetNewHashFields();
-		fetchHash();
 		reloadClientDetails();
+		reloadHashList();
 	};
 	const handleDeleteHash = async (itemToDelete) => {
 		const confirmed = window.confirm(
@@ -107,8 +95,8 @@ const HashList = ({
 		} else if (!success) {
 			console.log(error);
 		}
-		fetchHash();
 		reloadClientDetails();
+		reloadHashList();
 	};
 	return (
 		<HashListContainer>
@@ -174,7 +162,7 @@ const HashList = ({
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
-				itemList={hashList}
+				itemList={hashes}
 				handleDelete={handleDeleteHash}
 			/>
 		</HashListContainer>

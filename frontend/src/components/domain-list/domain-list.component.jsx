@@ -9,7 +9,7 @@ import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
-import { getItems } from "../../utils/api";
+import { ItemsContext } from "../../context/items.context";
 
 const defaulNewDomainFields = {
 	element: "",
@@ -26,9 +26,9 @@ const DomainList = ({
 }) => {
 	const [newDomainFields, setNewDomainFields] = useState(defaulNewDomainFields);
 	const [formVisible, setFormVisible] = useState(false);
-	const [domainsList, setDomainsList] = useState([]);
+	const [domains, setDomains] = useState([]);
 	const { logout } = useContext(UserContext);
-
+	const { domainList, reloadDomainList } = useContext(ItemsContext);
 	const { element, classification, ipRating, blocked } = newDomainFields;
 	const headersList = [
 		"Dominio",
@@ -45,22 +45,11 @@ const DomainList = ({
 		"lastUpdate",
 	];
 
-	const fetchDomains = async () => {
-		const { success, error, code, items } = await getItems("WebsiteList");
-		if (success) {
-			setDomainsList(
-				items.filter((domain) => domain.clients.includes(clientUsername))
-			);
-		} else if (code === 401 || code === 403) {
-			await logout();
-		} else {
-			console.log(error);
-		}
-	};
-
 	useEffect(() => {
-		fetchDomains();
-	}, []);
+		setDomains(
+			domainList.filter((domain) => domain.clients.includes(clientUsername))
+		);
+	}, [domainList, clientUsername]);
 	const resetNewDomainFields = () => setNewDomainFields(defaulNewDomainFields);
 
 	const handleChange = (event) => {
@@ -84,8 +73,8 @@ const DomainList = ({
 			return;
 		}
 		resetNewDomainFields();
-		fetchDomains();
 		reloadClientDetails();
+		reloadDomainList();
 	};
 
 	const handleDeleteDomain = async (itemToDelete) => {
@@ -104,8 +93,8 @@ const DomainList = ({
 		} else if (!success) {
 			console.log(error);
 		}
-		fetchDomains();
 		reloadClientDetails();
+		reloadDomainList();
 	};
 	return (
 		<DomainListContainer>
@@ -166,7 +155,7 @@ const DomainList = ({
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
-				itemList={domainsList}
+				itemList={domains}
 				handleDelete={handleDeleteDomain}
 			/>
 		</DomainListContainer>

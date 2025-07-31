@@ -2,8 +2,12 @@ import { UserContainer, UserIdContainer, UserImage } from "./user.styles";
 import UserInfo from "../../components/user-info/user-info.component";
 import { useContext } from "react";
 import { UserContext } from "../../context/user.context";
+import Spinner from "../../components/spinner/spinner.component";
+
 const User = () => {
 	const { currentUser } = useContext(UserContext);
+	if (!currentUser) return <Spinner />;
+
 	return (
 		<UserContainer>
 			<UserIdContainer>

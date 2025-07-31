@@ -1,4 +1,5 @@
 import ScrollList from "../../components/scroll-list/scroll-list.component";
+import InfoList from "../../components/info-list/info-list.component";
 import {
 	LogsContainer,
 	LogsListContainer,
@@ -8,6 +9,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { requestLogs } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
+import Spinner from "../../components/spinner/spinner.component";
 
 const headersList = [
 	"Marca de tiempo",
@@ -46,6 +48,7 @@ const Logs = () => {
 			console.log(error || "Error al recuperar los logs");
 		}
 	};
+	if (!logs) return <Spinner />;
 	return (
 		<LogsContainer>
 			<h1>Logs</h1>
@@ -57,10 +60,10 @@ const Logs = () => {
 				</RefreshButton>
 			</RefreshButtonContainer>
 			<LogsListContainer>
-				<ScrollList
-					headersList={headersList}
-					ordersList={ordersList}
-					itemList={logs}
+				<InfoList
+					headerTitleList={headersList}
+					orderedKeys={ordersList}
+					infoList={logs}
 					height={600}
 				/>
 			</LogsListContainer>

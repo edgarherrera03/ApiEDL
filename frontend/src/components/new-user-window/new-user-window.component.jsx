@@ -93,8 +93,6 @@ const NewUserWindow = ({ closeWindow, onReloadUsers }) => {
 				await logout();
 			} else if (code === 409) {
 				alert(error);
-			} else if (code === 401 || code === 403) {
-				await logout();
 			} else if (!success) {
 				console.log(error);
 			}

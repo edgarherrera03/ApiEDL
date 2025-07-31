@@ -3,6 +3,7 @@ import { UsersContainer } from "./users.styles";
 import { requestUsersInformation, deleteUserRequest } from "../../utils/api";
 import UsersList from "../../components/users-list/users-list.component";
 import { UserContext } from "../../context/user.context";
+import Spinner from "../../components/spinner/spinner.component";
 
 const Users = () => {
 	const [usersInfo, setUsersInfo] = useState([]);
@@ -64,6 +65,7 @@ const Users = () => {
 			console.log(error);
 		}
 	};
+	if (!usersInfo) return <Spinner />;
 
 	return (
 		<>

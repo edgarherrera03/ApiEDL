@@ -5,14 +5,22 @@ import {
 	NavLink,
 	AppTitle,
 } from "./navigation.styles";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { UserContext } from "../../context/user.context";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { logoutAuthUser } from "../../utils/api";
 
 const Navigation = () => {
 	const { currentUser, isAuthenticated, setIsAuthenticated, setCurrentUser } =
 		useContext(UserContext);
+	const [activePath, setActivePath] = useState("");
+	const location = useLocation();
+
+	useEffect(() => {
+		// Extrae el primer segmento del path para usarlo como activePath
+		const pathSegment = location.pathname.split("/")[1];
+		setActivePath(pathSegment);
+	}, [location.pathname]);
 
 	const handleLogOut = async () => {
 		setCurrentUser(null);
@@ -27,13 +35,25 @@ const Navigation = () => {
 				<AppTitle to="/home">ApiEDL</AppTitle>
 				{isAuthenticated && (
 					<NavLinks>
-						<NavLink to="/dashboard">Dashboard</NavLink>
-						<NavLink to="/clientes">Clientes</NavLink>
-						<NavLink to="/registros">Registros</NavLink>
-						<NavLink to="/users">Usuarios</NavLink>
-						<NavLink to="/logs">Logs</NavLink>
+						<NavLink to="/dashboard" $active={activePath === "dashboard"}>
+							Dashboard
+						</NavLink>
+						<NavLink to="/clientes" $active={activePath === "clientes"}>
+							Clientes
+						</NavLink>
+						<NavLink to="/registros" $active={activePath === "registros"}>
+							Registros
+						</NavLink>
+						<NavLink to="/users" $active={activePath === "users"}>
+							Usuarios
+						</NavLink>
+						<NavLink to="/logs" $active={activePath === "logs"}>
+							Logs
+						</NavLink>
 						<NavLink onClick={handleLogOut}>Salir</NavLink>
-						<NavLink to="/user">{currentUser["username"]}</NavLink>
+						<NavLink to="/user" $active={activePath === "user"}>
+							{currentUser["username"]}
+						</NavLink>
 					</NavLinks>
 				)}
 			</NavigationContainer>

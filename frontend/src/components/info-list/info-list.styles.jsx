@@ -5,6 +5,7 @@ import {
 	backgroundWhite,
 	backgroundDark,
 	darkColor,
+	infoText,
 } from "../../assets/_variables";
 
 export const InfoListContainer = styled.div`
@@ -20,22 +21,45 @@ export const InfoListHeader = styled.div`
 `;
 export const HeaderTitle = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	height: 50px;
+	min-height: 50px;
 	background-color: ${backgroundMediumDark};
 	border: 1px solid ${backgroundLightDark};
 	span {
 		color: ${backgroundWhite};
 		font-size: 20px;
 		font-weight: 500;
+		word-break: break-word;
 	}
 `;
 export const InformationContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	height: ${({ $height }) => ($height ? `${$height}px` : "auto")};
+	overflow-y: auto;
+
+	&::-webkit-scrollbar {
+		width: 3px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: ${backgroundDark}; /* fondo de la barra */
+		border-radius: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: ${backgroundMediumDark}; /* color de la barra */
+		border-radius: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: ${infoText}; /* color al hacer hover */
+	}
+
 	> :nth-child(odd) {
 		background-color: ${backgroundDark};
 		&:hover {
@@ -53,24 +77,28 @@ export const InformationContainer = styled.div`
 export const InfoItem = styled.div`
 	display: flex;
 	width: 100%;
+
 	> :last-child {
 		border-right: 0.1px solid ${darkColor};
 		justify-content: space-evenly;
 	}
 `;
-export const Info = styled.div`
-	display: flex;
 
-	align-items: center;
+export const Info = styled.div`
 	width: 100%;
-	height: 50px;
-	border: 0.1px solid ${darkColor};
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	min-height: 50px;
+	border: 1px solid ${darkColor};
 	border-right: none;
-	padding-left: 20px;
+	padding: 10px 0 10px 20px;
+	box-sizing: border-box;
 
 	span {
 		color: ${backgroundWhite};
 		font-size: 16px;
 		font-weight: 500;
+		word-break: break-word;
 	}
 `;

@@ -9,7 +9,8 @@ import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
-import { getItems } from "../../utils/api";
+import { addCommentToItem } from "../../utils/api";
+import { ItemsContext } from "../../context/items.context";
 
 const defaulNewIpFields = {
 	element: "",
@@ -17,7 +18,20 @@ const defaulNewIpFields = {
 	ipRating: "",
 	blocked: "",
 };
-
+const headersList = [
+	"Dirección IP",
+	"Clasificación",
+	"Calificación",
+	"Bloqueada",
+	"Ultima Modificación",
+];
+const orderList = [
+	"element",
+	"classification",
+	"ipRating",
+	"blocked",
+	"lastUpdate",
+];
 const IpList = ({
 	handleAdd,
 	handleDelete,
@@ -26,38 +40,15 @@ const IpList = ({
 }) => {
 	const [newIpFields, setNewIpFields] = useState(defaulNewIpFields);
 	const [formVisible, setFormVisible] = useState(false);
-	const [ipList, setIpList] = useState([]);
-	const { logout } = useContext(UserContext);
+	const [ip, setIp] = useState([]);
+	const { ipList, reloadIpList } = useContext(ItemsContext);
+	const { logout, currentUser } = useContext(UserContext);
 
 	const { element, classification, ipRating, blocked } = newIpFields;
-	const headersList = [
-		"Dirección IP",
-		"Clasificación",
-		"Calificación",
-		"Bloqueada",
-		"Ultima Modificación",
-	];
-	const orderList = [
-		"element",
-		"classification",
-		"ipRating",
-		"blocked",
-		"lastUpdate",
-	];
-	const fetchIps = async () => {
-		const { success, error, code, items } = await getItems("IpList");
-		if (success) {
-			setIpList(items.filter((ip) => ip.clients.includes(clientUsername)));
-		} else if (code === 401 || code === 403) {
-			await logout();
-		} else {
-			console.log(error);
-		}
-	};
 
 	useEffect(() => {
-		fetchIps();
-	}, []);
+		setIp(ipList.filter((ip) => ip.clients.includes(clientUsername)));
+	}, [ipList]);
 
 	const resetNewIpFields = () => setNewIpFields(defaulNewIpFields);
 
@@ -85,7 +76,7 @@ const IpList = ({
 			await logout();
 		}
 		resetNewIpFields();
-		fetchIps();
+		reloadIpList();
 		reloadClientDetails();
 	};
 
@@ -102,22 +93,39 @@ const IpList = ({
 		} else if (!success) {
 			console.log(error);
 		}
-		fetchIps();
+		reloadIpList();
 		reloadClientDetails();
 	};
 
+	const handleComment = async (comment, item) => {
+		const confirmed = window.confirm(
+			`Se añadirá un nuevo comentario para el objeto ${item}\n\n¿Confirmar?`
+		);
+		if (confirmed) {
+			const { success, error, code } = await addCommentToItem(
+				currentUser["username"],
+				clientUsername,
+				"IpList",
+				comment,
+				item
+			);
+			if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
+		}
+	};
 	return (
 		<IpListContainer>
 			<IpListHeader>
 				<span>Lista de IP's</span>
-
 				<CustomButton
 					buttonType={BUTTON_TYPE_CLASSES.seeMore}
 					onClick={toggleForm}
 					$formVisible={formVisible}>
 					Añadir IP {formVisible ? ">" : "<"}
 				</CustomButton>
-
 				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
 					<input
 						name="element"
@@ -165,8 +173,9 @@ const IpList = ({
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
-				itemList={ipList}
+				itemList={ip}
 				handleDelete={handleDeleteIp}
+				handleComment={handleComment}
 			/>
 		</IpListContainer>
 	);

@@ -13,6 +13,7 @@ const InfoList = ({
 	orderedKeys,
 	renderActions,
 	activated = false,
+	height = "",
 }) => {
 	return (
 		<InfoListContainer $activated={activated}>
@@ -23,7 +24,7 @@ const InfoList = ({
 					</HeaderTitle>
 				))}
 			</InfoListHeader>
-			<InformationContainer>
+			<InformationContainer $height={height}>
 				{infoList.map((item, index) => (
 					<InfoItem key={index}>
 						{orderedKeys.map((key, i) => (

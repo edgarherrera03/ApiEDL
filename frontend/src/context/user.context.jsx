@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
 			} else {
 				logout();
 			}
-			setLoading(false);
+			// setLoading(false);
 		};
 		verifyToken();
 	}, []);
@@ -43,6 +43,7 @@ export const UserProvider = ({ children }) => {
 		setIsAuthenticated,
 		loading,
 		logout,
+		setLoading,
 	};
 
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

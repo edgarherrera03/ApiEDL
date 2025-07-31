@@ -10,8 +10,7 @@ import {
 	ClientDetailContentContainer,
 	ClientTitle,
 } from "./client-detail-page.styles";
-import LeftBarClient from "../../components/left-bar-client/left-bar-client.component";
-import { CLIENT_ROUTES } from "../../components/left-bar-client/left-bar-client.component";
+import LeftBar from "../../components/left-bar/left-bar.component";
 import GeneralInfoClient from "../../components/general-info-client/general-info-client.component";
 import IpList from "../../components/ip-list/ip-list.component";
 import DomainList from "../../components/domain-list/domain-list.component";
@@ -19,6 +18,20 @@ import HashList from "../../components/hash-list/hash-list.component";
 import EdlProfiles from "../../components/edl-profiles/edl-profiles.component";
 import Spinner from "../../components/spinner/spinner.component";
 import { UserContext } from "../../context/user.context";
+
+const CLIENT_ROUTES = {
+	general: "general",
+	ipList: "ipList",
+	domainList: "domainList",
+	hashList: "hashList",
+};
+
+const routes = {
+	general: "General",
+	ipList: "Lista de IPs",
+	domainList: "Lista de Dominios",
+	hashList: "Lista de Hash",
+};
 
 const ClientDetailPage = () => {
 	const { token } = useParams();
@@ -85,7 +98,11 @@ const ClientDetailPage = () => {
 
 	return (
 		<ClientDetailPageContainer>
-			<LeftBarClient selected={selectedRoute} onSelect={handleSelectRoute} />
+			<LeftBar
+				selected={selectedRoute}
+				onSelect={handleSelectRoute}
+				routes={routes}
+			/>
 			<ClientDetailContentContainer>
 				<ClientTitle>
 					<h1>{client.name}</h1>

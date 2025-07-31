@@ -1,40 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { requestClientsList } from "../../utils/api";
+import { useContext } from "react";
 import { ClientsContainer } from "./clients.styles";
 import ClientsList from "../../components/clients-list/clients-list.component";
-import { UserContext } from "../../context/user.context";
+import { ClientsContext } from "../../context/clients.context";
+import Spinner from "../../components/spinner/spinner.component";
 
 const Clients = () => {
-	const { logout } = useContext(UserContext);
-	const [clientslist, setClientslist] = useState([]);
-	useEffect(() => {
-		const fetchClients = async () => {
-			const { success, code, clients, error } = await requestClientsList();
-			if (success) {
-				setClientslist(clients);
-			} else if (code === 404) {
-				console.log(error);
-			} else if (code === 403 || code === 401) {
-				await logout();
-			}
-		};
+	const { clientsList, reloadClientsList } = useContext(ClientsContext);
+	if (!clientsList) return <Spinner />;
 
-		fetchClients();
-	}, [logout]);
-	const reloadClientsList = async () => {
-		const { success, code, clients, error } = await requestClientsList();
-		if (success) {
-			setClientslist(clients);
-		} else if (code === 404) {
-			console.log(error);
-		} else if (code === 403 || code === 401) {
-			await logout();
-		}
-	};
 	return (
 		<ClientsContainer>
 			<ClientsList
-				clientsList={clientslist}
+				clientsList={clientsList}
 				reloadClientsList={reloadClientsList}
 			/>
 		</ClientsContainer>

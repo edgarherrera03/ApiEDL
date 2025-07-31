@@ -1,11 +1,17 @@
 import styled from "styled-components";
-import { backgroundDark, backgroundLightDark } from "../../assets/_variables";
+import {
+	backgroundDark,
+	backgroundLightDark,
+	backgroundMediumDark,
+	infoText,
+} from "../../assets/_variables";
 
 export const ScrollListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 	border-top: 1px solid ${backgroundLightDark};
+	border-radius: 5px;
 `;
 
 export const ScrollListHeaders = styled.div`
@@ -105,4 +111,13 @@ export const CommentSection = styled.div`
 export const ButtonSection = styled.div`
 	display: flex;
 	gap: 10px;
+`;
+
+export const Comment = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	span {
+		color: ${backgroundMediumDark};
+	}
 `;

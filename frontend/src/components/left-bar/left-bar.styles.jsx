@@ -5,7 +5,7 @@ import {
 	backgroundWhite,
 } from "../../assets/_variables";
 
-export const LeftBarClientContainer = styled.div`
+export const LeftBarContainer = styled.div`
 	position: fixed;
 	top: 100px;
 	display: flex;
