@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import {
 	RegisterItemTabContainer,
@@ -21,12 +21,12 @@ const defaultRegisterValues = {
 	clients: [],
 	classification: "",
 	country: "",
-	blocked: "",
+	blocked: "true",
 	rating: "",
 	comment: "",
 };
 
-const RegisterItemTab = ({ clientsList }) => {
+const RegisterItemTab = ({ clientsList, investigateResult }) => {
 	const [registerValues, setRegisterValues] = useState(defaultRegisterValues);
 	const { currentUser, logout } = useContext(UserContext);
 	const { reloadItems } = useContext(ItemsContext);
@@ -40,6 +40,12 @@ const RegisterItemTab = ({ clientsList }) => {
 		blocked,
 		comment,
 	} = registerValues;
+
+	useEffect(() => {
+		if (investigateResult) {
+			setRegisterValues({ ...registerValues, ...investigateResult });
+		}
+	}, [investigateResult]);
 
 	const handleSelectChange = (name) => (selectedOption) => {
 		setRegisterValues({ ...registerValues, [name]: selectedOption });
@@ -108,9 +114,9 @@ const RegisterItemTab = ({ clientsList }) => {
 								value={type}
 								onChange={handleChangeText}>
 								<option value="">Seleccione un tipo</option>
-								<option value="IpList">IP</option>
-								<option value="WebsiteList">Dominio</option>
-								<option value="HashList">Hash</option>
+								<option value="ip">IP</option>
+								<option value="domain">Dominio</option>
+								<option value="hash">Hash</option>
 							</Selector>
 						</InputLabel>
 					</Option>

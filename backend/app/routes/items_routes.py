@@ -23,7 +23,6 @@ def getItems():
     else:
         return jsonify({"error": "No se encontró ningun elemento solicitado"}), 404
 
-
 @bp.route('/actions/client/add-item-list', methods=['POST'])
 @token_verification_required
 def addItemToClient():
@@ -93,14 +92,12 @@ def registerItem():
     if not itemToAdd or not username:
         return jsonify({"error": "Missing fields"}), 400
 
-    listType = itemToAdd['type']
-
     type_mapping = {
-        'IpList': 'ip',
-        'WebsiteList': 'domain',
-        'HashList': 'hash'
+        'ip': 'IpList',
+        'domain': 'WebsiteList',
+        'hash': 'HashList'
     }
-    itemToAdd['type'] = type_mapping.get(itemToAdd['type'])
+    listType = type_mapping.get(itemToAdd['type'])
 
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     itemToAdd["lastUpdate"] = date
@@ -233,22 +230,27 @@ def deleteItem():
     else:
         return jsonify({'error': 'Hubo un error al eliminar el item'}), 500
 
-
 @bp.route('/actions/client/add-comment', methods=['POST'])
 @token_verification_required
 def addCommentToItem():
     data = request.get_json()
     username = data['username']
-    listType = data['listType']
+    type = data['listType']
     comment = data['comment']
     item = data ['item']
 
+    if not comment or not username or not type or not item:
+        return jsonify({"error": "Missing fields"}), 400
+    
+    type_mapping = {
+        'ip': 'IpList',
+        'domain': 'WebsiteList',
+        'hash': 'HashList'
+    }
+    listType = type_mapping.get(type)
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     collection = COLLECTIONS[listType]
 
-    if not comment or not username or not listType or not item:
-        return jsonify({"error": "Missing fields"}), 400
-    
     #Contruimos el formato del comentario
     commentToBeInserted = { 'username': username, 'comment': comment, 'date': date}
     collection.update_one(
@@ -279,3 +281,43 @@ def investigateItem():
     
     return jsonify({"message": 'Info recuparada de manera correcta', 'indicatorDetails': indicatorDetails}), 200
     
+@bp.route('/actions/modify-item', methods=['POST'])
+@token_verification_required
+def modifyItem():
+    data = request.get_json()
+    username = data['username']
+    itemToModify = data['itemToModify']
+    print(itemToModify)
+    if not itemToModify or not username:
+        return jsonify({"error": "Missing fields"}), 400
+
+    type_mapping = {
+        'ip': 'IpList',
+        'domain': 'WebsiteList',
+        'hash': 'HashList'
+    }
+    listType = type_mapping.get(itemToModify['type'])
+    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+    itemToModify['blocked'] = itemToModify['blocked'] == 'true'
+    itemToModify["lastUpdate"] = date
+    collection = COLLECTIONS[listType]
+
+    element = collection.find_one({'element': itemToModify['element']})
+    if not element:
+        return jsonify({'error': 'El elemento que se quiere modificar no se ha encontrado'}), 404
+    
+    collection.update_one(
+        {'element': itemToModify['element']},
+        {
+            '$set': {
+                'classification': itemToModify['classification'],
+                'rating': itemToModify['rating'],
+                'blocked': itemToModify['blocked'],
+                'lastUpdate': date,
+            }
+        }
+    )
+    action = USER_ACTIONS['modify_item_from_list']
+    details = f'Se modificó {itemToModify['element']}'
+    log_user_action(username, action, details)
+    return jsonify({"message": "Elemento modificado correctamente"}), 200

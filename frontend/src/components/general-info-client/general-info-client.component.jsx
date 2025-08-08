@@ -18,6 +18,7 @@ import { UserContext } from "../../context/user.context";
 const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 	const [expirationDate, setExpirationDate] = useState("");
 	const { currentUser, logout } = useContext(UserContext);
+	const role = currentUser["role"];
 	const handleSubmitExpirationDate = async (event) => {
 		event.preventDefault();
 		const newDate = event.target.elements[0].value;
@@ -71,15 +72,16 @@ const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 					<span>API Key</span>
 					<p>{client.apiKey}</p>
 				</TitleInformation>
-
-				<div>
-					<Button
-						onClick={handleRegenerateKey}
-						type="button"
-						buttonType={BUTTON_TYPE_CLASSES.generate}>
-						Regenerar
-					</Button>
-				</div>
+				{role === "admin" && (
+					<div>
+						<Button
+							onClick={handleRegenerateKey}
+							type="button"
+							buttonType={BUTTON_TYPE_CLASSES.generate}>
+							Regenerar
+						</Button>
+					</div>
+				)}
 			</ApiKeyContainer>
 			<ExpirationDateContainer>
 				<DateContainer>
@@ -90,13 +92,17 @@ const GeneralInfoClient = ({ client, token, reloadClientDetails }) => {
 				<form onSubmit={handleSubmitExpirationDate}>
 					<DateContainer>
 						<span>Nueva fecha:</span>
-						<input
-							type="date"
-							required
-							value={expirationDate}
-							onChange={handleChangeExpirationDate}
-						/>
-						<button type="submit">OK</button>
+						{role === "admin" && (
+							<>
+								<input
+									type="date"
+									required
+									value={expirationDate}
+									onChange={handleChangeExpirationDate}
+								/>
+								<button type="submit">OK</button>
+							</>
+						)}
 					</DateContainer>
 				</form>
 			</ExpirationDateContainer>

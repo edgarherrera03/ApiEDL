@@ -1,10 +1,5 @@
 import styled from "styled-components";
-import {
-	backgroundDark,
-	backgroundMediumDark,
-	backgroundWhite,
-	infoText,
-} from "../../assets/_variables";
+import { backgroundDark, backgroundWhite } from "../../assets/_variables";
 import Select from "react-select";
 
 export const RegisterItemTabContainer = styled.div`
@@ -32,20 +27,20 @@ export const RegisterItemContent = styled.div`
 	gap: 20px;
 	width: 70%;
 	align-items: center;
-	background-color: ${backgroundMediumDark};
+	background-color: ${backgroundWhite};
 	border-radius: 10px;
 	box-shadow: 0px 5px rgb(0, 0, 0, 0.2);
-	padding: 25px 0 15px 0;
+	padding: 25px 0 25px 0;
 	span {
-		color: ${infoText};
+		color: ${backgroundDark};
 		font-size: 25px;
-		font-weight: 500;
+		font-weight: 800;
 	}
 	form {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 5px;
+		gap: 10px;
 		min-height: 400px;
 		width: 100%;
 	}
@@ -82,11 +77,12 @@ export const SelectFilter = styled(Select).attrs({
 
 export const InputLabel = styled.label`
 	font-size: 18px;
-	color: ${backgroundWhite};
+	color: ${backgroundDark};
 	display: flex;
 	flex-direction: column;
 	text-align: left;
 	width: 85%;
+	font-weight: bold;
 `;
 export const Selector = styled.select`
 	width: 100%;

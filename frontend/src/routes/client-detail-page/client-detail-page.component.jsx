@@ -38,6 +38,7 @@ const ClientDetailPage = () => {
 	const [client, setClient] = useState(null);
 	const [selectedRoute, setSelectedRoute] = useState(CLIENT_ROUTES.general);
 	const { currentUser, logout } = useContext(UserContext);
+
 	useEffect(() => {
 		const fetchClient = async () => {
 			const { success, client, code, error } = await requestClientByToken(

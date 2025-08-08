@@ -133,3 +133,8 @@ export const Comment = styled.div`
 		color: ${backgroundMediumDark};
 	}
 `;
+
+export const ButtonContainer = styled.div`
+	display: flex;
+	gap: 15px;
+`;

@@ -10,8 +10,9 @@ import { ItemsContext } from "../../context/items.context";
 import RegisterItemTab from "../../components/register-item-tab/register-item-tab.component";
 import InvestigateTab from "../../components/investigate-tab/investigate-tab.component";
 import Spinner from "../../components/spinner/spinner.component";
+import { UserContext } from "../../context/user.context";
 
-const REGISTER_ROUTES = {
+export const REGISTER_ROUTES = {
 	buscar: "buscar",
 	investigar: "investigar",
 	registrar: "registrar",
@@ -42,10 +43,13 @@ const Registros = () => {
 	const [selectedRoute, setSelectedRoute] = useState(REGISTER_ROUTES.buscar);
 	const { clientsList } = useContext(ClientsContext);
 	const { ipList, domainList, hashList } = useContext(ItemsContext);
+	const { currentUser } = useContext(UserContext);
 	const [clientsOption, setClientsOption] = useState([]);
 	const [generalList, setGeneralList] = useState([]);
 	const [countryOptions, setCountryOptions] = useState([]);
+	const [investigateResult, setInvestigateResult] = useState({});
 
+	const role = currentUser["role"];
 	const loading =
 		!generalList.length || !clientsOption.length || !countryOptions.length;
 
@@ -83,6 +87,10 @@ const Registros = () => {
 		setSelectedRoute(route);
 	};
 
+	const handleInvestigateResult = (result) => {
+		setInvestigateResult(result);
+		setSelectedRoute(REGISTER_ROUTES.registrar);
+	};
 	if (loading) return <Spinner />;
 	return (
 		<RegistrosContainer>
@@ -99,9 +107,14 @@ const Registros = () => {
 						generalList={generalList}
 					/>
 				)}
-				{selectedRoute === REGISTER_ROUTES.investigar && <InvestigateTab />}
-				{selectedRoute === REGISTER_ROUTES.registrar && (
-					<RegisterItemTab clientsList={clientsOption} />
+				{selectedRoute === REGISTER_ROUTES.investigar && (
+					<InvestigateTab handleInvestigateResult={handleInvestigateResult} />
+				)}
+				{role === "admin" && selectedRoute === REGISTER_ROUTES.registrar && (
+					<RegisterItemTab
+						clientsList={clientsOption}
+						investigateResult={investigateResult}
+					/>
 				)}
 			</RegistrosInformationContainer>
 		</RegistrosContainer>

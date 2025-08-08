@@ -37,6 +37,7 @@ const IpList = ({
 	const [ip, setIp] = useState([]);
 	const { ipList, reloadIpList } = useContext(ItemsContext);
 	const { logout, currentUser } = useContext(UserContext);
+	const role = currentUser["role"];
 
 	useEffect(() => {
 		setIp(ipList.filter((ip) => ip.clients.includes(clientUsername)));
@@ -94,7 +95,7 @@ const IpList = ({
 		if (confirmed) {
 			const { success, error, code } = await addCommentToItem(
 				currentUser["username"],
-				"IpList",
+				"ip",
 				comment,
 				item
 			);
@@ -104,31 +105,36 @@ const IpList = ({
 				console.log(error);
 			}
 		}
+		reloadIpList();
 	};
 	return (
 		<IpListContainer>
 			<IpListHeader>
 				<span>Lista de IP's</span>
-				<CustomButton
-					buttonType={BUTTON_TYPE_CLASSES.seeMore}
-					onClick={toggleForm}
-					$formVisible={formVisible}>
-					Añadir IP {formVisible ? ">" : "<"}
-				</CustomButton>
-				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
-					<input
-						name="element"
-						required
-						value={element}
-						onChange={handleChange}
-						type="text"
-						minLength="7"
-						maxLength="15"
-						pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$"
-						placeholder="Dirección IPv4"
-					/>
-					<AddIpButton type="submit">+</AddIpButton>
-				</FormWrapper>
+				{role === "admin" && (
+					<>
+						<CustomButton
+							buttonType={BUTTON_TYPE_CLASSES.seeMore}
+							onClick={toggleForm}
+							$formVisible={formVisible}>
+							Añadir IP {formVisible ? ">" : "<"}
+						</CustomButton>
+						<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
+							<input
+								name="element"
+								required
+								value={element}
+								onChange={handleChange}
+								type="text"
+								minLength="7"
+								maxLength="15"
+								pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$"
+								placeholder="Dirección IPv4"
+							/>
+							<AddIpButton type="submit">+</AddIpButton>
+						</FormWrapper>
+					</>
+				)}
 			</IpListHeader>
 			<ScrollList
 				headersList={headersList}

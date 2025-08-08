@@ -41,6 +41,7 @@ const EdlProfiles = ({ client, token, onReloadClients }) => {
 	const [copiedList, setCopiedList] = useState(null);
 	const [listLimits, setListLimits] = useState({});
 	const { currentUser, logout } = useContext(UserContext);
+	const role = currentUser.role;
 	const username = client.username;
 	const apiKey = client.apiKey;
 
@@ -113,17 +114,21 @@ const EdlProfiles = ({ client, token, onReloadClients }) => {
 									{client[profile.listTitle].info.length} /{" "}
 									{client[profile.listTitle].listLimit}
 								</p>
-								<form
-									onSubmit={(e) => handleModifyListLimit(e, profile.listTitle)}>
-									<input
-										type="number"
-										placeholder="Nuevo registro maximo"
-										value={listLimits[profile.listTitle] || ""}
-										onChange={(e) => handleChange(e, profile.listTitle)}
-										required
-									/>
-									<button type="submit">Actualizar</button>
-								</form>
+								{role === "admin" && (
+									<form
+										onSubmit={(e) =>
+											handleModifyListLimit(e, profile.listTitle)
+										}>
+										<input
+											type="number"
+											placeholder="Nuevo registro maximo"
+											value={listLimits[profile.listTitle] || ""}
+											onChange={(e) => handleChange(e, profile.listTitle)}
+											required
+										/>
+										<button type="submit">Actualizar</button>
+									</form>
+								)}
 							</Info>
 							<Info>
 								<p>

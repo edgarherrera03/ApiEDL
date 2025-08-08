@@ -10,6 +10,7 @@ import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
 import { ItemsContext } from "../../context/items.context";
+import { addCommentToItem } from "../../utils/api";
 
 const DomainList = ({
 	handleAdd,
@@ -19,9 +20,11 @@ const DomainList = ({
 }) => {
 	const [formVisible, setFormVisible] = useState(false);
 	const [domains, setDomains] = useState([]);
-	const { logout } = useContext(UserContext);
+	const { logout, currentUser } = useContext(UserContext);
 	const [element, setElement] = useState("");
 	const { domainList, reloadDomainList } = useContext(ItemsContext);
+	const role = currentUser["role"];
+
 	const headersList = [
 		"Dominio",
 		"Clasificación",
@@ -87,38 +90,61 @@ const DomainList = ({
 		reloadClientDetails();
 		reloadDomainList();
 	};
+	const handleComment = async (comment, item) => {
+		const confirmed = window.confirm(
+			`Se añadirá un nuevo comentario para el objeto ${item}\n\n¿Confirmar?`
+		);
+		if (confirmed) {
+			const { success, error, code } = await addCommentToItem(
+				currentUser["username"],
+				"domain",
+				comment,
+				item
+			);
+			if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
+		}
+		reloadDomainList();
+	};
 	return (
 		<DomainListContainer>
 			<DomainListHeader>
 				<span>Lista de dominios</span>
+				{role === "admin" && (
+					<>
+						<CustomButton
+							buttonType={BUTTON_TYPE_CLASSES.seeMore}
+							onClick={toggleForm}
+							$formVisible={formVisible}>
+							Añadir dominio {formVisible ? ">" : "<"}
+						</CustomButton>
 
-				<CustomButton
-					buttonType={BUTTON_TYPE_CLASSES.seeMore}
-					onClick={toggleForm}
-					$formVisible={formVisible}>
-					Añadir dominio {formVisible ? ">" : "<"}
-				</CustomButton>
-
-				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
-					<input
-						name="element"
-						required
-						value={element}
-						onChange={handleChange}
-						type="text"
-						minLength="4"
-						maxLength="253"
-						pattern="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
-						placeholder="Dominio"
-					/>
-					<AddDomainButton type="submit">+</AddDomainButton>
-				</FormWrapper>
+						<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
+							<input
+								name="element"
+								required
+								value={element}
+								onChange={handleChange}
+								type="text"
+								minLength="4"
+								maxLength="253"
+								pattern="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+								placeholder="Dominio"
+							/>
+							<AddDomainButton type="submit">+</AddDomainButton>
+						</FormWrapper>
+					</>
+				)}
 			</DomainListHeader>
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
 				itemList={domains}
 				handleDelete={handleDeleteDomain}
+				handleComment={handleComment}
 			/>
 		</DomainListContainer>
 	);

@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
 from app.utils.auth import token_verification_required
 from app.models.db import logsCollection, clientsCollection
+from datetime import datetime
+from app.utils.helpers import COLLECTIONS
 
 bp = Blueprint('utils', __name__, url_prefix='/api/utils', template_folder='templates')
 
@@ -15,8 +17,14 @@ def getLogs():
             "details": log['details'],
             "timestamp": log['timestamp'],
         })
+
     if response:
-        sorted_logs = sorted(response, key=lambda x: x["timestamp"])
+        # Convertir y ordenar por fecha real (más reciente primero)
+        sorted_logs = sorted(
+            response,
+            key=lambda x: datetime.strptime(x["timestamp"], "%a, %d %b %Y %H:%M:%S GMT"),
+            reverse=True
+        )
         return jsonify({'message': 'Logs information fetched', 'logs': sorted_logs}), 200
     else:
         return jsonify({'error': 'No se encontraron los logs'}), 404
@@ -30,6 +38,7 @@ def get_edl():
     if not all([listType, username, api_key]):
         return render_template('not_found.template.html', message="Missing required parameters"), 400
 
+    collection = COLLECTIONS[listType]
     client = clientsCollection.find_one({'username': username})
     if not client:
         return render_template('not_found.template.html', message="Cliente no encontrado"), 404
@@ -40,8 +49,9 @@ def get_edl():
     # Esta lista contiene la lista de elementos que tienen como estatus bloqueado
     itemBlockedList = []
     for item in client[listType]['info']:
-        if item['blocked']:
-            itemBlockedList.append(item['element'])
+        element = collection.find_one({'element': item})
+        if element and element['blocked']:
+            itemBlockedList.append(item)
         else: 
             pass
 

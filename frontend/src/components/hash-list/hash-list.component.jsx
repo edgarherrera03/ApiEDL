@@ -10,6 +10,7 @@ import { useContext, useState, useEffect } from "react";
 import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
 import { ItemsContext } from "../../context/items.context";
+import { addCommentToItem } from "../../utils/api";
 
 const HashList = ({
 	handleAdd,
@@ -20,9 +21,9 @@ const HashList = ({
 	const [formVisible, setFormVisible] = useState(false);
 	const [element, setElement] = useState("");
 	const [hashes, setHashes] = useState([]);
-	const { logout } = useContext(UserContext);
+	const { logout, currentUser } = useContext(UserContext);
 	const { hashList, reloadHashList } = useContext(ItemsContext);
-
+	const role = currentUser["role"];
 	const headersList = [
 		"Hash",
 		"Nombre del programa",
@@ -87,35 +88,59 @@ const HashList = ({
 		reloadClientDetails();
 		reloadHashList();
 	};
+
+	const handleComment = async (comment, item) => {
+		const confirmed = window.confirm(
+			`Se añadirá un nuevo comentario para el objeto ${item}\n\n¿Confirmar?`
+		);
+		if (confirmed) {
+			const { success, error, code } = await addCommentToItem(
+				currentUser["username"],
+				"hash",
+				comment,
+				item
+			);
+			if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
+		}
+		reloadHashList();
+	};
 	return (
 		<HashListContainer>
 			<HashListHeader>
 				<span>Lista de Hashes</span>
+				{role === "admin" && (
+					<>
+						<CustomButton
+							buttonType={BUTTON_TYPE_CLASSES.seeMore}
+							onClick={toggleForm}
+							$formVisible={formVisible}>
+							Añadir Hash {formVisible ? ">" : "<"}
+						</CustomButton>
 
-				<CustomButton
-					buttonType={BUTTON_TYPE_CLASSES.seeMore}
-					onClick={toggleForm}
-					$formVisible={formVisible}>
-					Añadir Hash {formVisible ? ">" : "<"}
-				</CustomButton>
-
-				<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
-					<input
-						name="element"
-						required
-						value={element}
-						onChange={handleChange}
-						type="text"
-						placeholder="Hash"
-					/>
-					<AddHashButton type="submit">+</AddHashButton>
-				</FormWrapper>
+						<FormWrapper onSubmit={handleSubmit} $formVisible={formVisible}>
+							<input
+								name="element"
+								required
+								value={element}
+								onChange={handleChange}
+								type="text"
+								placeholder="Hash"
+							/>
+							<AddHashButton type="submit">+</AddHashButton>
+						</FormWrapper>
+					</>
+				)}
 			</HashListHeader>
 			<ScrollList
 				headersList={headersList}
 				ordersList={orderList}
 				itemList={hashes}
 				handleDelete={handleDeleteHash}
+				handleComment={handleComment}
 			/>
 		</HashListContainer>
 	);

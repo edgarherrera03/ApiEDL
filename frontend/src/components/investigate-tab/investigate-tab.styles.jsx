@@ -24,7 +24,7 @@ export const InvestigateTabContent = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	width: 80%;
+	width: 100%;
 	form {
 		display: flex;
 		flex-wrap: wrap;
@@ -68,5 +68,25 @@ export const SelectFilter = styled(Select).attrs({
 		display: flex;
 		align-items: center;
 		height: 100%;
+	}
+`;
+
+export const InvestigateResultContainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 40px;
+	line-height: 15px;
+`;
+
+export const Result = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	span {
+		color: ${backgroundDark};
+		font-weight: bold;
 	}
 `;

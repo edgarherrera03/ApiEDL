@@ -10,6 +10,7 @@ import {
 import { deleteItem } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
 import { ItemsContext } from "../../context/items.context";
+import { addCommentToItem } from "../../utils/api";
 
 const headersList = [
 	"Objeto",
@@ -106,6 +107,25 @@ const SearchTab = ({ clientsList, countryList, generalList }) => {
 		}
 		reloadItems();
 	};
+	const handleComment = async (comment, item, type) => {
+		const confirmed = window.confirm(
+			`Se añadirá un nuevo comentario para el objeto ${item}\n\n¿Confirmar?`
+		);
+		if (confirmed) {
+			const { success, error, code } = await addCommentToItem(
+				currentUser["username"],
+				type,
+				comment,
+				item
+			);
+			if (code === 401 || code === 403) {
+				await logout();
+			} else if (!success) {
+				console.log(error);
+			}
+		}
+		reloadItems();
+	};
 	return (
 		<SearchTabContainer>
 			<SearchTabTitle>
@@ -128,6 +148,7 @@ const SearchTab = ({ clientsList, countryList, generalList }) => {
 					itemList={filteredList}
 					handleDelete={handleDelete}
 					height={600}
+					handleComment={handleComment}
 				/>
 			</SearchTabContent>
 		</SearchTabContainer>

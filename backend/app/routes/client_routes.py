@@ -3,6 +3,7 @@ from app.models.db import clientsCollection
 from app.utils.auth import token_verification_required
 from app.utils.helpers import generate_unique_api_key, generate_unique_client_token, USER_ACTIONS, log_user_action
 from datetime import timezone, datetime
+from zoneinfo import ZoneInfo
 
 bp = Blueprint('clients', __name__, url_prefix='/api/clients')
 
@@ -101,13 +102,19 @@ def modifyExpirationDate(clientToken):
     if not newExpirationDate or not username:
         return jsonify({"error": "Missing fields"}), 400
 
+    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
         return jsonify({"error": "Client no encontrado"}), 404
 
     clientsCollection.update_one(
         {"clientToken": clientToken},
-        {"$set": {"expirationDate": newExpirationDate}}
+        {
+            '$set': {
+                "expirationDate": newExpirationDate,
+                'updateDate': date,
+            }
+        }
     )
     action = USER_ACTIONS['modify_expirationDate']
     details = f'Se modificó la fecha de expiración del cliente {client['username']} a {newExpirationDate}'
@@ -148,12 +155,18 @@ def regenerateApiKey(clientToken):
 
     newApiKey = generate_unique_api_key()
     client = clientsCollection.find_one({"clientToken": clientToken})
+    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     if not client:
         return jsonify({"error": "Cliente no encontrado"}), 404
     
     clientsCollection.update_one(
         {"clientToken": clientToken},
-        {'$set': {'apiKey': newApiKey}}
+        {
+            '$set': {
+                'apiKey': newApiKey,
+                'updateDate': date,
+            }
+         }
     )
     action = USER_ACTIONS['regenerate_api_key']
     details = f'La Api_Key del cliente {client['username']} fue regenerada'

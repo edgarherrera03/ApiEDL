@@ -27,10 +27,8 @@ def generate_unique_api_key():
 USER_ACTIONS = {
     'add_item_to_list': 'Añadió un elemento a una lista',
     'delete_item_from_list': 'Eliminó un elemento de una lista',
+    'modify_item_from_list': 'Modificó un elemento',
     'comment_item': 'Agregó un nuevo comentario',
-    'modify_ip': 'Modificó una dirección IP',
-    'modify_website': 'Modificó un dominio',
-    'modify_hash': 'Modificó un hash',
     'add_user': 'Añadió un usuario',
     'delete_user': 'Eliminó un usuario',
     'modify_user': 'Modificó un usuario',

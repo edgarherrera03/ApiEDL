@@ -241,3 +241,35 @@ export const investigateItem = async (item, itemType) => {
 		return { success: false, error: error };
 	}
 };
+
+export const modifyItem = async (username, itemToModify) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/items/actions/modify-item`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					itemToModify: itemToModify,
+				}),
+			}
+		);
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message,
+				indicatorDetails: data.indicatorDetails,
+			};
+		} else {
+			return { success: false, error: data.error, code: code };
+		}
+	} catch (error) {
+		return { success: false, error: error };
+	}
+};
