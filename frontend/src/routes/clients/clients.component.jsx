@@ -6,7 +6,8 @@ import Spinner from "../../components/spinner/spinner.component";
 
 const Clients = () => {
 	const { clientsList, reloadClientsList } = useContext(ClientsContext);
-	if (!clientsList) return <Spinner />;
+
+	if (clientsList.length === 0) return <Spinner />;
 
 	return (
 		<ClientsContainer>

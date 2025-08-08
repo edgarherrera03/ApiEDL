@@ -1,12 +1,16 @@
+import { serverIP, serverPort } from "../../assets/_variables";
 export const requestClientsList = async () => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/clients", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-		});
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/clients`,
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+			}
+		);
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok && data) {
@@ -38,7 +42,7 @@ export const addClientRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			"http://127.0.0.1:5000/api/clients/actions/add",
+			`http://${serverIP}:${serverPort}/api/clients/actions/add`,
 			{
 				method: "POST",
 				headers: {
@@ -75,7 +79,7 @@ export const addClientRequest = async (
 export const requestClientByToken = async (token) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/${token}`,
+			`http://${serverIP}:${serverPort}/api/clients/by-token/${token}`,
 			{
 				method: "GET",
 				headers: {
@@ -111,7 +115,7 @@ export const modifyExpirationDateRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/modify-expiration-date/${token}`,
+			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/modify-expiration-date/${token}`,
 			{
 				method: "POST",
 				headers: {
@@ -147,7 +151,7 @@ export const modifyListLimitRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/modify-list-limit/${token}`,
+			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/modify-list-limit/${token}`,
 			{
 				method: "POST",
 				headers: {
@@ -179,7 +183,7 @@ export const modifyListLimitRequest = async (
 export const regenerateApiKeyRequest = async (username, token) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/clients/by-token/actions/regenerate-api-key/${token}`,
+			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/regenerate-api-key/${token}`,
 			{
 				method: "POST",
 				headers: {

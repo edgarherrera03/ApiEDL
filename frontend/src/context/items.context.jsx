@@ -12,15 +12,18 @@ export const ItemsContext = createContext({
 	hashList: [],
 	setHashList: () => null,
 	reloadHashList: () => null,
+	reloadItems: () => null,
 });
 
 export const ItemsProvider = ({ children }) => {
 	const [ipList, setIpList] = useState([]);
 	const [domainList, setDomainList] = useState([]);
 	const [hashList, setHashList] = useState([]);
-	const { logout, setLoading } = useContext(UserContext);
+	const { logout, setLoading, isAuthenticated } = useContext(UserContext);
 
 	useEffect(() => {
+		if (!isAuthenticated) return;
+
 		const fetchItems = async () => {
 			const ip = await getItems("IpList");
 			const website = await getItems("WebsiteList");
@@ -34,8 +37,19 @@ export const ItemsProvider = ({ children }) => {
 			setLoading(false);
 		};
 		fetchItems();
-	}, [setLoading]);
+	}, [isAuthenticated, setLoading]);
 
+	const reloadItems = async () => {
+		const ip = await getItems("IpList");
+		const website = await getItems("WebsiteList");
+		const hash = await getItems("HashList");
+
+		if (ip.success && website.success && hash.success) {
+			setIpList(ip.items);
+			setDomainList(website.items);
+			setHashList(hash.items);
+		}
+	};
 	const reloadIpList = async () => {
 		const { success, code, items, error } = await getItems("IpList");
 		if (success) {
@@ -77,6 +91,7 @@ export const ItemsProvider = ({ children }) => {
 		hashList,
 		setHashList,
 		reloadHashList,
+		reloadItems,
 	};
 
 	return (

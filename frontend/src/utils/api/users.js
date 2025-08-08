@@ -1,6 +1,7 @@
+import { serverIP, serverPort } from "../../assets/_variables";
 export const requestUsersInformation = async () => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/users", {
+		const response = await fetch(`http://${serverIP}:${serverPort}/api/users`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -35,7 +36,7 @@ export const requestUsersInformation = async () => {
 export const deleteUserRequest = async (username, usernameToDelete) => {
 	try {
 		const response = await fetch(
-			"http://127.0.0.1:5000/api/users/actions/delete",
+			`http://${serverIP}:${serverPort}/api/users/actions/delete`,
 			{
 				method: "POST",
 				headers: {
@@ -72,7 +73,7 @@ export const addUserRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			"http://127.0.0.1:5000/api/users/actions/add",
+			`http://${serverIP}:${serverPort}/api/users/actions/add`,
 			{
 				method: "POST",
 				headers: {
@@ -111,7 +112,7 @@ export const modifyUserRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			"http://127.0.0.1:5000/api/users/actions/modify",
+			`http://${serverIP}:${serverPort}/api/users/actions/modify`,
 			{
 				method: "POST",
 				headers: {

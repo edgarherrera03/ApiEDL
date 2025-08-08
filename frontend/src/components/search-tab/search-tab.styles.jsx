@@ -5,6 +5,7 @@ export const SearchTabContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	gap: 20px;
 `;
 export const SearchTabTitle = styled.div`
 	display: flex;
@@ -18,5 +19,8 @@ export const SearchTabTitle = styled.div`
 `;
 
 export const SearchTabContent = styled.div`
+	display: flex;
+	flex-direction: column;
 	width: 100%;
+	gap: 35px;
 `;

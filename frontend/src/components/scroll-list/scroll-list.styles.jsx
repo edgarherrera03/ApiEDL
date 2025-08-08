@@ -52,6 +52,23 @@ export const ScollListInformation = styled.div`
 	flex-direction: column;
 	height: ${({ $height }) => ($height ? `${$height}px` : "auto")};
 	overflow-y: auto;
+	&::-webkit-scrollbar {
+		width: 3px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: ${backgroundDark}; /* fondo de la barra */
+		border-radius: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: ${backgroundLightDark}; /* color de la barra */
+		border-radius: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: ${infoText}; /* color al hacer hover */
+	}
 `;
 
 export const Item = styled.div`
@@ -106,11 +123,6 @@ export const CommentsContainer = styled.div`
 export const CommentSection = styled.div`
 	display: flex;
 	flex-direction: column;
-`;
-
-export const ButtonSection = styled.div`
-	display: flex;
-	gap: 10px;
 `;
 
 export const Comment = styled.div`

@@ -11,7 +11,6 @@ import {
 	Icon,
 	CommentSection,
 	Comment,
-	ButtonSection,
 } from "./scroll-list.styles";
 import BlockedIcon from "../blocked-icon/blocked-icon.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
@@ -19,7 +18,7 @@ import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 const ScrollList = ({
 	headersList,
 	ordersList,
-	itemList,
+	itemList = [],
 	height = "",
 	handleDelete,
 	handleComment,
@@ -70,6 +69,8 @@ const ScrollList = ({
 								<Info key={i}>
 									{key === "blocked" ? (
 										<BlockedIcon blocked={item[key]} />
+									) : Array.isArray(item[key]) ? (
+										<span>{item[key].join(", ")}</span>
 									) : (
 										<span>{item[key]}</span>
 									)}
@@ -114,17 +115,12 @@ const ScrollList = ({
 										</Button>
 									</form>
 								</CommentsContainer>
-								<ButtonSection>
-									<Button buttonType={BUTTON_TYPE_CLASSES.seeMore}>
-										Modificar
-									</Button>
-									<Button
-										onClick={() => handleDelete(item["element"])}
-										type="button"
-										buttonType={BUTTON_TYPE_CLASSES.deleteItem}>
-										Eliminar
-									</Button>
-								</ButtonSection>
+								<Button
+									onClick={() => handleDelete(item["element"], item["type"])}
+									type="button"
+									buttonType={BUTTON_TYPE_CLASSES.deleteItem}>
+									Eliminar
+								</Button>
 							</ItemDetails>
 						)}
 					</div>

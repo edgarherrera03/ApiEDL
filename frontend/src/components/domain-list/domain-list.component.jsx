@@ -11,25 +11,17 @@ import ScrollList from "../scroll-list/scroll-list.component";
 import { UserContext } from "../../context/user.context";
 import { ItemsContext } from "../../context/items.context";
 
-const defaulNewDomainFields = {
-	element: "",
-	classification: "",
-	ipRating: "",
-	blocked: "",
-};
-
 const DomainList = ({
 	handleAdd,
 	handleDelete,
 	clientUsername,
 	reloadClientDetails,
 }) => {
-	const [newDomainFields, setNewDomainFields] = useState(defaulNewDomainFields);
 	const [formVisible, setFormVisible] = useState(false);
 	const [domains, setDomains] = useState([]);
 	const { logout } = useContext(UserContext);
+	const [element, setElement] = useState("");
 	const { domainList, reloadDomainList } = useContext(ItemsContext);
-	const { element, classification, ipRating, blocked } = newDomainFields;
 	const headersList = [
 		"Dominio",
 		"Clasificación",
@@ -40,7 +32,7 @@ const DomainList = ({
 	const orderList = [
 		"element",
 		"classification",
-		"ipRating",
+		"rating",
 		"blocked",
 		"lastUpdate",
 	];
@@ -50,11 +42,10 @@ const DomainList = ({
 			domainList.filter((domain) => domain.clients.includes(clientUsername))
 		);
 	}, [domainList, clientUsername]);
-	const resetNewDomainFields = () => setNewDomainFields(defaulNewDomainFields);
 
 	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setNewDomainFields({ ...newDomainFields, [name]: value });
+		const { value } = event.target;
+		setElement(value);
 	};
 
 	const toggleForm = () => {
@@ -67,12 +58,12 @@ const DomainList = ({
 			`El siguiente dominio sera añadida:\n\n[Dominio: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(newDomainFields, "WebsiteList");
+		const { success } = await handleAdd(element, "WebsiteList");
 		if (!success) {
 			alert("Hubo un error al añadir el dominio");
 			return;
 		}
-		resetNewDomainFields();
+		setElement("");
 		reloadClientDetails();
 		reloadDomainList();
 	};
@@ -120,35 +111,6 @@ const DomainList = ({
 						pattern="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
 						placeholder="Dominio"
 					/>
-					<select
-						name="classification"
-						required
-						value={classification}
-						onChange={handleChange}>
-						<option value="">Clasificación</option>
-						<option value="Seguro">Seguro</option>
-						<option value="Sospechoso">Sospechoso</option>
-						<option value="Malicioso">Malicioso</option>
-					</select>
-					<input
-						name="ipRating"
-						required
-						type="number"
-						min={0}
-						max={100}
-						value={ipRating}
-						onChange={handleChange}
-						placeholder="Calificacion"
-					/>
-					<select
-						name="blocked"
-						required
-						value={blocked}
-						onChange={handleChange}>
-						<option value="">Estatus</option>
-						<option value={true}>Bloqueado</option>
-						<option value={false}>Permitido</option>
-					</select>
 					<AddDomainButton type="submit">+</AddDomainButton>
 				</FormWrapper>
 			</DomainListHeader>

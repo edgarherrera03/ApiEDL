@@ -17,41 +17,119 @@ usersInfo = [
 ]
 
 ipAdresses = [
-    {"element": "192.168.10.1", "classification": "Sospechoso", "ipRating": 60, "blocked": False, "lastUpdate": "2025-07-17", "clients": ["Client_A"]},
-    {"element": "10.0.1.5", "classification": "Malicioso", "ipRating": 90, "blocked": True, "lastUpdate": "2025-07-15", "clients": ["Client_A"]},
-    {"element": "172.16.10.12", "classification": "Seguro", "ipRating": 30, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_A"]},
-    {"element": "192.168.20.2", "classification": "Seguro", "ipRating": 15, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_B"]},
-    {"element": "10.1.0.8", "classification": "Sospechoso", "ipRating": 50, "blocked": False, "lastUpdate": "2025-06-30", "clients": ["Client_B"]},
-    {"element": "172.16.2.15", "classification": "Malicioso", "ipRating": 95, "blocked": True, "lastUpdate": "2025-07-16", "clients": ["Client_B"]},
-    {"element": "192.168.3.3", "classification": "Malicioso", "ipRating": 80, "blocked": True, "lastUpdate": "2025-07-18", "clients": ["Client_C"]},
-    {"element": "10.1.0.1", "classification": "Seguro", "ipRating": 20, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_C"]},
-    {"element": "172.17.0.5", "classification": "Sospechoso", "ipRating": 50, "blocked": False, "lastUpdate": "2025-07-09", "clients": ["Client_C"]},
-    {"element": "192.168.4.4", "classification": "Sospechoso", "ipRating": 65, "blocked": False, "lastUpdate": "2025-07-02", "clients": ["Client_D"]},
-    {"element": "10.2.0.6", "classification": "Malicioso", "ipRating": 85, "blocked": True, "lastUpdate": "2025-07-13", "clients": ["Client_D"]},
-    {"element": "192.168.5.5", "classification": "Seguro", "ipRating": 10, "blocked": False, "lastUpdate": "2025-07-07", "clients": ["Client_E"]},
-    {"element": "10.3.0.7", "classification": "Sospechoso", "ipRating": 45, "blocked": False, "lastUpdate": "2025-07-11", "clients": ["Client_E"]}
+    {"element": "192.168.10.1", "type": "ip", "classification": "Sospechoso", "rating": 60, "blocked": False, "lastUpdate": "2025-07-17", "clients": ["Client_A"], "country": "Argentina", "addedBy": "edgar"},
+    {"element": "10.0.1.5", "type": "ip", "classification": "Malicioso", "rating": 90, "blocked": True, "lastUpdate": "2025-07-15", "clients": ["Client_A"], "country": "Argentina", "addedBy": "sofia"},
+    {"element": "172.16.10.12", "type": "ip", "classification": "Seguro", "rating": 30, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_A"], "country": "Argentina", "addedBy": "admin"},
+    {"element": "192.168.20.2", "type": "ip", "classification": "Seguro", "rating": 15, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_B"], "country": "Brasil", "addedBy": "guest"},
+    {"element": "10.1.0.8", "type": "ip", "classification": "Sospechoso", "rating": 50, "blocked": False, "lastUpdate": "2025-06-30", "clients": ["Client_B"], "country": "Brasil", "addedBy": "edgar"},
+    {"element": "172.16.2.15", "type": "ip", "classification": "Malicioso", "rating": 95, "blocked": True, "lastUpdate": "2025-07-16", "clients": ["Client_B"], "country": "Brasil", "addedBy": "sofia"},
+    {"element": "192.168.3.3", "type": "ip", "classification": "Malicioso", "rating": 80, "blocked": True, "lastUpdate": "2025-07-18", "clients": ["Client_C"], "country": "Chile", "addedBy": "admin"},
+    {"element": "10.1.0.1", "type": "ip", "classification": "Seguro", "rating": 20, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_C"], "country": "Chile", "addedBy": "guest"},
+    {"element": "172.17.0.5", "type": "ip", "classification": "Sospechoso", "rating": 50, "blocked": False, "lastUpdate": "2025-07-09", "clients": ["Client_C"], "country": "Chile", "addedBy": "edgar"},
+    {"element": "192.168.4.4", "type": "ip", "classification": "Sospechoso", "rating": 65, "blocked": False, "lastUpdate": "2025-07-02", "clients": ["Client_D"], "country": "Uruguay", "addedBy": "sofia"},
+    {"element": "10.2.0.6", "type": "ip", "classification": "Malicioso", "rating": 85, "blocked": True, "lastUpdate": "2025-07-13", "clients": ["Client_D"], "country": "Uruguay", "addedBy": "admin"},
+    {"element": "192.168.5.5", "type": "ip", "classification": "Seguro", "rating": 10, "blocked": False, "lastUpdate": "2025-07-07", "clients": ["Client_E"], "country": "México", "addedBy": "guest"},
+    {"element": "10.3.0.7", "type": "ip", "classification": "Sospechoso", "rating": 45, "blocked": False, "lastUpdate": "2025-07-11", "clients": ["Client_E"], "country": "México", "addedBy": "edgar"}
 ]
 
 websites = [
-    {"element": "https://login.clienta.net", "classification": "Sospechoso", "ipRating": 55, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_A"]},
-    {"element": "https://portal.clienta.net", "classification": "Seguro", "ipRating": 10, "blocked": False, "lastUpdate": "2025-07-12", "clients": ["Client_A"]},
-    {"element": "https://clientb.services.com", "classification": "Sospechoso", "ipRating": 40, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_B"]},
-    {"element": "https://dashboard.clientb.com", "classification": "Malicioso", "ipRating": 85, "blocked": True, "lastUpdate": "2025-07-14", "clients": ["Client_B"]},
-    {"element": "https://clientc.net", "classification": "Seguro", "ipRating": 5, "blocked": False, "lastUpdate": "2025-07-05", "clients": ["Client_C"]},
-    {"element": "https://clientd.org", "classification": "Seguro", "ipRating": 25, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_D"]},
-    {"element": "https://support.clientd.org", "classification": "Sospechoso", "ipRating": 70, "blocked": False, "lastUpdate": "2025-07-15", "clients": ["Client_D"]},
-    {"element": "https://cliente.io", "classification": "Seguro", "ipRating": 20, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_E"]}
+    {"element": "https://login.clienta.net", "classification": "Sospechoso", "rating": 55, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_A"], "country": "Argentina", "addedBy": "edgar", "type": "domain"},
+    {"element": "https://portal.clienta.net", "classification": "Seguro", "rating": 10, "blocked": False, "lastUpdate": "2025-07-12", "clients": ["Client_A"], "country": "Argentina", "addedBy": "sofia", "type": "domain"},
+    {"element": "https://clientb.services.com", "classification": "Sospechoso", "rating": 40, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_B"], "country": "Brasil", "addedBy": "admin", "type": "domain"},
+    {"element": "https://dashboard.clientb.com", "classification": "Malicioso", "rating": 85, "blocked": True, "lastUpdate": "2025-07-14", "clients": ["Client_B"], "country": "Brasil", "addedBy": "guest", "type": "domain"},
+    {"element": "https://clientc.net", "classification": "Seguro", "rating": 5, "blocked": False, "lastUpdate": "2025-07-05", "clients": ["Client_C"], "country": "Chile", "addedBy": "edgar", "type": "domain"},
+    {"element": "https://clientd.org", "classification": "Seguro", "rating": 25, "blocked": False, "lastUpdate": "2025-07-01", "clients": ["Client_D"], "country": "Uruguay", "addedBy": "sofia", "type": "domain"},
+    {"element": "https://support.clientd.org", "classification": "Sospechoso", "rating": 70, "blocked": False, "lastUpdate": "2025-07-15", "clients": ["Client_D"], "country": "Uruguay", "addedBy": "admin", "type": "domain"},
+    {"element": "https://cliente.io", "classification": "Seguro", "rating": 20, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_E"], "country": "México", "addedBy": "guest", "type": "domain"}
 ]
 
 hashList = [
-    {"element": "a1b2c3d4e5f6g7h8i9j0", "programName": "Trojan.Generic", "classification": "Malicioso", "hashRating": 95, "blocked": True, "lastUpdate": "2025-07-15", "clients": ["Client_A"]},
-    {"element": "f0e1d2c3b4a596877665", "programName": "Updater.exe", "classification": "Seguro", "hashRating": 10, "blocked": False, "lastUpdate": "2025-07-12", "clients": ["Client_A"]},
-    {"element": "123abc456def789ghi0", "programName": "Downloader.exe", "classification": "Sospechoso", "hashRating": 55, "blocked": False, "lastUpdate": "2025-07-13", "clients": ["Client_B"]},
-    {"element": "00011122233344455566", "programName": "CleanerTool.exe", "classification": "Seguro", "hashRating": 12, "blocked": False, "lastUpdate": "2025-07-10", "clients": ["Client_B"]},
-    {"element": "deadbeefcafebabe1234", "programName": "Spyware.exe", "classification": "Malicioso", "hashRating": 88, "blocked": True, "lastUpdate": "2025-07-18", "clients": ["Client_C"]},
-    {"element": "beefcafe1234567890", "programName": "Installer.pkg", "classification": "Sospechoso", "hashRating": 60, "blocked": False, "lastUpdate": "2025-07-15", "clients": ["Client_D"]},
-    {"element": "hashsafeabcd123456", "programName": "DriverHelper", "classification": "Seguro", "hashRating": 15, "blocked": False, "lastUpdate": "2025-07-08", "clients": ["Client_E"]}
+    {
+        'element': 'a1b2c3d4e5f6g7h8i9j0',
+        'programName': 'Trojan.Generic',
+        'classification': 'Malicioso',
+        'rating': 95,
+        'blocked': True,
+        'lastUpdate': '2025-07-15',
+        'clients': ['Client_A'],
+        'country': 'Argentina',
+        'addedBy': 'edgar',
+        'type': 'hash'
+    },
+    {
+        'element': 'f0e1d2c3b4a596877665',
+        'programName': 'Updater.exe',
+        'classification': 'Seguro',
+        'rating': 10,
+        'blocked': False,
+        'lastUpdate': '2025-07-12',
+        'clients': ['Client_A'],
+        'country': 'Argentina',
+        'addedBy': 'sofia',
+        'type': 'hash'
+    },
+    {
+        'element': '123abc456def789ghi0',
+        'programName': 'Downloader.exe',
+        'classification': 'Sospechoso',
+        'rating': 55,
+        'blocked': False,
+        'lastUpdate': '2025-07-13',
+        'clients': ['Client_B'],
+        'country': 'Brasil',
+        'addedBy': 'admin',
+        'type': 'hash'
+    },
+    {
+        'element': '00011122233344455566',
+        'programName': 'CleanerTool.exe',
+        'classification': 'Seguro',
+        'rating': 12,
+        'blocked': False,
+        'lastUpdate': '2025-07-10',
+        'clients': ['Client_B'],
+        'country': 'Brasil',
+        'addedBy': 'guest',
+        'type': 'hash'
+    },
+    {
+        'element': 'deadbeefcafebabe1234',
+        'programName': 'Spyware.exe',
+        'classification': 'Malicioso',
+        'rating': 88,
+        'blocked': True,
+        'lastUpdate': '2025-07-18',
+        'clients': ['Client_C'],
+        'country': 'Chile',
+        'addedBy': 'edgar',
+        'type': 'hash'
+    },
+    {
+        'element': 'beefcafe1234567890',
+        'programName': 'Installer.pkg',
+        'classification': 'Sospechoso',
+        'rating': 60,
+        'blocked': False,
+        'lastUpdate': '2025-07-15',
+        'clients': ['Client_D'],
+        'country': 'Uruguay',
+        'addedBy': 'sofia',
+        'type': 'hash'
+    },
+    {
+        'element': 'hashsafeabcd123456',
+        'programName': 'DriverHelper',
+        'classification': 'Seguro',
+        'rating': 15,
+        'blocked': False,
+        'lastUpdate': '2025-07-08',
+        'clients': ['Client_E'],
+        'country': 'México',
+        'addedBy': 'admin',
+        'type': 'hash'
+    }
 ]
+
 clients = [
     {
         'id': 1,

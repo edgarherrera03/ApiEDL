@@ -10,9 +10,11 @@ export const ClientsContext = createContext({
 
 export const ClientsProvider = ({ children }) => {
 	const [clientsList, setClientsList] = useState([]);
-	const { logout } = useContext(UserContext);
+	const { logout, isAuthenticated } = useContext(UserContext);
 
 	useEffect(() => {
+		if (!isAuthenticated) return;
+
 		const fetchClients = async () => {
 			const { success, error, code, clients } = await requestClientsList();
 			if (success) {
@@ -24,7 +26,7 @@ export const ClientsProvider = ({ children }) => {
 			}
 		};
 		fetchClients();
-	}, []);
+	}, [isAuthenticated, logout]);
 
 	const reloadClientsList = async () => {
 		const { success, code, clients, error } = await requestClientsList();

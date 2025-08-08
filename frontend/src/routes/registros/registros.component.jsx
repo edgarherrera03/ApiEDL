@@ -2,11 +2,14 @@ import {
 	RegistrosContainer,
 	RegistrosInformationContainer,
 } from "./registros.styles";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LeftBar from "../../components/left-bar/left-bar.component";
 import SearchTab from "../../components/search-tab/search-tab.component";
 import { ClientsContext } from "../../context/clients.context";
 import { ItemsContext } from "../../context/items.context";
+import RegisterItemTab from "../../components/register-item-tab/register-item-tab.component";
+import InvestigateTab from "../../components/investigate-tab/investigate-tab.component";
+import Spinner from "../../components/spinner/spinner.component";
 
 const REGISTER_ROUTES = {
 	buscar: "buscar",
@@ -20,35 +23,67 @@ const routes = {
 	registrar: "Registrar",
 };
 
+export const ratingOptions = [
+	{ value: "Malicioso", label: "Malicioso" },
+	{ value: "Seguro", label: "Seguro" },
+	{ value: "Sospechoso", label: "Sospechoso" },
+];
+export const elementOptions = [
+	{ value: "ip", label: "IP" },
+	{ value: "domain", label: "Dominio" },
+	{ value: "hash", label: "Hash" },
+];
+export const blockedOptions = [
+	{ value: true, label: "Bloqueado" },
+	{ value: false, label: "No Bloqueado" },
+];
+
 const Registros = () => {
 	const [selectedRoute, setSelectedRoute] = useState(REGISTER_ROUTES.buscar);
 	const { clientsList } = useContext(ClientsContext);
 	const { ipList, domainList, hashList } = useContext(ItemsContext);
+	const [clientsOption, setClientsOption] = useState([]);
+	const [generalList, setGeneralList] = useState([]);
+	const [countryOptions, setCountryOptions] = useState([]);
 
-	// Lista de clientes presentes en el select
-	const clientsOption = clientsList.map((client) => ({
-		value: client.username,
-		label: client.name,
-	}));
+	const loading =
+		!generalList.length || !clientsOption.length || !countryOptions.length;
 
-	// Lista de todos los elementos
+	useEffect(() => {
+		if (
+			clientsList.length > 0 &&
+			ipList.length > 0 &&
+			domainList.length > 0 &&
+			hashList.length > 0
+		) {
+			setClientsOption(
+				clientsList.map((client) => ({
+					value: client.username,
+					label: client.name,
+				}))
+			);
+			setGeneralList([...ipList, ...domainList, ...hashList]);
 
-	// Lista de paises presentes en el select
-	const allCountries = [
-		...ipList.map((item) => item.country),
-		...domainList.map((item) => item.country),
-		...hashList.map((item) => item.country),
-	];
-	const uniqueCountries = Array.from(new Set(allCountries.filter(Boolean)));
-	const countryOptions = uniqueCountries.map((country) => ({
-		value: country,
-		label: country,
-	}));
+			const allCountries = [
+				...ipList.map((item) => item.country),
+				...domainList.map((item) => item.country),
+				...hashList.map((item) => item.country),
+			];
+			const uniqueCountries = Array.from(new Set(allCountries.filter(Boolean)));
+			setCountryOptions(
+				uniqueCountries.map((country) => ({
+					value: country,
+					label: country,
+				}))
+			);
+		}
+	}, [clientsList, ipList, domainList, hashList]);
 
-	// Permite seleccionar ruta que se debe mostrar (buscar, investigar o registrar)
 	const handleSelectRoute = (route) => {
 		setSelectedRoute(route);
 	};
+
+	if (loading) return <Spinner />;
 	return (
 		<RegistrosContainer>
 			<LeftBar
@@ -58,7 +93,15 @@ const Registros = () => {
 			/>
 			<RegistrosInformationContainer>
 				{selectedRoute === REGISTER_ROUTES.buscar && (
-					<SearchTab clientsList={clientsOption} countryList={countryOptions} />
+					<SearchTab
+						clientsList={clientsOption}
+						countryList={countryOptions}
+						generalList={generalList}
+					/>
+				)}
+				{selectedRoute === REGISTER_ROUTES.investigar && <InvestigateTab />}
+				{selectedRoute === REGISTER_ROUTES.registrar && (
+					<RegisterItemTab clientsList={clientsOption} />
 				)}
 			</RegistrosInformationContainer>
 		</RegistrosContainer>

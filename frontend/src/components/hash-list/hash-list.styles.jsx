@@ -81,6 +81,6 @@ export const CustomButton = styled(Button)`
 	${({ $formVisible }) =>
 		$formVisible &&
 		css`
-			transform: translateX(-770px);
+			transform: translateX(-220px);
 		`}
 `;

@@ -4,3 +4,4 @@ bcrypt
 pymongo
 python-dotenv
 PyJWT
+OTXv2

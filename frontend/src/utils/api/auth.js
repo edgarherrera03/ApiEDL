@@ -1,6 +1,7 @@
+import { serverIP, serverPort } from "../../assets/_variables";
 export const signInAuthUser = async (signInFields) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/login", {
+		const response = await fetch(`http://${serverIP}:${serverPort}/api/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -31,7 +32,7 @@ export const signInAuthUser = async (signInFields) => {
 
 export const logoutAuthUser = async () => {
 	try {
-		await fetch("http://127.0.0.1:5000/api/logout", {
+		await fetch(`http://${serverIP}:${serverPort}/api/logout`, {
 			method: "POST",
 			credentials: "include",
 		});
@@ -43,7 +44,7 @@ export const logoutAuthUser = async () => {
 export const tokenVerification = async () => {
 	try {
 		const response = await fetch(
-			"http://127.0.0.1:5000/api/token-verification",
+			`http://${serverIP}:${serverPort}/api/token-verification`,
 			{
 				method: "GET",
 				credentials: "include",
@@ -75,14 +76,17 @@ export const tokenVerification = async () => {
 
 export const changePasswordRequest = async (username, newPassword) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/modify-password", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-			body: JSON.stringify({ username: username, password: newPassword }),
-		});
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/modify-password`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ username: username, password: newPassword }),
+			}
+		);
 
 		const data = await response.json();
 		const code = response.status;

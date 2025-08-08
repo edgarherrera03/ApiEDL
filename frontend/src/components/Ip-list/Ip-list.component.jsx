@@ -12,12 +12,6 @@ import { UserContext } from "../../context/user.context";
 import { addCommentToItem } from "../../utils/api";
 import { ItemsContext } from "../../context/items.context";
 
-const defaulNewIpFields = {
-	element: "",
-	classification: "",
-	ipRating: "",
-	blocked: "",
-};
 const headersList = [
 	"Dirección IP",
 	"Clasificación",
@@ -28,7 +22,7 @@ const headersList = [
 const orderList = [
 	"element",
 	"classification",
-	"ipRating",
+	"rating",
 	"blocked",
 	"lastUpdate",
 ];
@@ -38,23 +32,19 @@ const IpList = ({
 	clientUsername,
 	reloadClientDetails,
 }) => {
-	const [newIpFields, setNewIpFields] = useState(defaulNewIpFields);
 	const [formVisible, setFormVisible] = useState(false);
+	const [element, setElement] = useState("");
 	const [ip, setIp] = useState([]);
 	const { ipList, reloadIpList } = useContext(ItemsContext);
 	const { logout, currentUser } = useContext(UserContext);
 
-	const { element, classification, ipRating, blocked } = newIpFields;
-
 	useEffect(() => {
 		setIp(ipList.filter((ip) => ip.clients.includes(clientUsername)));
-	}, [ipList]);
-
-	const resetNewIpFields = () => setNewIpFields(defaulNewIpFields);
+	}, [ipList, clientUsername]);
 
 	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setNewIpFields({ ...newIpFields, [name]: value });
+		const { value } = event.target;
+		setElement(value);
 	};
 
 	const toggleForm = () => {
@@ -67,7 +57,7 @@ const IpList = ({
 			`La siguiente IP sera añadida:\n\n[IP: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success, error, code } = await handleAdd(newIpFields, "IpList");
+		const { success, error, code } = await handleAdd(element, "IpList");
 		if (!success && code === 404) {
 			console.log(error || "No se encontró al cliente");
 		} else if (code === 409) {
@@ -75,7 +65,7 @@ const IpList = ({
 		} else if (code === 403 || code === 401) {
 			await logout();
 		}
-		resetNewIpFields();
+		setElement("");
 		reloadIpList();
 		reloadClientDetails();
 	};
@@ -104,7 +94,6 @@ const IpList = ({
 		if (confirmed) {
 			const { success, error, code } = await addCommentToItem(
 				currentUser["username"],
-				clientUsername,
 				"IpList",
 				comment,
 				item
@@ -138,35 +127,6 @@ const IpList = ({
 						pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$"
 						placeholder="Dirección IPv4"
 					/>
-					<select
-						name="classification"
-						required
-						value={classification}
-						onChange={handleChange}>
-						<option value="">Clasificación</option>
-						<option value="Seguro">Seguro</option>
-						<option value="Sospechoso">Sospechoso</option>
-						<option value="Malicioso">Malicioso</option>
-					</select>
-					<input
-						name="ipRating"
-						required
-						type="number"
-						min={0}
-						max={100}
-						value={ipRating}
-						onChange={handleChange}
-						placeholder="Calificación"
-					/>
-					<select
-						name="blocked"
-						required
-						value={blocked}
-						onChange={handleChange}>
-						<option value="">Estatus</option>
-						<option value={true}>Bloqueado</option>
-						<option value={false}>Permitido</option>
-					</select>
 					<AddIpButton type="submit">+</AddIpButton>
 				</FormWrapper>
 			</IpListHeader>

@@ -1,6 +1,7 @@
+import { serverIP, serverPort } from "../../assets/_variables";
 export const getItems = async (listType) => {
 	try {
-		const response = await fetch("http://127.0.0.1:5000/api/items", {
+		const response = await fetch(`http://${serverIP}:${serverPort}/api/items`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -38,7 +39,7 @@ export const addItemToList = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/items/actions/client/add-item-list`,
+			`http://${serverIP}:${serverPort}/api/items/actions/client/add-item-list`,
 			{
 				method: "POST",
 				headers: {
@@ -72,6 +73,41 @@ export const addItemToList = async (
 	}
 };
 
+export const registerItem = async (username, itemToAdd) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/items/actions/client/register-item`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					itemToAdd: itemToAdd,
+				}),
+			}
+		);
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Objeto añadido correctamente",
+			};
+		} else {
+			return {
+				success: false,
+				error: data.error,
+				code: code,
+			};
+		}
+	} catch (error) {
+		return { success: false, error: "Request failed" };
+	}
+};
+
 export const deleteItemFromList = async (
 	username,
 	clientUsername,
@@ -80,7 +116,7 @@ export const deleteItemFromList = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/items/actions/client/delete-item-list`,
+			`http://${serverIP}:${serverPort}/api/items/actions/client/delete-item-list`,
 			{
 				method: "POST",
 				headers: {
@@ -106,21 +142,14 @@ export const deleteItemFromList = async (
 			return { success: false, error: data.error, code: code };
 		}
 	} catch (error) {
-		console.error("Hubo un error al eliminar el objeto:", error);
 		return { success: false, error: "Request failed" };
 	}
 };
 
-export const addCommentToItem = async (
-	username,
-	clientUsername,
-	listType,
-	comment,
-	item
-) => {
+export const deleteItem = async (username, itemToDelete, listType) => {
 	try {
 		const response = await fetch(
-			`http://127.0.0.1:5000/api/items/actions/client/add-comment`,
+			`http://${serverIP}:${serverPort}/api/items/actions/client/delete-item`,
 			{
 				method: "POST",
 				headers: {
@@ -129,7 +158,37 @@ export const addCommentToItem = async (
 				credentials: "include",
 				body: JSON.stringify({
 					username: username,
-					clientUsername: clientUsername,
+					itemToDelete: itemToDelete,
+					listType: listType,
+				}),
+			}
+		);
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Objeto eliminado correctamente",
+			};
+		} else {
+			return { success: false, error: data.error, code: code };
+		}
+	} catch (error) {
+		return { success: false, error: "Request failed" };
+	}
+};
+export const addCommentToItem = async (username, listType, comment, item) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/items/actions/client/add-comment`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
 					listType: listType,
 					comment: comment,
 					item: item,
@@ -142,6 +201,38 @@ export const addCommentToItem = async (
 			return {
 				success: true,
 				message: data.message,
+			};
+		} else {
+			return { success: false, error: data.error, code: code };
+		}
+	} catch (error) {
+		return { success: false, error: error };
+	}
+};
+
+export const investigateItem = async (item, itemType) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/items/actions/investigate-item`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					item: item,
+					itemType: itemType,
+				}),
+			}
+		);
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message,
+				indicatorDetails: data.indicatorDetails,
 			};
 		} else {
 			return { success: false, error: data.error, code: code };

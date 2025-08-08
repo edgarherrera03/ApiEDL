@@ -2,24 +2,37 @@ import styled from "styled-components";
 import { backgroundDark } from "../../assets/_variables";
 import Select from "react-select";
 
-export const SearchBarContainer = styled.div`
+export const InvestigateTabContainer = styled.div`
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 20px;
+	flex-direction: column;
 	width: 100%;
-	span {
+	gap: 20px;
+`;
+
+export const InvestigateTabTitle = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	h1 {
 		color: ${backgroundDark};
-		font-size: 1.2rem;
-		font-weight: 600;
+		font-size: 2.5rem;
+		margin-bottom: 10px;
 	}
+`;
+
+export const InvestigateTabContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	width: 80%;
 	form {
 		display: flex;
 		flex-wrap: wrap;
-
 		align-items: center;
 		gap: 5px;
 		min-height: 40px;
+		/* width: 100%; */
+
 		input {
 			height: 40px;
 			box-sizing: border-box;
@@ -27,6 +40,7 @@ export const SearchBarContainer = styled.div`
 			padding: 0 10px;
 			font-size: 1rem;
 			border-radius: 5px;
+			width: 40%;
 		}
 	}
 `;
