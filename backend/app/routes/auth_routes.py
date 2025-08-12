@@ -39,6 +39,7 @@ def login():
             secure=False,
             samesite="Lax",
             max_age=1800,
+            domain="172.31.11.52",
         )
         return response
     else:

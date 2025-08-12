@@ -3,17 +3,23 @@ from .db import clientsCollection, usersCollection, usersInfoCollection, ipColle
 from ..utils.helpers import hashPassword
 
 users = [
-    {"username": "edgar", "password": "pass123"},
-    {"username": "sofia", "password": "abc456"},
-    {"username": "admin", "password": "admin123"},
-    {"username": "guest", "password": "guest123"},
+    {"username": "admin", "password": "pass123"},
+    {"username": "grossi", "password": "abc456"},
+    {"username": "kvillalta", "password": "admin123"},
+    {"username": "acostaj", "password": "guest123"},
+    {"username": "wilfredo", "password": "guest123"},
+    {"username": "daquino", "password": "guest123"},
+    {"username": "edgar", "password": "guest123"},
 ]
 
 usersInfo = [
-    {"username": "edgar", "role": "admin"},
-    {"username": "sofia", "role": "admin"},
     {"username": "admin", "role": "admin"},
-    {"username": "guest", "role": "reader"},
+    {"username": "grossi", "role": "admin"},
+    {"username": "kvillalta", "role": "admin"},
+    {"username": "acostaj", "role": "admin"},
+    {"username": "wilfredo", "role": "admin"},
+    {"username": "daquino", "role": "admin"},
+    {"username": "edgar", "role": "admin"},
 ]
 
 ipAdresses = [
@@ -294,31 +300,31 @@ def init_db():
         })
         print(f"User '{user['username']}' registered.")
 
-    for client in clients:
-        if clientsCollection.find_one({"id": client["id"]}):
-            print(f"Client with ID '{client['id']}' already exists. Skipping.")
-            continue
+    # for client in clients:
+    #     if clientsCollection.find_one({"id": client["id"]}):
+    #         print(f"Client with ID '{client['id']}' already exists. Skipping.")
+    #         continue
 
-        clientsCollection.insert_one(client)
-        print(f"Client with ID '{client['id']}' registered.")
+    #     clientsCollection.insert_one(client)
+    #     print(f"Client with ID '{client['id']}' registered.")
     
-    for ipAdress in ipAdresses:
-        if ipCollection.find_one({'element': ipAdress['element']}):
-            print(f"Ip Adress '{ipAdress['element']}' already exists. Skipping.")
-            continue
-        ipCollection.insert_one(ipAdress)
-        print(f"Ip Adress '{ipAdress['element']}' registered.")
+    # for ipAdress in ipAdresses:
+    #     if ipCollection.find_one({'element': ipAdress['element']}):
+    #         print(f"Ip Adress '{ipAdress['element']}' already exists. Skipping.")
+    #         continue
+    #     ipCollection.insert_one(ipAdress)
+    #     print(f"Ip Adress '{ipAdress['element']}' registered.")
     
-    for website in websites:
-        if domainCollection.find_one({'element': website['element']}):
-            print(f"Domain '{website['element']}' already exists. Skipping.")
-            continue
-        domainCollection.insert_one(website)
-        print(f"Domain '{website['element']}' registered.")
+    # for website in websites:
+    #     if domainCollection.find_one({'element': website['element']}):
+    #         print(f"Domain '{website['element']}' already exists. Skipping.")
+    #         continue
+    #     domainCollection.insert_one(website)
+    #     print(f"Domain '{website['element']}' registered.")
     
-    for hash in hashList:
-        if hashCollection.find_one({'element': hash['element']}):
-            print(f"Hash '{hash['element']}' already exists. Skipping.")
-            continue
-        hashCollection.insert_one(hash)
-        print(f"Hash '{hash['element']}' registered.")
+    # for hash in hashList:
+    #     if hashCollection.find_one({'element': hash['element']}):
+    #         print(f"Hash '{hash['element']}' already exists. Skipping.")
+    #         continue
+    #     hashCollection.insert_one(hash)
+    #     print(f"Hash '{hash['element']}' registered.")

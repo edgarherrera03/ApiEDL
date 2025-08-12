@@ -50,37 +50,28 @@ const Registros = () => {
 	const [investigateResult, setInvestigateResult] = useState({});
 
 	const role = currentUser["role"];
-	const loading =
-		!generalList.length || !clientsOption.length || !countryOptions.length;
 
 	useEffect(() => {
-		if (
-			clientsList.length > 0 &&
-			ipList.length > 0 &&
-			domainList.length > 0 &&
-			hashList.length > 0
-		) {
-			setClientsOption(
-				clientsList.map((client) => ({
-					value: client.username,
-					label: client.name,
-				}))
-			);
-			setGeneralList([...ipList, ...domainList, ...hashList]);
+		setClientsOption(
+			clientsList.map((client) => ({
+				value: client.username,
+				label: client.name,
+			}))
+		);
+		setGeneralList([...ipList, ...domainList, ...hashList]);
 
-			const allCountries = [
-				...ipList.map((item) => item.country),
-				...domainList.map((item) => item.country),
-				...hashList.map((item) => item.country),
-			];
-			const uniqueCountries = Array.from(new Set(allCountries.filter(Boolean)));
-			setCountryOptions(
-				uniqueCountries.map((country) => ({
-					value: country,
-					label: country,
-				}))
-			);
-		}
+		const allCountries = [
+			...ipList.map((item) => item.country),
+			...domainList.map((item) => item.country),
+			...hashList.map((item) => item.country),
+		];
+		const uniqueCountries = Array.from(new Set(allCountries.filter(Boolean)));
+		setCountryOptions(
+			uniqueCountries.map((country) => ({
+				value: country,
+				label: country,
+			}))
+		);
 	}, [clientsList, ipList, domainList, hashList]);
 
 	const handleSelectRoute = (route) => {
@@ -91,6 +82,17 @@ const Registros = () => {
 		setInvestigateResult(result);
 		setSelectedRoute(REGISTER_ROUTES.registrar);
 	};
+
+	const loading =
+		clientsList === undefined ||
+		ipList === undefined ||
+		domainList === undefined ||
+		hashList === undefined ||
+		(clientsOption.length === 0 && clientsList.length > 0) ||
+		(generalList.length === 0 &&
+			(ipList.length > 0 || domainList.length > 0 || hashList.length > 0)) ||
+		(countryOptions.length === 0 && generalList.length > 0);
+
 	if (loading) return <Spinner />;
 	return (
 		<RegistrosContainer>

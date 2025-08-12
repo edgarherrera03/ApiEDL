@@ -1,6 +1,8 @@
 from pymongo import MongoClient
+import os
 
-client = MongoClient("mongodb://localhost:27017/")
+mongo_uri = os.getenv('MONGO_URI')
+client = MongoClient(mongo_uri)
 # Nombre de la base de datos
 db = client["ApiEDLDatabase"]
 

@@ -20,6 +20,7 @@ export const ClientsProvider = ({ children }) => {
 			if (success) {
 				setClientsList(clients);
 			} else if (code === 404) {
+				setClientsList([]);
 				console.log(error);
 			} else if (code === 403 || code === 401) {
 				await logout();
@@ -33,6 +34,7 @@ export const ClientsProvider = ({ children }) => {
 		if (success) {
 			setClientsList(clients);
 		} else if (code === 404) {
+			setClientsList([]);
 			console.log(error);
 		} else if (code === 403 || code === 401) {
 			await logout();

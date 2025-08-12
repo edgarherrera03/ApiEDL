@@ -11,7 +11,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
-    CORS(app, supports_credentials=True, origins=["*"])
+    CORS(app, supports_credentials=True, origins=["http://localhost:3000", "http://172.31.11.52:3000"])
 
     init_db()
 
