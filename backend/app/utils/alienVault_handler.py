@@ -53,7 +53,6 @@ def calculate_score(pulses):
     final_score = math.ceil(coef_time * coef_amount * 100)
     return final_score
 
-
 def classify_indicator(indicator: str, indicator_type: str):
     try:
         # Determinar el tipo de IP automáticamente 

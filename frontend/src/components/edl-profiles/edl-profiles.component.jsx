@@ -12,39 +12,53 @@ import {
 } from "./edl-profiles.styles";
 import { modifyListLimitRequest } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
-
-const profiles = [
-	{
-		icon: "🌐",
-		title: "Lista de IPs bloqueadas",
-		countLabel: "Cantidad de IPs bloqueadas:",
-		lastModified: "14/07/2025",
-		listTitle: "IpList",
-	},
-	{
-		icon: "🔗",
-		title: "Lista de dominios bloqueados",
-		countLabel: "Cantidad de dominios bloqueados:",
-		lastModified: "14/07/2025",
-		listTitle: "WebsiteList",
-	},
-	{
-		icon: "#️⃣",
-		title: "Lista de Hashes bloqueados",
-		countLabel: "Cantidad de hashes bloqueadas:",
-		lastModified: "14/07/2025",
-		listTitle: "HashList",
-	},
-];
+import { ItemsContext } from "../../context/items.context";
 
 const EdlProfiles = ({ client, token, onReloadClients }) => {
 	const [copiedList, setCopiedList] = useState(null);
 	const [listLimits, setListLimits] = useState({});
 	const { currentUser, logout } = useContext(UserContext);
+	const { ipList, domainList, hashList } = useContext(ItemsContext);
+	const blockedIpCount = ipList.filter(
+		(ip) => ip.blocked && ip.clients.includes(client.username)
+	).length;
+	const blockedDomainCount = domainList.filter(
+		(domain) => domain.blocked && domain.clients.includes(client.username)
+	).length;
+	const blockedHashCount = hashList.filter(
+		(hash) => hash.blocked && hash.clients.includes(client.username)
+	).length;
+
 	const role = currentUser.role;
 	const username = client.username;
 	const apiKey = client.apiKey;
 
+	const profiles = [
+		{
+			icon: "🌐",
+			title: "Lista de IPs bloqueadas",
+			countLabel: "Cantidad de IPs:",
+			countBlockedLabel: "Cantidad de IPs bloqueadas:",
+			listTitle: "IpList",
+			blocked: blockedIpCount,
+		},
+		{
+			icon: "🔗",
+			title: "Lista de dominios bloqueados",
+			countLabel: "Cantidad de dominios:",
+			countBlockedLabel: "Cantidad de dominios bloqueados:",
+			listTitle: "WebsiteList",
+			blocked: blockedDomainCount,
+		},
+		{
+			icon: "#️⃣",
+			title: "Lista de Hashes bloqueados",
+			countLabel: "Cantidad de hash:",
+			countBlockedLabel: "Cantidad de hash bloqueados:",
+			listTitle: "HashList",
+			blocked: blockedHashCount,
+		},
+	];
 	const handleCopy = async (itemList) => {
 		const textToCopy = `http://127.0.0.1:5000/api/utils/edls/get_edl?list_type=${itemList}&username=${username}&api_key=${apiKey}`;
 		try {
@@ -129,6 +143,11 @@ const EdlProfiles = ({ client, token, onReloadClients }) => {
 										<button type="submit">Actualizar</button>
 									</form>
 								)}
+							</Info>
+							<Info>
+								<p>
+									<span>{profile.countBlockedLabel}</span> {profile.blocked}
+								</p>
 							</Info>
 							<Info>
 								<p>

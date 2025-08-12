@@ -21,7 +21,13 @@ const Users = () => {
 		const fetchUsers = async () => {
 			const { success, users, code, error } = await requestUsersInformation();
 			if (success) {
-				setUsersInfo(users);
+				// Reordenar para que 'admin' esté primero
+				const sortedUsers = [...users].sort((a, b) => {
+					if (a.username === "admin") return -1;
+					if (b.username === "admin") return 1;
+					return 0;
+				});
+				setUsersInfo(sortedUsers);
 			} else if (code === 401 || code === 403) {
 				await logout();
 			} else {

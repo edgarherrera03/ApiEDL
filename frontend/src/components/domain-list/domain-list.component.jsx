@@ -61,10 +61,13 @@ const DomainList = ({
 			`El siguiente dominio sera añadida:\n\n[Dominio: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(element, "WebsiteList");
-		if (!success) {
-			alert("Hubo un error al añadir el dominio");
-			return;
+		const { success, error, code } = await handleAdd(element, "WebsiteList");
+		if (!success && code === 404) {
+			console.log(error || "No se encontró al cliente");
+		} else if (code === 409 || code === 400 || code === 405) {
+			alert(error);
+		} else if (code === 403 || code === 401) {
+			await logout();
 		}
 		setElement("");
 		reloadClientDetails();

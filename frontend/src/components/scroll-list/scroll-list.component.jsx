@@ -59,7 +59,7 @@ const ScrollList = ({
 	};
 
 	const handleModifyItem = (index) => {
-		setOpenModifyItemIndex(index); // 🔧 almacenar índice actual
+		setOpenModifyItemIndex(index);
 	};
 
 	const closeWindow = () => {

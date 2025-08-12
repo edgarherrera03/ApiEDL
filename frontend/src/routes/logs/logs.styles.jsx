@@ -14,6 +14,8 @@ export const LogsContainer = styled.div`
 	align-items: center;
 	width: 100%;
 	padding: 50px 0;
+	pointer-events: ${(props) => (props.$activated ? "none" : "auto")};
+	opacity: ${(props) => (props.$activated ? 0.5 : 1)};
 	h1 {
 		color: ${backgroundDark};
 		font-size: 30px;
@@ -32,6 +34,7 @@ export const LogsListContainer = styled.div`
 export const RefreshButtonContainer = styled.div`
 	display: flex;
 	width: 80%;
+	gap: 20px;
 `;
 
 export const RefreshButton = styled.div`

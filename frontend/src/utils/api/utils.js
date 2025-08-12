@@ -28,7 +28,45 @@ export const requestLogs = async () => {
 			};
 		}
 	} catch (error) {
-		console.log(error);
+		return {
+			success: false,
+			error: "Request failed",
+		};
+	}
+};
+
+export const cleanLogsRequest = async (username, cleanDate) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/utils/logs/clean`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					cleanDate: cleanDate,
+				}),
+			}
+		);
+
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok && data) {
+			return {
+				success: true,
+				message: data.message,
+			};
+		} else {
+			return {
+				success: false,
+				error: data.error,
+				code: code,
+			};
+		}
+	} catch (error) {
 		return {
 			success: false,
 			error: "Request failed",

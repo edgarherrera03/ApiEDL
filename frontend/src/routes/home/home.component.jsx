@@ -39,7 +39,7 @@ const Home = () => {
 						<p>
 							Si tiene algún inconveniente o necesita asistencia técnica, por
 							favor, contacte con el personal técnico correspondiente{" "}
-							<span>soporte@ets.consulting</span>.
+							<a href="mailto:soporte@ets.consulting">soporte@ets.consulting</a>
 						</p>
 					</TextContainer>
 				</InfoContainer>

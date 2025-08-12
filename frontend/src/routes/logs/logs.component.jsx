@@ -1,4 +1,3 @@
-import ScrollList from "../../components/scroll-list/scroll-list.component";
 import InfoList from "../../components/info-list/info-list.component";
 import {
 	LogsContainer,
@@ -7,9 +6,13 @@ import {
 	RefreshButton,
 } from "./logs.styles";
 import { useContext, useEffect, useState } from "react";
-import { requestLogs } from "../../utils/api";
+import { cleanLogsRequest, requestLogs } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
 import Spinner from "../../components/spinner/spinner.component";
+import Button, {
+	BUTTON_TYPE_CLASSES,
+} from "../../components/button/button.component";
+import CleanLogsWindow from "../../components/clean-logs-window/clean-logs-window.component";
 
 const headersList = [
 	"Marca de tiempo",
@@ -22,7 +25,8 @@ const ordersList = ["timestamp", "username", "action", "details"];
 
 const Logs = () => {
 	const [logs, setLogs] = useState([]);
-	const { logout } = useContext(UserContext);
+	const [openLogsClean, setOpenLogsClean] = useState(false);
+	const { currentUser, logout } = useContext(UserContext);
 
 	useEffect(() => {
 		const fetchLogs = async () => {
@@ -48,26 +52,62 @@ const Logs = () => {
 			console.log(error || "Error al recuperar los logs");
 		}
 	};
+
+	const handleOpenLogsClean = () => {
+		setOpenLogsClean(true);
+	};
+	const handleCloseLogsClean = () => {
+		setOpenLogsClean(false);
+	};
+
+	const handleCleanLogs = async (cleanDate) => {
+		const confirmed = window.confirm(
+			`La logs mas antiguos que ${cleanDate} seran eliminados\n\n¿Confirmar?`
+		);
+		if (!confirmed) return;
+		const { success, error, code } = await cleanLogsRequest(
+			currentUser.username,
+			cleanDate
+		);
+		if (code === 403 || code === 401) {
+			await logout();
+		} else if (!success) {
+			console.log(error);
+		}
+	};
 	if (!logs) return <Spinner />;
 	return (
-		<LogsContainer>
-			<h1>Logs</h1>
-			<RefreshButtonContainer>
-				<RefreshButton>
-					<i onClick={reloadLogsList} className="material-icons">
-						refresh
-					</i>
-				</RefreshButton>
-			</RefreshButtonContainer>
-			<LogsListContainer>
-				<InfoList
-					headerTitleList={headersList}
-					orderedKeys={ordersList}
-					infoList={logs}
-					height={600}
+		<>
+			<LogsContainer $activated={openLogsClean}>
+				<h1>Logs</h1>
+				<RefreshButtonContainer>
+					<RefreshButton>
+						<i onClick={reloadLogsList} className="material-icons">
+							refresh
+						</i>
+					</RefreshButton>
+					<Button
+						onClick={handleOpenLogsClean}
+						buttonType={BUTTON_TYPE_CLASSES.add}>
+						Limpiar logs
+					</Button>
+				</RefreshButtonContainer>
+				<LogsListContainer>
+					<InfoList
+						headerTitleList={headersList}
+						orderedKeys={ordersList}
+						infoList={logs}
+						height={600}
+					/>
+				</LogsListContainer>
+			</LogsContainer>
+			{openLogsClean && (
+				<CleanLogsWindow
+					handleSubmit={handleCleanLogs}
+					handleCancel={handleCloseLogsClean}
 				/>
-			</LogsListContainer>
-		</LogsContainer>
+			)}
+		</>
 	);
 };
 

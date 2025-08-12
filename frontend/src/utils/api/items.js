@@ -177,6 +177,7 @@ export const deleteItem = async (username, itemToDelete, listType) => {
 		return { success: false, error: "Request failed" };
 	}
 };
+
 export const addCommentToItem = async (username, listType, comment, item) => {
 	try {
 		const response = await fetch(

@@ -35,7 +35,6 @@ def addItemToClient():
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     collection = COLLECTIONS[listType]
 
-
     if not itemToAdd or not username or not listType:
         return jsonify({"error": "Missing fields"})
 
@@ -43,28 +42,35 @@ def addItemToClient():
     if not client:
         return jsonify({"error": "Cliente no encontrado"}), 404
 
-    for item in client[listType]['info']:
-        if itemToAdd == item :
-            return jsonify({"error": "El elemento ya existe"}), 409
-    
-    # Verificamos si el elemento que se añadira al cliente ya esta registrado, si no lo esta, la funcion mandara un error
+    # Verificar que el elemento existe en la lista general
     element = collection.find_one({'element': itemToAdd})
     if not element:
         return jsonify({'error': 'El elemento que se desea añadir no ha sido registrado aún. Por favor, hágalo desde la página de registros.'}), 400
-    else:
-        collection.update_one(
-            {'element': itemToAdd},
-            {
-                '$push': {
-                    'clients': clientUsername,
-                },
-                '$set': {
-                    'lastUpdate': date,
-                }
-            }
-        )
 
-    # Luego de añadirlo a la lista general lo hacemos ahora a la lista del cliente
+    # Verificar que el elemento no esté ya en la lista del cliente
+    if itemToAdd in client[listType]['info']:
+        return jsonify({"error": "El elemento ya existe en la lista del cliente"}), 409
+
+    # Verificar límite de la lista
+    current_size = len(client[listType]['info'])
+    limit = client[listType]['listLimit']
+    if limit is not None and current_size >= limit:
+        return jsonify({"error": "El cliente ha alcanzado el límite de elementos para esta lista"}), 405
+
+    # Añadir el cliente a la lista del elemento en la colección general
+    collection.update_one(
+        {'element': itemToAdd},
+        {
+            '$push': {
+                'clients': clientUsername,
+            },
+            '$set': {
+                'lastUpdate': date,
+            }
+        }
+    )
+
+    # Añadir el elemento a la lista del cliente
     clientsCollection.update_one(
         {"username": clientUsername},
         {
@@ -77,9 +83,11 @@ def addItemToClient():
         }
     )
 
+    # Registrar acción del usuario
     action = USER_ACTIONS['add_item_to_list']
-    details = f'Se añadió {itemToAdd} a la lista {listType} del cliente {client['username']}'
+    details = f'Se añadió {itemToAdd} a la lista {listType} del cliente {client["username"]}'
     log_user_action(username, action, details)
+
     return jsonify({"message": "Elemento añadido correctamente"}), 200
 
 @bp.route('/actions/client/register-item', methods=['POST'])
@@ -100,22 +108,39 @@ def registerItem():
     listType = type_mapping.get(itemToAdd['type'])
 
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+    itemToAdd["creationDate"] = date
     itemToAdd["lastUpdate"] = date
     itemToAdd['blocked'] = itemToAdd['blocked'] == 'true'
     collection = COLLECTIONS[listType]
     itemToAdd['addedBy'] = username
 
-    # Verificamos si ya existe en la lista general para no tener elementos duplicados
+    # Filtramos clientes que no han llegado a su límite
+    allowed_clients = []
+    for client_username in itemToAdd['clients']:
+        client_doc = clientsCollection.find_one({'username': client_username})
+        if client_doc:
+            current_count = len(client_doc[listType]['info'])
+            limit = client_doc[listType]['listLimit']
+            if current_count < limit:
+                allowed_clients.append(client_username)
+
+    if not allowed_clients:
+        return jsonify({"error": "Ningún cliente disponible para añadir este elemento"}), 409
+
+    # Actualizamos la lista de clientes en el item
+    itemToAdd['clients'] = allowed_clients
+
+    # Verificamos si ya existe en la lista general
     element = collection.find_one({'element': itemToAdd['element']})
     if not element: 
         collection.insert_one(itemToAdd)
     else:
         return jsonify({"error": "El elemento ya existe"}), 409
 
-    # Y ahora añadimos el elemento cada cliente
-    for client in itemToAdd['clients']:
+    # Añadimos el elemento solo a los clientes permitidos
+    for client_username in allowed_clients:
         clientsCollection.update_one(
-            {'username': client},
+            {'username': client_username},
             {
                 '$push': {
                     f'{listType}.info': itemToAdd['element'],
@@ -124,7 +149,7 @@ def registerItem():
         )
     
     action = USER_ACTIONS['add_item_to_list']
-    details = f'Se añadió {itemToAdd} a la lista {listType}'
+    details = f'Se añadió {itemToAdd} a la lista {listType} para clientes: {allowed_clients}'
     log_user_action(username, action, details)
     return jsonify({"message": "Elemento añadido correctamente"}), 200
 

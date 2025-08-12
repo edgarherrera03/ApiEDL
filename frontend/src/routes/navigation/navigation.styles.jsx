@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Link } from "react-router";
 import {
 	backgroundDark,
-	backgroundLightDark,
 	backgroundMediumDark,
 	backgroundWhite,
 	infoText,
@@ -20,24 +19,6 @@ export const NavigationContainer = styled.div`
 	background-color: ${backgroundDark};
 	z-index: 999;
 	padding: 0 40px;
-`;
-
-export const LogoContainer = styled.div`
-	height: 58px;
-	width: 58px;
-	border-radius: 50px;
-	background-size: cover;
-	background-position: center;
-	cursor: pointer;
-	@media (max-width: 768px) {
-		height: 55px;
-		width: 55px;
-	}
-
-	@media (max-width: 515px) {
-		height: 45px;
-		width: 45px;
-	}
 `;
 
 export const AppTitle = styled(Link)`

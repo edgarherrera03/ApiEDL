@@ -76,6 +76,41 @@ export const addClientRequest = async (
 	}
 };
 
+export const deleteClientRequest = async (username, usernameToDelete) => {
+	try {
+		const response = await fetch(
+			`http://${serverIP}:${serverPort}/api/clients/actions/delete`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					username: username,
+					usernameToDelete: usernameToDelete,
+				}),
+			}
+		);
+		const data = await response.json();
+		const code = response.status;
+		if (response.ok) {
+			return {
+				success: true,
+				message: data.message || "Cliente eliminado correctamente",
+			};
+		} else {
+			return {
+				success: false,
+				error: data.error || "Hubo un error al eliminar al cliente",
+				code: code,
+			};
+		}
+	} catch (error) {
+		return { success: false, error: "Request failed" };
+	}
+};
+
 export const requestClientByToken = async (token) => {
 	try {
 		const response = await fetch(

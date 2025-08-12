@@ -4,7 +4,6 @@ from ..models.db import clientsCollection, ipCollection, hashCollection, domainC
 from ..models.db import logsCollection
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import pycountry
 
 def hashPassword(password):
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
@@ -39,6 +38,7 @@ USER_ACTIONS = {
     'change_password': 'Cambio de contraseña',
     'modify_list_limit': 'Modificó el limite de una lista',
     'regenerate_api_key': 'Regeneró una Api_Key',
+    'clean_logs': 'Eliminó logs',
 }
 
 COLLECTIONS = {
@@ -55,10 +55,3 @@ def log_user_action(username, action, details):
         "timestamp": datetime.now(ZoneInfo("America/El_Salvador")).strftime('%a, %d %b %Y %H:%M:%S GMT')
     }
     logsCollection.insert_one(log_entry)
-
-def get_country_name(country_code):
-    try:
-        country = pycountry.countries.get(alpha_2=country_code)
-        return country.name if country else None
-    except:
-        return None

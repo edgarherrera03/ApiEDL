@@ -6,14 +6,15 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import InfoList from "../info-list/info-list.component";
 import NewClientWindow from "../new-client-window/new-client-window.component";
+import { deleteClientRequest } from "../../utils/api";
 
 const headerTitles = [
 	"ID",
 	"Cliente",
 	"Usuario",
-	"Fecha de expiración",
 	"Fecha de creación",
 	"Fecha de actualización",
+	"Fecha de expiración",
 	"Acciones",
 ];
 
@@ -29,7 +30,7 @@ const orderedKeys = [
 
 const ClientsList = ({ clientsList, reloadClientsList }) => {
 	const [openNewClientWindow, setOpenNewClientWindow] = useState(false);
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, logout } = useContext(UserContext);
 	const role = currentUser["role"];
 	const navigate = useNavigate();
 
@@ -40,13 +41,41 @@ const ClientsList = ({ clientsList, reloadClientsList }) => {
 		setOpenNewClientWindow(false);
 	};
 
+	const onDelete = async (usernameToDelete) => {
+		const confirmed = window.confirm(
+			`El siguiente cliente sera elminado: ${usernameToDelete}\n\n Nota: todos los elementos e información atribuida a ese cliente serán eliminados.\n\n¿Confirmar?`
+		);
+		if (!confirmed) return;
+		const { success, error, code } = await deleteClientRequest(
+			currentUser.username,
+			usernameToDelete
+		);
+		if (code === 401 || code === 403) {
+			await logout();
+		} else if (code === 404) {
+			alert(error);
+		} else if (!success) {
+			console.log(error);
+		}
+		reloadClientsList();
+	};
+
 	const renderClientActions = (client) => (
-		<Button
-			onClick={() => navigate(`/clientes/${client.clientToken}`)}
-			type="button"
-			buttonType={BUTTON_TYPE_CLASSES.modify}>
-			Ver
-		</Button>
+		<>
+			<Button
+				onClick={() => navigate(`/clientes/${client.clientToken}`)}
+				type="button"
+				buttonType={BUTTON_TYPE_CLASSES.modify}>
+				Ver
+			</Button>
+			{role === "admin" && (
+				<Button
+					buttonType={BUTTON_TYPE_CLASSES.delete}
+					onClick={() => onDelete(client.username)}>
+					Delete
+				</Button>
+			)}
+		</>
 	);
 	return (
 		<>

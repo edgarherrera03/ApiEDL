@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, render_template
 from app.utils.auth import token_verification_required
 from app.models.db import logsCollection, clientsCollection
 from datetime import datetime
-from app.utils.helpers import COLLECTIONS
+from app.utils.helpers import COLLECTIONS, USER_ACTIONS, log_user_action
 
 bp = Blueprint('utils', __name__, url_prefix='/api/utils', template_folder='templates')
 
@@ -28,6 +28,45 @@ def getLogs():
         return jsonify({'message': 'Logs information fetched', 'logs': sorted_logs}), 200
     else:
         return jsonify({'error': 'No se encontraron los logs'}), 404
+
+@bp.route('/logs/clean', methods=['POST'])
+@token_verification_required
+def cleanLogs():
+    data = request.get_json()
+    username = data.get('username')
+    cleanDateStr = data.get('cleanDate')
+
+    if not username or not cleanDateStr:
+        return jsonify({"error": "Faltan campos username o cleanDate"}), 400
+
+    try:
+        # Convertimos cleanDateStr (YYYY-MM-DD) a datetime a medianoche para comparar correctamente
+        cleanDate = datetime.strptime(cleanDateStr, "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"error": "Formato de fecha inválido. Debe ser: 'YYYY-MM-DD'"}), 400
+
+    # Buscar logs a eliminar (con fecha anterior a cleanDate)
+    logs_to_delete_ids = []
+    for log in logsCollection.find():
+        try:
+            log_date = datetime.strptime(log['timestamp'], "%a, %d %b %Y %H:%M:%S GMT")
+            if log_date < cleanDate:
+                logs_to_delete_ids.append(log['_id'])
+        except Exception:
+            # Ignorar logs con timestamp en formato inválido
+            pass
+
+    if logs_to_delete_ids:
+        result = logsCollection.delete_many({"_id": {"$in": logs_to_delete_ids}})
+        deleted_count = result.deleted_count
+    else:
+        deleted_count = 0
+
+    action = USER_ACTIONS['clean_logs']
+    details = f'Se eliminaron los logs con una fecha más antigua a {cleanDateStr}'
+    log_user_action(username, action, details)
+
+    return jsonify({"message": f"Se eliminaron {deleted_count} logs anteriores a {cleanDateStr}"}), 200
 
 @bp.route('/edls/get_edl', methods=['GET'])
 def get_edl():

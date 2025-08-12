@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 from app.models.db import clientsCollection
 from app.utils.auth import token_verification_required
-from app.utils.helpers import generate_unique_api_key, generate_unique_client_token, USER_ACTIONS, log_user_action
-from datetime import timezone, datetime
+from app.utils.helpers import generate_unique_api_key, generate_unique_client_token, USER_ACTIONS, log_user_action, COLLECTIONS
+from datetime import datetime
 from zoneinfo import ZoneInfo
+from pymongo import UpdateOne
 
 bp = Blueprint('clients', __name__, url_prefix='/api/clients')
 
@@ -39,9 +40,14 @@ def addClient():
     if not usernameToAdd or not name or not expirationDate or not username:
         return jsonify({"error": "Missing fields"}), 400
     
-    creationDate = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    updateDate = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    
+    creationDate = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+    updateDate = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+    try:
+        newExpirationDateFormatted = datetime.strptime(expirationDate, "%Y-%m-%d") \
+            .replace(tzinfo=ZoneInfo("America/El_Salvador")) \
+            .strftime('%Y-%m-%d %H:%M:%S GMT')
+    except ValueError:
+        return jsonify({"error": "Invalid date format, must be YYYY-MM-DD"}), 400
 
     if clientsCollection.find_one({"username": usernameToAdd}):
         return jsonify({"error": "El cliente que se intento añadir ya existe"}), 409
@@ -55,12 +61,11 @@ def addClient():
         "username": usernameToAdd,
         "creationDate": creationDate,
         "updateDate": updateDate,
-        "expirationDate": expirationDate,
+        "expirationDate": newExpirationDateFormatted,
         "clientToken": clientToken,
         "IpList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
-        "WhiteList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
+        "WebsiteList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
         "HashList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
-        "WebsiteList": [],
         "apiKey": apiKey,
     })
 
@@ -71,7 +76,58 @@ def addClient():
         return jsonify({"message": f"Client '{usernameToAdd}' successfully added."}), 200
     else:
         return jsonify({"error": "Add failed"}), 500
+
+@bp.route('/actions/delete', methods=['POST'])
+@token_verification_required
+def deleteClient():
+    data = request.get_json()
+    username = data['username']
+    usernameToDelete = data['usernameToDelete']
+
+    if not usernameToDelete or not username:
+        return jsonify({"error": "Missing fields"}), 400
     
+    date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+
+    client = clientsCollection.find_one({'username': usernameToDelete})
+    if client:
+        # Primero borramos todos los elementos (IP, dominios, hash) atribuidos al cliente
+        for list_name, collection in COLLECTIONS.items():
+            elements = client[list_name]['info']
+            
+            # Usamos operaciones en lote para reducir las llamadas a la DB
+            ops = []
+            for element in elements:
+                # 1. Quitar el usuario de la lista de clientes y registrar la fecha
+                ops.append(UpdateOne(
+                    {'element': element},
+                    {
+                        '$pull': {'clients': usernameToDelete},
+                        '$set': {'lastIUpdate': date}  
+                    }
+                ))
+                # 2. Borrar si la lista queda vacía
+                ops.append(UpdateOne(
+                    {'element': element, 'clients': {'$size': 0}},
+                    {'$unset': {'element': ""}}  # Marcamos para borrado luego
+                ))
+            
+            if ops:
+                collection.bulk_write(ops, ordered=True)
+            
+            # Elimina los documentos marcados como vacíos
+            collection.delete_many({'clients': {'$size': 0}})
+
+        # Luego de borrar los elementos de las otras bases de datos, borramos al cliente 
+        clientsCollection.delete_one({'username': usernameToDelete})
+        
+        action = USER_ACTIONS['delete_client']
+        details = f'Se eliminó {usernameToDelete} de la lista de clientes'
+        log_user_action(username, action, details)
+        return jsonify({'message': 'El cliente se elimino de manera correcta'}), 200
+    else:
+        return jsonify({'error': 'El cliente que se quiso eliminar no existe o ya ha sido eliminado'}), 404
+
 @bp.route('/by-token/<clientToken>')
 @token_verification_required
 def getClientByToken(clientToken):
@@ -102,6 +158,13 @@ def modifyExpirationDate(clientToken):
     if not newExpirationDate or not username:
         return jsonify({"error": "Missing fields"}), 400
 
+    try:
+        newExpirationDateFormatted = datetime.strptime(newExpirationDate, "%Y-%m-%d") \
+            .replace(tzinfo=ZoneInfo("America/El_Salvador")) \
+            .strftime('%Y-%m-%d %H:%M:%S GMT')
+    except ValueError:
+        return jsonify({"error": "Invalid date format, must be YYYY-MM-DD"}), 400
+    
     date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
     client = clientsCollection.find_one({"clientToken": clientToken})
     if not client:
@@ -111,7 +174,7 @@ def modifyExpirationDate(clientToken):
         {"clientToken": clientToken},
         {
             '$set': {
-                "expirationDate": newExpirationDate,
+                "expirationDate": newExpirationDateFormatted,
                 'updateDate': date,
             }
         }

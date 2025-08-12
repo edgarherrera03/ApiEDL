@@ -1,6 +1,5 @@
 import {
 	NavigationContainer,
-	// LogoContainer,
 	NavLinks,
 	NavLink,
 	AppTitle,
@@ -31,7 +30,6 @@ const Navigation = () => {
 	return (
 		<>
 			<NavigationContainer>
-				{/* <LogoContainer /> */}
 				<AppTitle to="/home">ApiEDL</AppTitle>
 				{isAuthenticated && (
 					<NavLinks>

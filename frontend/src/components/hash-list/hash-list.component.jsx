@@ -60,10 +60,13 @@ const HashList = ({
 			`El siguiente hash sera añadido:\n\n[Hash: ${element}]\n\n¿Confirmar?`
 		);
 		if (!confirmed) return;
-		const { success } = await handleAdd(element, "HashList");
-		if (!success) {
-			alert("Hubo un error al añadir el hash");
-			return;
+		const { success, code, error } = await handleAdd(element, "HashList");
+		if (!success && code === 404) {
+			console.log(error || "No se encontró al cliente");
+		} else if (code === 409 || code === 400 || code === 405) {
+			alert(error);
+		} else if (code === 403 || code === 401) {
+			await logout();
 		}
 		setElement("");
 		reloadClientDetails();

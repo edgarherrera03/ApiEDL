@@ -61,8 +61,8 @@ const IpList = ({
 		const { success, error, code } = await handleAdd(element, "IpList");
 		if (!success && code === 404) {
 			console.log(error || "No se encontró al cliente");
-		} else if (code === 409) {
-			alert("La IP que se intentó añadir ya existe");
+		} else if (code === 409 || code === 400 || code === 405) {
+			alert(error);
 		} else if (code === 403 || code === 401) {
 			await logout();
 		}

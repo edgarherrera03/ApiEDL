@@ -30,7 +30,9 @@ const InfoList = ({
 						{orderedKeys.map((key, i) => (
 							<Info key={i}>
 								{key === "actions" ? (
-									renderActions ? (
+									item.username === "admin" ? (
+										<span></span> // vacío si es admin
+									) : renderActions ? (
 										renderActions(item)
 									) : (
 										<span></span>

@@ -21,18 +21,18 @@ export const UserProvider = ({ children }) => {
 		localStorage.removeItem("user");
 		await logoutAuthUser();
 	};
+	const verifyToken = async () => {
+		const { success } = await tokenVerification();
+		if (success) {
+			setIsAuthenticated(true);
+			const storedUser = JSON.parse(localStorage.getItem("user"));
+			setCurrentUser(storedUser);
+		} else {
+			logout();
+		}
+	};
+
 	useEffect(() => {
-		const verifyToken = async () => {
-			const { success } = await tokenVerification();
-			if (success) {
-				setIsAuthenticated(true);
-				const storedUser = JSON.parse(localStorage.getItem("user"));
-				setCurrentUser(storedUser);
-			} else {
-				logout();
-			}
-			// setLoading(false);
-		};
 		verifyToken();
 	}, []);
 
@@ -44,6 +44,7 @@ export const UserProvider = ({ children }) => {
 		loading,
 		logout,
 		setLoading,
+		verifyToken,
 	};
 
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
