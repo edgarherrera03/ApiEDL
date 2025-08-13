@@ -1,16 +1,12 @@
-import { serverIP, serverPort } from "../../assets/_variables";
 export const requestClientsList = async () => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients`,
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-			}
-		);
+		const response = await fetch(`/api/clients`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok && data) {
@@ -41,22 +37,19 @@ export const addClientRequest = async (
 	expirationDate
 ) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/actions/add`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					name: name,
-					usernameToAdd: usernameToAdd,
-					expirationDate: expirationDate,
-				}),
-			}
-		);
+		const response = await fetch(`/api/clients/actions/add`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				name: name,
+				usernameToAdd: usernameToAdd,
+				expirationDate: expirationDate,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -78,20 +71,17 @@ export const addClientRequest = async (
 
 export const deleteClientRequest = async (username, usernameToDelete) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/actions/delete`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					usernameToDelete: usernameToDelete,
-				}),
-			}
-		);
+		const response = await fetch(`/api/clients/actions/delete`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				usernameToDelete: usernameToDelete,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -113,16 +103,13 @@ export const deleteClientRequest = async (username, usernameToDelete) => {
 
 export const requestClientByToken = async (token) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/by-token/${token}`,
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-			}
-		);
+		const response = await fetch(`/api/clients/by-token/${token}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok && data) {
@@ -150,7 +137,7 @@ export const modifyExpirationDateRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/modify-expiration-date/${token}`,
+			`/api/clients/by-token/actions/modify-expiration-date/${token}`,
 			{
 				method: "POST",
 				headers: {
@@ -186,7 +173,7 @@ export const modifyListLimitRequest = async (
 ) => {
 	try {
 		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/modify-list-limit/${token}`,
+			`/api/clients/by-token/actions/modify-list-limit/${token}`,
 			{
 				method: "POST",
 				headers: {
@@ -218,7 +205,7 @@ export const modifyListLimitRequest = async (
 export const regenerateApiKeyRequest = async (username, token) => {
 	try {
 		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/clients/by-token/actions/regenerate-api-key/${token}`,
+			`/api/clients/by-token/actions/regenerate-api-key/${token}`,
 			{
 				method: "POST",
 				headers: {

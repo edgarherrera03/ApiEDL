@@ -11,6 +11,3 @@ export const darkColor = "#000000";
 
 export const NavBarHeight = 100;
 export const LeftBarClientWidth = 230;
-
-export const serverIP = "172.31.11.52";
-export const serverPort = "5001";

@@ -1,7 +1,6 @@
-import { serverIP, serverPort } from "../../assets/_variables";
 export const getItems = async (listType) => {
 	try {
-		const response = await fetch(`http://${serverIP}:${serverPort}/api/items`, {
+		const response = await fetch(`/api/items`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -38,22 +37,19 @@ export const addItemToList = async (
 	listType
 ) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/client/add-item-list`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					itemToAdd: itemToAdd,
-					listType: listType,
-					clientUsername: clientUsername,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/client/add-item-list`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				itemToAdd: itemToAdd,
+				listType: listType,
+				clientUsername: clientUsername,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -75,20 +71,17 @@ export const addItemToList = async (
 
 export const registerItem = async (username, itemToAdd) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/client/register-item`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					itemToAdd: itemToAdd,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/client/register-item`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				itemToAdd: itemToAdd,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -115,22 +108,19 @@ export const deleteItemFromList = async (
 	listType
 ) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/client/delete-item-list`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					itemToDelete: itemToDelete,
-					listType: listType,
-					clientUsername: clientUsername,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/client/delete-item-list`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				itemToDelete: itemToDelete,
+				listType: listType,
+				clientUsername: clientUsername,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -148,21 +138,18 @@ export const deleteItemFromList = async (
 
 export const deleteItem = async (username, itemToDelete, listType) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/client/delete-item`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					itemToDelete: itemToDelete,
-					listType: listType,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/client/delete-item`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				itemToDelete: itemToDelete,
+				listType: listType,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -180,22 +167,19 @@ export const deleteItem = async (username, itemToDelete, listType) => {
 
 export const addCommentToItem = async (username, listType, comment, item) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/client/add-comment`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					listType: listType,
-					comment: comment,
-					item: item,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/client/add-comment`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				listType: listType,
+				comment: comment,
+				item: item,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -213,20 +197,17 @@ export const addCommentToItem = async (username, listType, comment, item) => {
 
 export const investigateItem = async (item, itemType) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/investigate-item`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					item: item,
-					itemType: itemType,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/investigate-item`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				item: item,
+				itemType: itemType,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {
@@ -245,20 +226,17 @@ export const investigateItem = async (item, itemType) => {
 
 export const modifyItem = async (username, itemToModify) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/items/actions/modify-item`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					itemToModify: itemToModify,
-				}),
-			}
-		);
+		const response = await fetch(`/api/items/actions/modify-item`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				itemToModify: itemToModify,
+			}),
+		});
 		const data = await response.json();
 		const code = response.status;
 		if (response.ok) {

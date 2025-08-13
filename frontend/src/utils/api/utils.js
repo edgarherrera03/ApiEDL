@@ -1,16 +1,12 @@
-import { serverIP, serverPort } from "../../assets/_variables";
 export const requestLogs = async () => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/utils/logs`,
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-			}
-		);
+		const response = await fetch(`/api/utils/logs`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
 
 		const data = await response.json();
 		const code = response.status;
@@ -37,20 +33,17 @@ export const requestLogs = async () => {
 
 export const cleanLogsRequest = async (username, cleanDate) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/utils/logs/clean`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					cleanDate: cleanDate,
-				}),
-			}
-		);
+		const response = await fetch(`/api/utils/logs/clean`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				cleanDate: cleanDate,
+			}),
+		});
 
 		const data = await response.json();
 		const code = response.status;

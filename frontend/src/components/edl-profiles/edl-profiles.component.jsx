@@ -13,7 +13,6 @@ import {
 import { modifyListLimitRequest } from "../../utils/api";
 import { UserContext } from "../../context/user.context";
 import { ItemsContext } from "../../context/items.context";
-import { serverIP, serverPort } from "../../assets/_variables";
 
 const EdlProfiles = ({ client, token, onReloadClients }) => {
 	const [copiedList, setCopiedList] = useState(null);
@@ -61,7 +60,7 @@ const EdlProfiles = ({ client, token, onReloadClients }) => {
 		},
 	];
 	const handleCopy = async (itemList) => {
-		const textToCopy = `http://${serverIP}:${serverPort}/api/utils/edls/get_edl?list_type=${itemList}&username=${username}&api_key=${apiKey}`;
+		const textToCopy = `/api/utils/edls/get_edl?list_type=${itemList}&username=${username}&api_key=${apiKey}`;
 		try {
 			await navigator.clipboard.writeText(textToCopy);
 			setCopiedList(itemList);

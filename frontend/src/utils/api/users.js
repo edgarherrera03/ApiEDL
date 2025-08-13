@@ -1,7 +1,6 @@
-import { serverIP, serverPort } from "../../assets/_variables";
 export const requestUsersInformation = async () => {
 	try {
-		const response = await fetch(`http://${serverIP}:${serverPort}/api/users`, {
+		const response = await fetch(`/api/users`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -35,20 +34,17 @@ export const requestUsersInformation = async () => {
 
 export const deleteUserRequest = async (username, usernameToDelete) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/users/actions/delete`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					usernameToDelete: usernameToDelete,
-				}),
-			}
-		);
+		const response = await fetch(`/api/users/actions/delete`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				usernameToDelete: usernameToDelete,
+			}),
+		});
 
 		const data = await response.json();
 		const code = response.status;
@@ -72,22 +68,19 @@ export const addUserRequest = async (
 	role
 ) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/users/actions/add`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					usernameToAdd: usernameToAdd,
-					password: password,
-					role: role,
-				}),
-			}
-		);
+		const response = await fetch(`/api/users/actions/add`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				usernameToAdd: usernameToAdd,
+				password: password,
+				role: role,
+			}),
+		});
 
 		const data = await response.json();
 		const code = response.status;
@@ -111,22 +104,19 @@ export const modifyUserRequest = async (
 	role
 ) => {
 	try {
-		const response = await fetch(
-			`http://${serverIP}:${serverPort}/api/users/actions/modify`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					username: username,
-					password: password,
-					usernameToModify: usernameToModify,
-					role: role,
-				}),
-			}
-		);
+		const response = await fetch(`/api/users/actions/modify`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				username: username,
+				password: password,
+				usernameToModify: usernameToModify,
+				role: role,
+			}),
+		});
 
 		const data = await response.json();
 		const code = response.status;
