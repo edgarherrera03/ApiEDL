@@ -8,10 +8,10 @@ from app.routes import auth_routes, user_routes, client_routes, utils_routes, it
 
 def create_app():
     load_dotenv()
-    app = Flask(__name__, static_folder='../build', static_url_path='') 
+    app = Flask(__name__, static_folder='../build', static_url_path='')  
     app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
-    CORS(app, supports_credentials=True, origins=["http://localhost:3000", "http://172.31.11.52:3000"])
+    CORS(app, supports_credentials=True)
 
     init_db()
 
@@ -29,4 +29,5 @@ def create_app():
             return send_from_directory(app.static_folder, path)
         else:
             return send_from_directory(app.static_folder, 'index.html')
+
     return app

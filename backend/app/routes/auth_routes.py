@@ -36,10 +36,9 @@ def login():
             "access_token",
             token,
             httponly=True,
-            secure=False,
+            secure=True,
             samesite="Lax",
             max_age=1800,
-            domain="172.31.11.52",
         )
         return response
     else:

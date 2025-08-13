@@ -5,3 +5,4 @@ pymongo
 python-dotenv
 PyJWT
 OTXv2
+gunicorn
