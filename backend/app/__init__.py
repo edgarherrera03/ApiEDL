@@ -13,21 +13,22 @@ def create_app():
 
     CORS(app, supports_credentials=True)
 
-    init_db()
-
     app.register_blueprint(auth_routes.bp)
     app.register_blueprint(user_routes.bp)
     app.register_blueprint(client_routes.bp)
     app.register_blueprint(utils_routes.bp)
     app.register_blueprint(items_routes.bp)
 
-    # Ruta para servir React (build)
+    @app.route('/home', defaults={'path': 'home'})
+    @app.route('/dashboard', defaults={'path': 'dashboard'})
+    @app.route('/clientes', defaults={'path': 'clientes'})
+    @app.route('/clientes/<path:path>')
+    @app.route('/registros', defaults={'path': 'registros'})
+    @app.route('/users', defaults={'path': 'users'})
+    @app.route('/logs', defaults={'path': 'logs'})
+    @app.route('/user', defaults={'path': 'user'})
     @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
     def serve_react(path):
-        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-            return send_from_directory(app.static_folder, path)
-        else:
-            return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, 'index.html')
 
     return app
