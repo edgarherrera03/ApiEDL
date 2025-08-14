@@ -300,31 +300,31 @@ def init_db():
         })
         print(f"User '{user['username']}' registered.")
 
-    # for client in clients:
-    #     if clientsCollection.find_one({"id": client["id"]}):
-    #         print(f"Client with ID '{client['id']}' already exists. Skipping.")
-    #         continue
+    for client in clients:
+        if clientsCollection.find_one({"id": client["id"]}):
+            print(f"Client with ID '{client['id']}' already exists. Skipping.")
+            continue
 
-    #     clientsCollection.insert_one(client)
-    #     print(f"Client with ID '{client['id']}' registered.")
+        clientsCollection.insert_one(client)
+        print(f"Client with ID '{client['id']}' registered.")
     
-    # for ipAdress in ipAdresses:
-    #     if ipCollection.find_one({'element': ipAdress['element']}):
-    #         print(f"Ip Adress '{ipAdress['element']}' already exists. Skipping.")
-    #         continue
-    #     ipCollection.insert_one(ipAdress)
-    #     print(f"Ip Adress '{ipAdress['element']}' registered.")
+    for ipAdress in ipAdresses:
+        if ipCollection.find_one({'element': ipAdress['element']}):
+            print(f"Ip Adress '{ipAdress['element']}' already exists. Skipping.")
+            continue
+        ipCollection.insert_one(ipAdress)
+        print(f"Ip Adress '{ipAdress['element']}' registered.")
     
-    # for website in websites:
-    #     if domainCollection.find_one({'element': website['element']}):
-    #         print(f"Domain '{website['element']}' already exists. Skipping.")
-    #         continue
-    #     domainCollection.insert_one(website)
-    #     print(f"Domain '{website['element']}' registered.")
+    for website in websites:
+        if domainCollection.find_one({'element': website['element']}):
+            print(f"Domain '{website['element']}' already exists. Skipping.")
+            continue
+        domainCollection.insert_one(website)
+        print(f"Domain '{website['element']}' registered.")
     
-    # for hash in hashList:
-    #     if hashCollection.find_one({'element': hash['element']}):
-    #         print(f"Hash '{hash['element']}' already exists. Skipping.")
-    #         continue
-    #     hashCollection.insert_one(hash)
-    #     print(f"Hash '{hash['element']}' registered.")
+    for hash in hashList:
+        if hashCollection.find_one({'element': hash['element']}):
+            print(f"Hash '{hash['element']}' already exists. Skipping.")
+            continue
+        hashCollection.insert_one(hash)
+        print(f"Hash '{hash['element']}' registered.")
