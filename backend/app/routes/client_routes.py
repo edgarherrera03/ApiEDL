@@ -8,6 +8,12 @@ from pymongo import UpdateOne
 
 bp = Blueprint('clients', __name__, url_prefix='/api/clients')
 
+'''
+    En este documento se detallan todas las funciones utilizadas para el manejo y modificacion de los clientes. 
+'''
+
+
+# Funcion que permite la obtencion de la lista de clientes registrados en la base de datos
 @bp.route("/", strict_slashes=False)
 @token_verification_required
 def getClients():
@@ -29,6 +35,7 @@ def getClients():
     else:
         return jsonify({"error": "No se encontraron ningun cliente"}), 404
 
+# Funcion que permite añadir un cliente a la lista inicializando cada uno de los campos
 @bp.route('/actions/add', methods=['POST'])
 @token_verification_required  
 def addClient():
@@ -63,7 +70,7 @@ def addClient():
         "updateDate": updateDate,
         "expirationDate": newExpirationDateFormatted,
         "clientToken": clientToken,
-        "IpList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
+        "IpList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000}, 
         "WebsiteList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
         "HashList": {'info':[], 'lastUpdate': creationDate, 'listLimit': 10000},
         "apiKey": apiKey,
@@ -77,6 +84,7 @@ def addClient():
     else:
         return jsonify({"error": "Add failed"}), 500
 
+# Funcion que permite eliminar un cliente de la lista y todos los datos relacionados con el 
 @bp.route('/actions/delete', methods=['POST'])
 @token_verification_required
 def deleteClient():
@@ -128,6 +136,7 @@ def deleteClient():
     else:
         return jsonify({'error': 'El cliente que se quiso eliminar no existe o ya ha sido eliminado'}), 404
 
+# Funcion que permite obtener un cliente especifico gracias al token unico que le ha sido asignado
 @bp.route('/by-token/<clientToken>')
 @token_verification_required
 def getClientByToken(clientToken):
@@ -149,6 +158,7 @@ def getClientByToken(clientToken):
     else:
         return jsonify({"error": "Cliente no encontrado"}), 404
 
+# Funcion que permite modificar la fecha de expiracion del contrato de un cliente
 @bp.route('/by-token/actions/modify-expiration-date/<clientToken>', methods=['POST'])
 @token_verification_required
 def modifyExpirationDate(clientToken):
@@ -184,6 +194,7 @@ def modifyExpirationDate(clientToken):
     log_user_action(username, action, details)
     return jsonify({"message": "Expiration date updated successfully"}), 200
 
+# Funcion que permite modificar el limite de la lista de Ip, dominios o hash que son asignados a un cliente en especifico
 @bp.route('/by-token/actions/modify-list-limit/<clientToken>', methods=['POST'])
 @token_verification_required
 def modifyListLimit(clientToken):
@@ -210,6 +221,7 @@ def modifyListLimit(clientToken):
     log_user_action(username, action, details)
     return jsonify({"message": "List limit updated successfully"}), 200
 
+# Funcion que permite regenerar la clave ApiKey de un cliente 
 @bp.route('/by-token/actions/regenerate-api-key/<clientToken>', methods=['POST'])
 @token_verification_required
 def regenerateApiKey(clientToken):

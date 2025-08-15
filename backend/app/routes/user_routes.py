@@ -5,6 +5,11 @@ from app.utils.helpers import hashPassword, verifyPassword, USER_ACTIONS, log_us
 
 bp = Blueprint('users', __name__, url_prefix='/api/users')
 
+'''
+    En este documento se detallan las funciones que permiten el manejo de la lista de usuarios de la ApiEDL.
+'''
+
+# Obtener la lista de usuarios registrados con sus roles
 @bp.route("/", strict_slashes=False)
 @token_verification_required
 def getUsersInfo():
@@ -18,7 +23,8 @@ def getUsersInfo():
         return jsonify({'message': 'Informacion de usuarios recuperada correctamente', 'users': response}), 200
     else:
         return jsonify({'error': 'No se encontro ninguna info'}), 404
-    
+
+# Funcion que permite eliminar un usuario y sus credenciales de la base de datos
 @bp.route("/actions/delete", methods=['POST'])
 @token_verification_required
 def deleteUser():
@@ -44,6 +50,7 @@ def deleteUser():
     else:
         return jsonify({"error": "Hubo un error al elminar al usuario"}), 500
 
+# Funcion que permite añadir un usuario a la base de datos
 @bp.route('/actions/add', methods=['POST'])
 @token_verification_required
 def addUser():
@@ -71,6 +78,7 @@ def addUser():
     else:
         return jsonify({"error": "Add failed"}), 500
 
+# Funcion que permite modificar el rol de un usuario
 @bp.route('/actions/modify', methods=['POST'])
 @token_verification_required
 def modifyUser():

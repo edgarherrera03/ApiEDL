@@ -3,8 +3,11 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Obtencion del link a la base de datos
 mongo_uri = os.getenv('MONGO_URI')
 client = MongoClient(mongo_uri)
+
 # Nombre de la base de datos
 db = client["ApiEDLDatabase"]
 

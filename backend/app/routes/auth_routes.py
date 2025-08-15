@@ -10,11 +10,18 @@ from flask import current_app as app
 
 bp = Blueprint('auth', __name__, url_prefix='/api')
 
+'''
+    En este documento se detallan todas las funciones utilizada para el manejo de la sesion de un cliente
+    y su autenticacion.
+'''
+
+# Funcion que verifica si el token de autenticacion del cliente sigue valido
 @bp.route("/token-verification")
 @token_verification_required
 def token_verification():
     return jsonify({"message": "Token is valid"}), 200
 
+# Funcion que maneja el login de un cliente (crea un token de autenticacion con una expiracion de 30 min)
 @bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -38,12 +45,13 @@ def login():
             httponly=True,
             secure=True,
             samesite="Lax",
-            max_age=1800,
+            max_age=1800, # 1800 segundo -> 30 min 
         )
         return response
     else:
         return jsonify({"error" : "Usuario o contraseña inválidos"}), 401
 
+# Funcion que elimina el token de autenticacion de las cookies y saca de la sesion al usuario
 @bp.route('/logout',  methods=["POST"])
 @token_verification_required
 def logout():

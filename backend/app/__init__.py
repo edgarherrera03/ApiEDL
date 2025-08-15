@@ -19,6 +19,7 @@ def create_app():
     app.register_blueprint(utils_routes.bp)
     app.register_blueprint(items_routes.bp)
 
+    # Permite que la app redirija a la pagina correspondiente al hacer reload -> ligado al uso de react-router
     @app.route('/home', defaults={'path': 'home'})
     @app.route('/dashboard', defaults={'path': 'dashboard'})
     @app.route('/clientes', defaults={'path': 'clientes'})
@@ -30,5 +31,7 @@ def create_app():
     @app.route('/', defaults={'path': ''})
     def serve_react(path):
         return send_from_directory(app.static_folder, 'index.html')
-
+    
+    # Usar unicamente para pruebas a la aplicacion
+    # init_db()
     return app

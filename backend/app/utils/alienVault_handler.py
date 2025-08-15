@@ -27,6 +27,7 @@ def get_indicator_info(indicator: str, type_: str):
         print(f"[!] Error obteniendo pulses: {e}")
         return []
 
+# Funcion que calcula el score atribuido a un elemento buscado en Alien Vault basado en el numero de pulsos y de su antiguedad
 def calculate_score(pulses):
     now = datetime.now()
     score_sum = 0

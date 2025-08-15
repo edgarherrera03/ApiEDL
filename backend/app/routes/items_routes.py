@@ -5,9 +5,16 @@ from app.utils.auth import token_verification_required
 from zoneinfo import ZoneInfo
 from datetime import datetime
 from app.models.db import clientsCollection
+import os
 
 bp = Blueprint('items', __name__, url_prefix='/api/items')
 
+'''
+    En este documento se detalla las funciones utilizadas para el manejo de los diferentes elementos (IPs, dominios y hash).
+    En cada funcion se obtiene el tipo de elemento a obtener, modificar, agregar o eliminar para cada lista.
+'''
+
+# Funcion que permite obtener los elementos de una lista 
 @bp.route("/", strict_slashes=False, methods=['POST'])
 @token_verification_required
 def getItems():
@@ -23,6 +30,7 @@ def getItems():
     else:
         return jsonify({"error": "No se encontró ningun elemento solicitado"}), 404
 
+# Funcion que permite añadir un elemento a la lista propia a un cliente, esta manda un error si el elemento no esta registrado en la lista general de registros
 @bp.route('/actions/client/add-item-list', methods=['POST'])
 @token_verification_required
 def addItemToClient():
@@ -90,6 +98,7 @@ def addItemToClient():
 
     return jsonify({"message": "Elemento añadido correctamente"}), 200
 
+# Funcion que permite registrar un elemento a la lista general
 @bp.route('/actions/client/register-item', methods=['POST'])
 @token_verification_required
 def registerItem():
@@ -153,6 +162,8 @@ def registerItem():
     log_user_action(username, action, details)
     return jsonify({"message": "Elemento añadido correctamente"}), 200
 
+# Funcion que permite eliminar un elemento de la lista de un cliente especifico
+# Esto no elimina el elemento de la lista general (a menos que el elemento solo hay sido atribuido al cliente del que se quiere eliminar el elemento)
 @bp.route('/actions/client/delete-item-list', methods=['POST'])
 @token_verification_required
 def deleteItemFromClient():
@@ -211,6 +222,7 @@ def deleteItemFromClient():
     log_user_action(username, action, details)
     return jsonify({"message": "Elemento eliminado de manera correcta"}), 200
 
+# Funcion que elimina un elemento de la lista general de registros y de la lista de clientes a los cuales haya sido previamente asignado
 @bp.route('/actions/client/delete-item', methods=['POST'])
 @token_verification_required
 def deleteItem():
@@ -255,6 +267,7 @@ def deleteItem():
     else:
         return jsonify({'error': 'Hubo un error al eliminar el item'}), 500
 
+# Funcion que permite añadir un comentario para cada elemento 
 @bp.route('/actions/client/add-comment', methods=['POST'])
 @token_verification_required
 def addCommentToItem():
@@ -291,6 +304,7 @@ def addCommentToItem():
     log_user_action(username, action, details)
     return jsonify({"message": "Comentario agregado de manera correcta"}), 200
 
+# Funcion que permite obtener la informacion de un elemento dada por AlienVault (la funcion classify_indicator hace es la usa la Api hacia AlienVault)
 @bp.route('/actions/investigate-item', methods=['POST'])
 @token_verification_required
 def investigateItem():
@@ -305,7 +319,8 @@ def investigateItem():
         return jsonify({"error": "Hubo un problema con Alien Vault"}), 502
     
     return jsonify({"message": 'Info recuparada de manera correcta', 'indicatorDetails': indicatorDetails}), 200
-    
+
+# Funcion que permite modificar un elemento (calificacion, clasificacion o bloqueo)    
 @bp.route('/actions/modify-item', methods=['POST'])
 @token_verification_required
 def modifyItem():
@@ -346,3 +361,100 @@ def modifyItem():
     details = f'Se modificó {itemToModify['element']}'
     log_user_action(username, action, details)
     return jsonify({"message": "Elemento modificado correctamente"}), 200
+
+# Funcion que permite añadir una lista de elementos del mismo tipo a la base de datos
+@bp.route('/actions/soar/new_record', methods=['POST'])
+def addNewItems():
+    # Obtener user_soar y soar_key desde query params
+    username = request.args.get('user_soar')
+    soar_key = request.args.get('soar_key')
+
+    data = request.get_json()
+    items = data.get('items')
+
+    if not items or not username or not soar_key:
+        return jsonify({"error": "Missing fields"}), 400
+    
+    SOAR_KEY = os.getenv("SOAR_KEY")
+
+    if soar_key != SOAR_KEY:
+        return jsonify({'error': 'Clave de soar no valida.'}), 400
+
+    type_mapping = {
+        'ip': 'IpList',
+        'domain': 'WebsiteList',
+        'hash': 'HashList'
+    }
+
+    for itemToAdd in items:
+        listType = type_mapping.get(itemToAdd.get('type'))
+        if not listType:
+            continue  # O puedes registrar/loggear error según necesites
+
+        date = datetime.now(ZoneInfo("America/El_Salvador")).strftime('%Y-%m-%d %H:%M:%S GMT')
+        itemToAdd["creationDate"] = date
+        itemToAdd["lastUpdate"] = date
+        itemToAdd['blocked'] = str(itemToAdd.get('blocked', '')).lower() == 'true'
+        collection = COLLECTIONS[listType]
+        itemToAdd['addedBy'] = username
+
+        # Filtrar clientes disponibles según su límite
+        allowed_clients = []
+        for client_username in itemToAdd.get('clients', []):
+            client_doc = clientsCollection.find_one({'username': client_username})
+            if client_doc:
+                current_count = len(client_doc[listType]['info'])
+                limit = client_doc[listType]['listLimit']
+                if current_count < limit:
+                    allowed_clients.append(client_username)
+
+        if not allowed_clients:
+            continue  # O manejar error o mensaje si deseas
+
+        # Verificar si el elemento ya existe en la lista general
+        element = collection.find_one({'element': itemToAdd['element']})
+        if element:
+            # El elemento ya existe, actualizar la lista de clientes que no lo tengan
+            for client_username in allowed_clients:
+                client_doc = clientsCollection.find_one({'username': client_username})
+                print(client_doc[listType]['info'])
+                if client_doc and itemToAdd['element'] not in client_doc[listType]['info']:
+                    clientsCollection.update_one(
+                        {'username': client_username},
+                        {
+                            '$push': {
+                                f'{listType}.info': itemToAdd['element'],
+                            }
+                        }
+                    )
+            # Actualizar la lista de clientes del elemento en la colección general (sin duplicados)
+            collection.update_one(
+                {'element': itemToAdd['element']},
+                {
+                    '$addToSet': {
+                        'clients': {'$each': allowed_clients}
+                    },
+                    '$set': {
+                        'lastUpdate': date
+                    }
+                }
+            )
+        else:
+            # Insertar nuevo elemento solo si no existe
+            itemToAdd['clients'] = allowed_clients
+            collection.insert_one(itemToAdd)
+            for client_username in allowed_clients:
+                clientsCollection.update_one(
+                    {'username': client_username},
+                    {
+                        '$push': {
+                            f'{listType}.info': itemToAdd['element'],
+                        }
+                    }
+                )
+
+    action = USER_ACTIONS['add_item_to_list']
+    details = f'Se añadieron {len(items)} elementos a las listas correspondientes'
+    log_user_action(username, action, details)
+
+    return jsonify({'message': 'Items procesados correctamente'}), 200

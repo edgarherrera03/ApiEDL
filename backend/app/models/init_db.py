@@ -2,6 +2,13 @@ import secrets
 from .db import clientsCollection, usersCollection, usersInfoCollection, ipCollection, domainCollection, hashCollection
 from ..utils.helpers import hashPassword
 
+"""
+    Este documento contiene la inicialización del programa. 
+    Los datos incluidos son completamente ficticios y generados por ChatGPT. 
+    El código tiene como objetivo probar funcionalidades de la aplicación utilizando 
+    una base de datos con datos de prueba.
+"""
+
 users = [
     {"username": "admin", "password": "pass123"},
     {"username": "grossi", "password": "abc456"},
