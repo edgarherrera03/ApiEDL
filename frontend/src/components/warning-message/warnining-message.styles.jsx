@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { ReactComponent as MaliciousSvg } from "../../assets/malicious.svg";
-import { ReactComponent as SuspiciousSvg } from "../../assets/suspicious.svg";
-import { ReactComponent as SafeSvg } from "../../assets/safe.svg";
+import MaliciousSvg from "../../assets/malicious.svg?react";
+import SuspiciousSvg from "../../assets/suspicious.svg?react";
+import SafeSvg from "../../assets/safe.svg?react";
 import { dangerColor, greenColor, warningColor } from "../../assets/_variables";
 
 export const WarningMessageContainer = styled.div`

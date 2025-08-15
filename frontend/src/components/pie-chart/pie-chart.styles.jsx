@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { backgroundDark, backgroundWhite } from "../../assets/_variables";
-import { ReactComponent as DownloadSvg } from "../../assets/download.svg";
+import DownloadSvg from "../../assets/download.svg?react";
 
 export const PieChartContainer = styled.div`
 	display: flex;

@@ -5,8 +5,8 @@ import {
 	greenColor,
 	warningColor,
 } from "../../assets/_variables";
-import { ReactComponent as WarningSvg } from "../../assets/warning.svg";
-import { ReactComponent as HelpSvg } from "../../assets/help.svg";
+import WarningSvg from "../../assets/warning.svg?react";
+import HelpSvg from "../../assets/help.svg?react";
 
 export const HomeContainer = styled.div`
 	position: absolute;

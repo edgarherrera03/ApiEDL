@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { NavBarHeight, backgroundDark } from "../../assets/_variables";
-import { ReactComponent as UserSvg } from "../../assets/user.svg";
+import UserSvg from "../../assets/user.svg?react";
 
 export const UserContainer = styled.div`
 	position: absolute;
