@@ -142,6 +142,7 @@ const IpList = ({
 				itemList={ip}
 				handleDelete={handleDeleteIp}
 				handleComment={handleComment}
+				height={500}
 			/>
 		</IpListContainer>
 	);

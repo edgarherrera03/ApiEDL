@@ -29,13 +29,18 @@ export const ItemsProvider = ({ children }) => {
 			const website = await getItems("WebsiteList");
 			const hash = await getItems("HashList");
 
-			if (ip.success && website.success && hash.success) {
-				setIpList(ip.items);
-				setDomainList(website.items);
-				setHashList(hash.items);
-			}
+			if (ip.success) setIpList(ip.items || []);
+			else setIpList([]);
+
+			if (website.success) setDomainList(website.items || []);
+			else setDomainList([]);
+
+			if (hash.success) setHashList(hash.items || []);
+			else setHashList([]);
+
 			setLoading(false);
 		};
+
 		fetchItems();
 	}, [isAuthenticated, setLoading]);
 
@@ -44,12 +49,11 @@ export const ItemsProvider = ({ children }) => {
 		const website = await getItems("WebsiteList");
 		const hash = await getItems("HashList");
 
-		if (ip.success && website.success && hash.success) {
-			setIpList(ip.items);
-			setDomainList(website.items);
-			setHashList(hash.items);
-		}
+		setIpList(ip.success ? ip.items || [] : []);
+		setDomainList(website.success ? website.items || [] : []);
+		setHashList(hash.success ? hash.items || [] : []);
 	};
+
 	const reloadIpList = async () => {
 		const { success, code, items, error } = await getItems("IpList");
 		if (success) {

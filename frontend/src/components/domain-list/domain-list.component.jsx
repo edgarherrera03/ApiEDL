@@ -148,6 +148,7 @@ const DomainList = ({
 				itemList={domains}
 				handleDelete={handleDeleteDomain}
 				handleComment={handleComment}
+				height={500}
 			/>
 		</DomainListContainer>
 	);

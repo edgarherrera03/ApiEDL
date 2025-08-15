@@ -35,4 +35,5 @@ export const DashboardContent = styled.div`
 	flex-wrap: wrap;
 	width: 100%;
 	gap: 30px;
+	justify-content: center;
 `;

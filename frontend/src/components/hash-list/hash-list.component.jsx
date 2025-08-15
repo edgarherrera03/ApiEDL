@@ -26,7 +26,6 @@ const HashList = ({
 	const role = currentUser["role"];
 	const headersList = [
 		"Hash",
-		"Nombre del programa",
 		"Clasificación",
 		"Calificación",
 		"Bloqueada",
@@ -34,7 +33,6 @@ const HashList = ({
 	];
 	const orderList = [
 		"element",
-		"programName",
 		"classification",
 		"rating",
 		"blocked",
@@ -144,6 +142,7 @@ const HashList = ({
 				itemList={hashes}
 				handleDelete={handleDeleteHash}
 				handleComment={handleComment}
+				height={500}
 			/>
 		</HashListContainer>
 	);

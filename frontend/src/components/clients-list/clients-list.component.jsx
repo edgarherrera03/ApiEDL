@@ -97,6 +97,7 @@ const ClientsList = ({ clientsList, reloadClientsList }) => {
 					orderedKeys={orderedKeys}
 					renderActions={renderClientActions}
 					activated={openNewClientWindow}
+					height={600}
 				/>
 			</ClientsListContainer>
 			{openNewClientWindow && (
