@@ -64,7 +64,7 @@ const PieChartComponent = ({ item }) => {
 				<span>{item.labelTitle}</span>
 				<DownloadButton onClick={downloadImage} />
 			</Title>
-			<ResponsiveContainer width={400} height={450}>
+			<ResponsiveContainer width="100%" height={450}>
 				<PieChart>
 					<Pie
 						dataKey="value"

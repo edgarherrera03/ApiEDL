@@ -11,7 +11,7 @@ export const LineChartContainer = styled.div`
 	background-color: ${backgroundWhite};
 	border-radius: 10px;
 	min-width: 600px;
-	width: 80%;
+	width: 100%;
 	span {
 		font-size: 20px;
 		color: ${backgroundDark};

@@ -6,11 +6,11 @@ export const PieChartContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 20px 0 25px 0;
+	padding: 20px 5px 25px 5px;
 	min-height: 400px;
 	background-color: ${backgroundWhite};
 	border-radius: 10px;
-	width: fit-content;
+	width: 100%;
 	span {
 		font-size: 20px;
 		color: ${backgroundDark};
