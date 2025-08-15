@@ -10,7 +10,7 @@ export const PieChartContainer = styled.div`
 	min-height: 400px;
 	background-color: ${backgroundWhite};
 	border-radius: 10px;
-	width: 100%;
+	width: 80%;
 	span {
 		font-size: 20px;
 		color: ${backgroundDark};
